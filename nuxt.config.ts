@@ -34,7 +34,6 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
-  ssr: false,
   css: ["@/assets/scss/style.scss"],
   vite: {
     vue: {
