@@ -4,16 +4,17 @@
       <v-list-item class="pl-1">
         <v-list-item-title class="d-flex align-center">
           <a href="/"
-            ><img src="~/assets/image/pollen_direct_logo_1x.webp"
+            ><img
+              src="~/assets/image/pollen-direct.svg"
+              class="mt-2"
+              style="width: 55px"
           /></a>
         </v-list-item-title>
       </v-list-item>
 
       <v-spacer />
       <v-skeleton-loader :loading="loading" type="list-item-two-line">
-        <!-- v-if="!isAuthenticated" -->
-
-        <v-menu v-if="$vuetify.display.mobile && !isAuthenticated">
+        <v-menu v-if="$vuetify.display.mobile && !is_authenticated">
           <template #activator="{ props }">
             <div>
               <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
@@ -46,13 +47,13 @@
 
         <div v-else class="my-10">
           <v-btn
-            v-if="!isAuthenticated"
+            v-if="!is_authenticated"
             class="my-4 mx-2 me-auto text-capitalize bg-purple-darken-3"
             @click="onSignUp()"
             >Sign Up with Pollen Pass</v-btn
           >
           <v-btn
-            v-if="!isAuthenticated"
+            v-if="!is_authenticated"
             variant="outlined"
             class="my-4 mx-2 me-auto text-capitalize"
             color="purple-darken-3"
@@ -60,7 +61,7 @@
             >Login</v-btn
           >
         </div>
-        <v-menu v-if="isAuthenticated">
+        <v-menu v-if="is_authenticated">
           <template #activator="{ props }">
             <div>
               <v-btn
@@ -97,21 +98,19 @@
           </v-card>
         </v-menu>
         <div
-          v-if="isAuthenticated && !$vuetify.display.mobile"
+          v-if="is_authenticated && !$vuetify.display.mobile"
           class="d-flex flex-column ma-2"
         >
           <h5>
             {{
-              userProfile.firstName
-                ? userProfile.firstName + " " + userProfile.lastName
-                : userProfile.name
+              profile?.first_name
+                ? profile.first_name + " " + profile.last_name
+                : profile.name
             }}
           </h5>
           <h6 class="font-weight-regular">
             Member ID:
-            {{
-              userProfile.id ? userProfile.id : userProfile.sub.split("-")[0]
-            }}
+            {{ profile?.auth_id || "-" }}
           </h6>
         </div>
       </v-skeleton-loader>
@@ -185,11 +184,35 @@
 
 <script setup>
 import { ref } from "vue";
+import { useAuth } from "~/composables/auth0";
+import { useSellerStore } from "~/stores/seller";
 
+const { is_user_authenticated, get_user_id } = useAuth();
+
+const seller_store = useSellerStore();
+const { get_user_profile } = seller_store;
+
+const user_id = get_user_id();
+const is_authenticated = computed(() => {
+  return is_user_authenticated();
+});
 const displayLogoutDialog = ref(false);
 const isAuthenticated = ref(false);
 const loading = ref(false);
-const userProfile = ref({});
+const profile = ref({});
+
+onMounted(async () => {
+  await get_profile();
+});
+
+const get_profile = async () => {
+  const req = await get_user_profile(user_id);
+  if (req) {
+    if (JSON.stringify(profile.value) !== JSON.stringify(req)) {
+      profile.value = req.data ? req.data : req;
+    }
+  }
+};
 
 const onLogin = async () => {};
 const onSignUp = async () => {};
