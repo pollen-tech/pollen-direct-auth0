@@ -30,9 +30,12 @@
             <OnboardingStepper :step="step" />
             <OnboardingCompanyInformation
               v-if="step == '1'"
-              @submit="goToHomePage"
+              @submit="next_step"
             />
-            <OnboardingCompanyInterest v-if="step == '2'" />
+            <OnboardingCompanyInterest
+              v-if="step == '2'"
+              @submit="goto_home_page"
+            />
           </div>
         </v-col>
       </v-row>
@@ -45,8 +48,11 @@ import { ref } from "vue";
 
 const step = ref("1");
 onBeforeMount(async () => {});
-const goToHomePage = () => {
+const goto_home_page = () => {
   navigateTo("/");
+};
+const next_step = () => {
+  step.value = 2;
 };
 </script>
 

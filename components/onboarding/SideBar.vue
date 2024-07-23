@@ -5,11 +5,13 @@
       style="background-color: transparent"
     >
       <div class="pa-12">
-        <p class="text-h5 font-weight-bold">LMS</p>
-        <p style="color: #782cd1" class="text-body-2 font-weight-medium">
-          LIQUIDATION MANAGEMENT SYSTEM
+        <p class="text-h5 font-weight-bold">
+          Overstock inventory direct from manufacturers
         </p>
-        <ul class="pt-4" style="font-size: 18px; list-style-type: none">
+        <p style="color: #782cd1" class="text-body-2 font-weight-medium">
+          Pollen Direct
+        </p>
+        <ul class="mt-8" style="font-size: 18px">
           <li
             v-for="i in columnContext"
             :key="i"
@@ -46,19 +48,17 @@ export default defineNuxtComponent({
       columnTitle: "PollenOS",
       columnContext: [
         {
-          title: "Predict",
-          description:
-            "Understand recovery cost ranges by category, SKU, target market, and more thanks to Pollen's proprietary data over thousands of successful trades",
+          title: "Global Brands",
+          description: "",
         },
         {
-          title: "Plan",
-          description:
-            "Model offer and order scenarios intuitively and easily within Pollen's Liquidation Management System, to identify a data-backed path to sustainable liquidation.",
+          title: "Regular Refreshed Catalogs",
+          description: "",
         },
         {
-          title: "Prioritize",
-          description:
-            "Choose your channels and markets to maximize cost recovery by SKU and time to expiry, then activate your liquidation strategy with the touch of a button in PollenOS. Learn More",
+          title:
+            "Multiple Categories: personal care, house hold items, food and more",
+          description: "",
         },
       ],
     };
