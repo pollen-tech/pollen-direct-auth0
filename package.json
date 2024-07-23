@@ -7,7 +7,9 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "clean:nuxt": "npx nuxi cleanup .nuxt",
+    "clean:cache": "npx nuxi cleanup node_modules/.cache"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
