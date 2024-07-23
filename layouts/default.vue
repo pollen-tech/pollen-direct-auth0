@@ -49,7 +49,7 @@
           <v-btn
             v-if="!is_authenticated"
             class="my-4 mx-2 me-auto text-capitalize bg-purple-darken-3"
-            @click="onSignUp()"
+            @click="on_signup()"
             >Sign Up with Pollen Pass</v-btn
           >
           <v-btn
@@ -57,7 +57,7 @@
             variant="outlined"
             class="my-4 mx-2 me-auto text-capitalize"
             color="purple-darken-3"
-            @click="onLogin()"
+            @click="on_login()"
             >Login</v-btn
           >
         </div>
@@ -77,14 +77,13 @@
           <v-card class="rounded pa-1">
             <v-card-text class="pa-0">
               <v-list density="compact">
-                <v-list-item>
-                  <NuxtLink
-                    to="/profile"
-                    class="text-grey-darken-1 text-body-2 cursor-pointer text-decoration-none"
-                  >
-                    <v-icon>mdi-account-details-outline</v-icon> Profile
-                  </NuxtLink>
+                <v-list-item
+                  class="text-grey-darken-1 text-body-2"
+                  @click="show_profile_setting()"
+                >
+                  <v-icon>mdi-account-details-outline</v-icon> Profile
                 </v-list-item>
+
                 <v-list-item>
                   <NuxtLink
                     class="text-grey-darken-1 text-body-2 cursor-pointer text-decoration-none"
@@ -105,7 +104,7 @@
             {{
               profile?.first_name
                 ? profile.first_name + " " + profile.last_name
-                : profile.name
+                : "- -"
             }}
           </h5>
           <h6 class="font-weight-regular">
@@ -121,6 +120,12 @@
       style="min-height: 100vh"
     >
       <slot />
+      <ProfileSettings
+        v-model="dialog_visible"
+        :dialog_value="dialog_visible"
+        :user_id="user_id"
+        @close="dialog_visible = false"
+      />
     </v-main>
     <v-dialog v-model="displayLogoutDialog">
       <v-card
@@ -164,7 +169,7 @@
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
-              @click="onLogout()"
+              @click="on_logout()"
               style="
                 background-color: #8431e7;
                 border: none;
@@ -187,6 +192,8 @@ import { ref } from "vue";
 import { useAuth } from "~/composables/auth0";
 import { useSellerStore } from "~/stores/seller";
 
+const runtimeConfig = useRuntimeConfig();
+
 const { is_user_authenticated, get_user_id } = useAuth();
 
 const seller_store = useSellerStore();
@@ -197,12 +204,14 @@ const is_authenticated = computed(() => {
   return is_user_authenticated();
 });
 const displayLogoutDialog = ref(false);
-const isAuthenticated = ref(false);
 const loading = ref(false);
 const profile = ref({});
+const dialog_visible = ref(false);
 
 onMounted(async () => {
-  await get_profile();
+  if (user_id) {
+    await get_profile();
+  }
 });
 
 const get_profile = async () => {
@@ -214,8 +223,29 @@ const get_profile = async () => {
   }
 };
 
-const onLogin = async () => {};
-const onSignUp = async () => {};
+const on_login = async () => {
+  navigateToPollenPass("login");
+};
+
+const on_signup = async () => {
+  navigateToPollenPass("signup");
+};
+
+const on_logout = async () => {
+  localStorage.clear();
+  window.location.reload();
+};
+
+const navigateToPollenPass = (param) => {
+  const url = new URL(runtimeConfig.public.pollenPassUrl);
+  url.searchParams.append("channel", "CH_POLLEN_DIRECT");
+  url.searchParams.append("action", param);
+  navigateTo(url.toString(), { external: true });
+};
+
+const show_profile_setting = () => {
+  dialog_visible.value = true;
+};
 </script>
 
 <style scoped></style>

@@ -723,3 +723,54 @@ tbody {
   background-position: center;
   background-size: cover;
 }
+
+.profile-card {
+  background-image: url("@/assets/image/bg-signup-success.webp");
+  background-position: center;
+  background-size: cover;
+  padding: 5px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 550px;
+  min-width: 300px;
+}
+
+@media (max-width: 550px) {
+  .profile-card {
+    width: auto;
+  }
+}
+
+.v-dialog .dialog-right {
+  left: auto !important;
+  right: 0 !important;
+}
+
+.floating-close-btn {
+  position: absolute !important;
+  border: 1px solid #e5e7eb;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  background: white !important;
+}
+
+.red--text {
+  color: rgb(176, 0, 32);
+}
+
+.notification__close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 50px !important;
+  height: 50px !important;
+  background-color: #faf5ff !important;
+  color: #782cd1 !important;
+  font-weight: bold !important;
+  margin-top: 20px;
+}
+
+.vue-tel-input {
+  min-height: 56px;
+}
