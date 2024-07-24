@@ -177,6 +177,14 @@
             @click="submit"
             >Continue</v-btn
           >
+          <v-btn
+            variant="outlined"
+            class="my-4 me-auto text-capitalize rounded-lg"
+            block
+            :loading="isLoading"
+            @click="$emit('skip')"
+            >Skip Onboarding</v-btn
+          >
         </v-form>
       </v-card>
 
@@ -213,7 +221,7 @@
 import { ref } from "vue";
 import { useSellerStore } from "@/stores/seller";
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["submit", "skip"]);
 const sellerStore = useSellerStore();
 const companyType = ref([
   {

@@ -31,6 +31,7 @@
             <OnboardingCompanyInformation
               v-if="step == '1'"
               @submit="next_step"
+              @skip="goto_home_page"
             />
             <OnboardingCompanyInterest
               v-if="step == '2'"
