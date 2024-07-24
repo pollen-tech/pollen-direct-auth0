@@ -6,15 +6,24 @@ export const useAuth = () => {
     id_token: string;
     user_id: string;
     expires_in: number;
+    expires_at: number;
   }) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("id_token", response.id_token);
       localStorage.setItem("user_id", response?.user_id);
-      localStorage.setItem(
-        "expires_at",
-        JSON.stringify(response.expires_in * 1000 + new Date().getTime())
-      );
+      debugger;
+      if (response.expires_in) {
+        localStorage.setItem(
+          "expires_at",
+          JSON.stringify(response.expires_in * 1000 + new Date().getTime())
+        );
+      } else {
+        localStorage.setItem(
+          "expires_at",
+          JSON.stringify(response.expires_at * 1000 + new Date().getTime())
+        );
+      }
     }
   };
 
