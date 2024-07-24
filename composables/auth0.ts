@@ -12,7 +12,6 @@ export const useAuth = () => {
       localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("id_token", response.id_token);
       localStorage.setItem("user_id", response?.user_id);
-      debugger;
       if (response.expires_in) {
         localStorage.setItem(
           "expires_at",

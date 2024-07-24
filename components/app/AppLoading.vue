@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-overlay :model-value="loading" class="align-center justify-center">
+    <v-overlay :model-value="isLoading" class="align-center justify-center">
       <v-progress-circular
         color="primary"
         indeterminate
@@ -10,15 +10,14 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    loading: { type: Boolean, default: false },
-  },
-  setup() {
-    return {};
-  },
-};
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps({
+  loading: { type: Boolean, default: true },
+});
+
+const isLoading = computed(() => props.loading);
 </script>
 
 <style lang="scss" scoped></style>

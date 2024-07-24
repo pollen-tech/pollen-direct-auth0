@@ -27,7 +27,7 @@
                 <v-list-item>
                   <NuxtLink
                     class="text-grey-darken-1 text-body-2 cursor-pointer text-decoration-none"
-                    @click="onSignUp()"
+                    @click="on_signup()"
                   >
                     Sign Up with Pollen Pass
                   </NuxtLink>
@@ -35,7 +35,7 @@
                 <v-list-item>
                   <NuxtLink
                     class="text-grey-darken-1 text-body-2 cursor-pointer text-decoration-none"
-                    @click="onLogin()"
+                    @click="on_login()"
                   >
                     Login
                   </NuxtLink>
