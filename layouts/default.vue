@@ -81,7 +81,13 @@
                   class="text-grey-darken-1 text-body-2"
                   @click="show_profile_setting()"
                 >
-                  <v-icon>mdi-account-details-outline</v-icon> Profile
+                  Pollen Pass Profile Settings
+                </v-list-item>
+                <v-list-item
+                  class="text-grey-darken-1 text-body-2"
+                  @click="show_company_setting()"
+                >
+                  Company Settings
                 </v-list-item>
 
                 <v-list-item>
@@ -89,7 +95,7 @@
                     class="text-grey-darken-1 text-body-2 cursor-pointer text-decoration-none"
                     @click="displayLogoutDialog = true"
                   >
-                    <v-icon>mdi-logout</v-icon> Logout
+                    Logout
                   </NuxtLink>
                 </v-list-item>
               </v-list>
@@ -125,6 +131,12 @@
         :dialog_value="dialog_visible"
         :user_id="user_id"
         @close="dialog_visible = false"
+      />
+      <CompanySettings
+        v-model="dialog_company"
+        :dialog_value="dialog_company"
+        :user_id="user_id"
+        @close="dialog_company = false"
       />
     </v-main>
     <v-dialog v-model="displayLogoutDialog">
@@ -207,6 +219,7 @@ const displayLogoutDialog = ref(false);
 const loading = ref(false);
 const profile = ref({});
 const dialog_visible = ref(false);
+const dialog_company = ref(false);
 
 onMounted(async () => {
   if (user_id) {
@@ -245,6 +258,10 @@ const navigateToPollenPass = (param) => {
 
 const show_profile_setting = () => {
   dialog_visible.value = true;
+};
+
+const show_company_setting = () => {
+  dialog_company.value = true;
 };
 </script>
 
