@@ -248,7 +248,16 @@
                       <tbody>
                         <tr v-for="(item, index) in channels">
                           <td>{{ CHANNEL[item.channel] || "unknown" }}</td>
-                          <td class="text-purple">(NOT AVAILABLE)</td>
+                          <td class="text-purple">
+                            <a
+                              :href="
+                                item.channel === 'CH_LMS'
+                                  ? runtimeConfig.public.pollenLMSUrl
+                                  : '/'
+                              "
+                              >{{ CHANNEL[item.channel] }}</a
+                            >
+                          </td>
                           <td>
                             {{ moment(item?.created_at).format("DD/MM/YYYY") }}
                           </td>
@@ -316,13 +325,11 @@ const dialog_content = ref([
     description: "Here you view the links connected to this account",
   },
 ]);
-const dialog_content_show = ref(0);
 
 onMounted(async () => {
   // await getUserInfo(""); TODO
 });
 onUpdated(async () => {
-  console.log(props.dialog_value && !profile.value.auth_id);
   if (props.dialog_value && !profile.value.auth_id) {
     await get_profile();
     await get_pp_channel();
@@ -337,6 +344,7 @@ const get_profile = async () => {
       if (profile.value?.phone_verified) {
         profile.value.phone_no =
           "+" + profile.value.country_code + profile.value.phone_no;
+        console.log(profile.value.phone_no);
       }
     }
   }
