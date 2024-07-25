@@ -112,7 +112,7 @@ const notification = ref({
 const email = ref("");
 const required_email = [
   (v) =>
-    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) ||
     "E-mail must be valid",
 ];
 const is_loading = ref(false);
