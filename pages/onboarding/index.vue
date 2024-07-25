@@ -27,7 +27,7 @@
         </v-col>
         <v-col cols="12" md="7" class="d-flex justify-center">
           <div class="w-75 d-flex flex-column h-100 py-8 mt-10">
-            <OnboardingStepper :step="step" />
+            <OnboardingStepper :step="step" :name="profile?.first_name" />
             <OnboardingCompanyInformation
               v-if="step == '1'"
               @submit="next_step"
@@ -35,6 +35,7 @@
             />
             <OnboardingCompanyInterest
               v-if="step == '2'"
+              @previous-page="step = '1'"
               @submit="goto_home_page"
             />
           </div>
@@ -47,10 +48,35 @@
 <script setup>
 import { ref } from "vue";
 
+import { useSellerStore } from "~/stores/seller";
+
+const { get_user_id } = useAuth();
+
+const seller_store = useSellerStore();
+const { get_user_profile } = seller_store;
+
+const user_id = get_user_id();
+
 const step = ref("1");
-onBeforeMount(async () => {});
+const profile = ref({});
+
+onBeforeMount(async () => {
+  if (user_id) {
+    await get_profile();
+  }
+});
+
+const get_profile = async () => {
+  const req = await get_user_profile(user_id);
+  if (req) {
+    if (JSON.stringify(profile.value) !== JSON.stringify(req)) {
+      profile.value = req.data ? req.data : req;
+    }
+  }
+};
+
 const goto_home_page = () => {
-  navigateTo("/");
+  window.location.href = "/";
 };
 const next_step = () => {
   step.value = 2;

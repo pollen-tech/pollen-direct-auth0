@@ -1,12 +1,16 @@
 <template>
   <div>
     <div class="d-flex flex-column align-center">
-      <h3>Complete your Company Information</h3>
+      <h3>
+        Complete your Company Information
+        <span class="text-caption text-grey">(NOT AVAILABLE)</span>
+      </h3>
 
       <v-card
         :width="$vuetify.display.mobile ? 300 : 450"
         elevation="0"
         class="align-center my-4"
+        :disabled="true"
       >
         <v-form ref="form">
           <div class="my-2 text-start flex-1-0">
@@ -177,15 +181,17 @@
             @click="submit"
             >Continue</v-btn
           >
-          <v-btn
-            variant="outlined"
-            class="my-4 me-auto text-capitalize rounded-lg"
-            block
-            :loading="isLoading"
-            @click="$emit('skip')"
-            >Skip Onboarding</v-btn
-          >
         </v-form>
+      </v-card>
+      <v-card elevation="0" class="align-center px-8 w-100">
+        <v-btn
+          variant="outlined"
+          class="me-auto text-capitalize rounded-lg"
+          block
+          :loading="isLoading"
+          @click="$emit('skip')"
+          >Skip Onboarding</v-btn
+        >
       </v-card>
 
       <v-dialog

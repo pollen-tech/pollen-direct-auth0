@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <p class="font-weight-bold">Welcome John Doe!</p>
+      <p class="font-weight-bold">Welcome {{ name }}!</p>
       <p>
         Complete the form below to view catalogs featuring millions of
         liquidation stock, and make your bulk purchase offers direct to global
@@ -27,6 +27,7 @@
 <script setup>
 const props = defineProps({
   step: { type: String, default: 1, required: false },
+  name: { type: String, default: "" },
 });
 </script>
 
