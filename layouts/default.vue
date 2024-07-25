@@ -237,7 +237,7 @@ const get_profile = async () => {
 };
 
 const on_login = async () => {
-  navigateToPollenPass("login");
+  navigateTo("/auth/login");
 };
 
 const on_signup = async () => {
@@ -246,7 +246,7 @@ const on_signup = async () => {
 
 const on_logout = async () => {
   localStorage.clear();
-  window.location.reload();
+  window.location.href = "/";
 };
 
 const navigateToPollenPass = (param) => {
