@@ -63,5 +63,9 @@ export const useSellerStore = defineStore("seller", {
       const req = await lmsApi(`/users/${param}`);
       return req;
     },
+    async get_user_channel(param: any) {
+      const req = await lmsApi(`/users/channel/${param}`);
+      return req;
+    },
   },
 });
