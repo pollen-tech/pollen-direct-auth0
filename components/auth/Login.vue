@@ -20,7 +20,7 @@
 
       <div class="mt-10 mb-5 text-center ga-2 d-flex flex-column">
         <h3 class="font-weight-bold">{{ title.title }}</h3>
-        <label class="font-weight-normal mt-1">{{ title.desc }} test</label>
+        <label class="font-weight-normal mt-1">{{ title.desc }} </label>
       </div>
 
       <v-card

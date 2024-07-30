@@ -254,7 +254,6 @@ const navigateToPollenPass = (param) => {
   url.searchParams.append("channel", "CH_POLLEN_DIRECT");
   url.searchParams.append("action", param);
   console.log(url);
-  debugger;
   navigateTo(url.toString(), { external: true });
 };
 

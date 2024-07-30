@@ -29,16 +29,7 @@ export const useSellerStore = defineStore("seller", {
       seller_company_types: [],
       seller_liquidate: [],
       sellerProfile: {},
-      category: [
-        {
-          category_id: 1,
-          category_name: "Hair Care",
-        },
-        {
-          category_id: 2,
-          category_name: "Skin Care",
-        },
-      ],
+      category: [],
       subCategory: [],
       order_unit: [
         {
@@ -63,8 +54,8 @@ export const useSellerStore = defineStore("seller", {
   actions: {
     async get_company_types() {
       // TODO change to directApi
-      const data = await lmsApi(`/onboard-company/company-type`);
-      this.seller_company_types = data;
+      const req = await directApi(`/onboard-company/company-type`);
+      this.seller_company_types = req.data;
     },
     async get_liquidation_unit() {
       const data = await lmsApi(`/onboard-company/liquidate-unit`);
@@ -74,14 +65,13 @@ export const useSellerStore = defineStore("seller", {
       const body = {
         company_name: param,
       };
-      // TODO change to directApi
-      const data = await lmsApi(
+      const { data } = await directApi(
         `/onboard-company?${new URLSearchParams(body).toString()}`
       );
       return data;
     },
     async get_company_profile(param: any) {
-      const data = await lmsApi(`/onboard-company/users/${param}`);
+      const data = await directApi(`/onboard-company/users/${param}`);
       return data;
     },
     async validate_user_exist(param: any) {
@@ -96,15 +86,13 @@ export const useSellerStore = defineStore("seller", {
       const req = await lmsApi(`/users/channel/${param}`);
       return req;
     },
-    async get_category(param: any) {
-      // const req = await lmsApi(`/users/category`);
-      // return req;
-      return this.category;
+    async get_category() {
+      const { data } = await directApi(`/onboard-company/category`);
+      this.category = data;
     },
-    async get_order_unit(param: any) {
-      // const req = await lmsApi(`/users/category`);
-      // return req;
-      return this.order_unit;
+    async get_order_unit() {
+      const { data } = await directApi(`/onboard-company/order-volume`);
+      this.order_unit = data;
     },
   },
 });

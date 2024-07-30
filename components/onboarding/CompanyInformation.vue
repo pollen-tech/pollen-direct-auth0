@@ -224,7 +224,7 @@ import { ref } from "vue";
 import { useSellerStore } from "@/stores/seller";
 import { directApi } from "@/services/api";
 
-const emit = defineEmits(["submit", "skip"]);
+const emit = defineEmits(["submit", "skip", "error"]);
 const props = defineProps({
   userId: { type: String, default: "" },
   companyTypes: { type: Array, default: [] },
@@ -251,21 +251,21 @@ const formRef = ref(null);
 const submit = async () => {
   try {
     const { valid } = await formRef.value.validate();
-    if (valid) {
+    if (valid && validateCompanyName == 1) {
       const body = {
+        user_id: props.userId,
         name: company.value.name,
         company_type_id: company.value.types,
         operation_country_id: company.value.country.country_id,
-        liquidate_unit_id: 0,
+        operation_country_name: company.value.country.name,
       };
       console.log(body);
       const req = await directApi("/onboard-company", "POST", body);
-      if (req) {
-        const res = { company_id: 100 };
-        emit("submit", res);
+      if (req.status_code == "CREATED") {
+        emit("submit", req?.data);
       } else {
+        emit("error", req);
         console.log(req);
-        return;
       }
     }
   } catch (err) {}

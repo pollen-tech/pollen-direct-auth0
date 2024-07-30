@@ -15,16 +15,16 @@
                 >Categories of Interest <span class="red--text">*</span>
               </label>
             </div>
-
             <v-combobox
               v-model="company.categories"
               :items="category"
-              item-value="category_id"
-              item-title="category_name"
+              item-value="name"
+              item-title="name"
               :return-object="false"
               placeholder="Main Category, Multi-Select (Mandatory)"
               variant="outlined"
               :rules="required"
+              multiple
             ></v-combobox>
 
             <v-combobox
@@ -183,7 +183,7 @@
 import { ref } from "vue";
 import { directApi } from "@/services/api";
 
-const emit = defineEmits(["submit", "previousPage"]);
+const emit = defineEmits(["submit", "previousPage", "error"]);
 
 const props = defineProps({
   userId: { type: String, default: "" },
@@ -208,15 +208,20 @@ const submit = async () => {
       const body = {
         company_id: props.companyId,
         order_volume_id: company.value.order_volume_id,
+        interest_categories: [], // company.value.categories,
         import_markets: extract_import_market(),
         target_markets: extract_target_market(),
       };
       console.log(body);
-      const req = await directApi("/onboard-company", "POST", body);
-      if (req) {
+      const req = await directApi(
+        `/onboard-company/${props.companyId}/interest`,
+        "POST",
+        body
+      );
+      if (!req.statusCode) {
         emit("submit");
       } else {
-        console.log(req);
+        emit("error", req);
         return;
       }
     }

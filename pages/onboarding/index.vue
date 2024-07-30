@@ -30,10 +30,12 @@
             <OnboardingStepper :step="step" :name="profile?.first_name" />
             <OnboardingCompanyInformation
               v-if="step == 1"
+              :user-id="user_id"
               :company-types="company_type"
               :countries="countries"
               @submit="next_step"
               @skip="goto_home_page"
+              @error="show_error"
             />
             <OnboardingCompanyInterest
               v-else
@@ -44,11 +46,13 @@
               :company-id="company_id"
               @previous-page="previous_step"
               @submit="goto_home_page"
+              @error="show_error"
             />
           </div>
         </v-col>
       </v-row>
     </v-container>
+    <NotificationStatus />
   </div>
 </template>
 
@@ -57,12 +61,15 @@ import { ref, onBeforeMount, nextTick } from "vue";
 import { useAuth } from "~/composables/auth0";
 import { useSellerStore } from "~/stores/seller";
 import { useCountryStore } from "~/stores/country";
+import { useCommonStore } from "~/stores/common";
 
 definePageMeta({
   middleware: "auth",
 });
 
 const { get_user_id } = useAuth();
+
+const commonStore = useCommonStore();
 
 const countryStore = useCountryStore();
 const { countries } = storeToRefs(countryStore);
@@ -93,7 +100,6 @@ onBeforeMount(async () => {
     if (!companyProfile?.data) {
       await get_profile();
       await seller_store.get_company_types();
-      await seller_store.get_liquidation_unit();
       await seller_store.get_category();
       await seller_store.get_order_unit();
       await countryStore.get_countries();
@@ -107,13 +113,32 @@ const goto_home_page = () => {
 
 const next_step = async (param) => {
   step.value = 2;
-  company_id.value = param.company_id;
+  company_id.value = param.id;
   await nextTick();
 };
 
 const previous_step = async () => {
   step.value = 1;
   await nextTick();
+};
+
+const show_error = (req) => {
+  let errorMsg = req.message;
+  if (typeof req.message !== "string") {
+    const formattedMessages = req.message.map((message) => {
+      const words = message.split(" ");
+      words[0] = "• " + words[0];
+      return words.join(" ");
+    });
+
+    errorMsg = formattedMessages.join(",<br/>");
+  }
+
+  commonStore.setShowNotification({
+    display: true,
+    status: "error",
+    msg: errorMsg,
+  });
 };
 </script>
 
