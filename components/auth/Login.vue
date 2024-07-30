@@ -6,7 +6,7 @@
         'margin-top': $vuetify.display.mobile ? '20px' : '10%',
       }"
     >
-      <div class="text-caption justify-center mb-12 d-flex">
+      <div class="text-caption justify-center mb-12 mx-10 d-flex">
         <img src="~/assets/image/pollen-direct-1.svg" class="mx-4" />
         <div>
           <p class="font-weight-bold mb-1">
@@ -17,7 +17,11 @@
           </p>
         </div>
       </div>
-      <h3>{{ title }}</h3>
+
+      <div class="mt-10 mb-5 text-center ga-2 d-flex flex-column">
+        <h3 class="font-weight-bold">{{ title.title }}</h3>
+        <label class="font-weight-normal mt-1">{{ title.desc }} test</label>
+      </div>
 
       <v-card
         :width="$vuetify.display.mobile ? 300 : 450"
@@ -27,45 +31,29 @@
         <v-form ref="formRef">
           <div class="my-4 text-start flex-1-0">
             <label class="font-weight-medium"
-              >Email <span class="red--text">*</span>
+              >Enter your Pollen Pass registered email
             </label>
 
             <v-text-field
               v-model="email"
               variant="outlined"
-              placeholder="Enter Email"
+              placeholder="Enter valid email address"
               :rules="required_email"
             ></v-text-field>
           </div>
-          <v-checkbox
-            v-model="check_accept_terms"
-            hide-details
-            @change="checkTerms()"
-          >
-            <template v-slot:label>
-              <div>
-                Accept Pollen
-                <a
-                  href="https://www.pollen.tech/privacy"
-                  target="_blank"
-                  style="color: #6a27b9"
-                  v-bind="props"
-                  @click.stop
-                >
-                  Terms and Conditions
-                </a>
-              </div>
-            </template>
-          </v-checkbox>
           <v-btn
-            :disabled="!check_accept_terms"
+            :disabled="!email"
             class="my-4 me-auto text-capitalize rounded-lg"
             color="#8431E7"
             block
             :loading="is_loading"
             @click="submit"
-            >Continue</v-btn
+            >Sign in</v-btn
           >
+          <p class="text-center" style="font-size: 14px">
+            Don't have Pollen Pass?
+            <a href="#" @click="on_signup" style="color: #8431e7"> Sign Up</a>
+          </p>
         </v-form>
       </v-card>
 
@@ -103,7 +91,11 @@ import { ref, reactive } from "vue";
 
 const emit = defineEmits(["submit"]);
 
-const title = ref("Enter your information");
+const runtimeConfig = useRuntimeConfig();
+const title = ref({
+  title: "Enter your information",
+  desc: "Login to Pollen Direct with Pollen Pass",
+});
 const notification = ref({
   title:
     "Get exclusive access to the latest Pollen Direct liquidation inventory catalogs with Pollen Pass",
@@ -131,7 +123,17 @@ const submit = async () => {
   }
 };
 
-const checkTerms = () => {};
+const on_signup = async () => {
+  navigateToPollenPass("signup");
+};
+
+const navigateToPollenPass = (param) => {
+  const url = new URL(runtimeConfig.public.pollenPassUrl);
+  url.searchParams.append("channel", "CH_POLLEN_DIRECT");
+  url.searchParams.append("action", param);
+  console.log(url);
+  navigateTo(url.toString(), { external: true });
+};
 
 onMounted(async () => {});
 </script>
