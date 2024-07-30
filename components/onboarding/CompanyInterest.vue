@@ -8,7 +8,7 @@
         elevation="0"
         class="align-center my-4"
       >
-        <v-form ref="form">
+        <v-form ref="formRef">
           <div class="my-2 text-start flex-1-0">
             <div class="d-flex">
               <label class="d-flex font-weight-medium"
@@ -17,8 +17,10 @@
             </div>
 
             <v-combobox
-              v-model="item.category"
-              :items="sellerStore.category"
+              v-model="company.categories"
+              :items="category"
+              item-value="category_id"
+              item-title="category_name"
               :return-object="false"
               placeholder="Main Category, Multi-Select (Mandatory)"
               variant="outlined"
@@ -26,8 +28,10 @@
             ></v-combobox>
 
             <v-combobox
-              v-model="item.subCategory"
-              :items="sellerStore.subCategory"
+              v-model="company.subCategory"
+              :items="subCategory"
+              item-value="id"
+              item-title="name"
               :return-object="false"
               placeholder="Sub Category (Optional)"
               variant="outlined"
@@ -41,15 +45,17 @@
                 >Market You Buy from <span class="red--text">*</span>
               </label>
             </div>
-
-            <v-combobox
-              v-model="item.marketYouBuyFrom"
-              :items="[]"
-              :return-object="false"
+            <v-autocomplete
+              v-model="company.import_markets"
+              item-value="id"
+              item-title="name"
+              :items="countries"
+              :return-object="true"
               placeholder="Choose one or more"
               variant="outlined"
               :rules="required"
-            ></v-combobox>
+              clearable
+            />
           </div>
 
           <div class="my-2 text-start flex-1-0">
@@ -59,14 +65,52 @@
               </label>
             </div>
 
-            <v-combobox
-              v-model="item.targetResaleMarket"
-              :items="[]"
-              :return-object="false"
-              placeholder="Choose one or more"
-              variant="outlined"
-              :rules="required"
-            ></v-combobox>
+            <p
+              v-if="target_resale_market.length < 1"
+              class="red--text text-caption"
+            >
+              Field is required
+            </p>
+            <div>
+              <template v-if="target_resale_market.length >= 0">
+                <span
+                  v-for="(target, i) in target_resale_market"
+                  v-bind:key="i"
+                >
+                  <v-chip
+                    v-if="target?.country?.name"
+                    :key="target.country.country_id"
+                    class="ma-2 text-truncate multiline-text"
+                    closable
+                    @click:close="remove_item(target)"
+                  >
+                    <template v-for="(city, c) in target.city" v-bind:key="c">
+                      <span v-if="c < 1"> {{ city.city_name }} , </span>
+                      <span v-if="c === 1">
+                        &nbsp; ( +{{ target.city.length - 1 }} others ), &nbsp;
+                        <v-tooltip activator="parent" location="end">
+                          <div
+                            v-for="(additionalCity, index) in target.city.slice(
+                              1
+                            )"
+                            :key="index"
+                          >
+                            {{ additionalCity.city_name }}
+                          </div>
+                        </v-tooltip>
+                      </span>
+                    </template>
+
+                    {{ target?.country?.name }}
+                  </v-chip>
+                </span>
+              </template>
+            </div>
+            <onboarding-country-city
+              :preselect="target_resale_market"
+              :countries="countries"
+              @apply-option="applyOption"
+            />
           </div>
           <div class="my-2 text-start flex-1-0">
             <div class="d-flex">
@@ -76,8 +120,10 @@
             </div>
 
             <v-combobox
-              v-model="item.monthlyOrderVolume"
-              :items="[]"
+              v-model="company.order_volume_id"
+              item-value="id"
+              item-title="name"
+              :items="orderUnit"
               :return-object="false"
               placeholder="Choose one or more"
               variant="outlined"
@@ -135,50 +181,106 @@
 
 <script setup>
 import { ref } from "vue";
-import { useSellerStore } from "@/stores/seller";
+import { directApi } from "@/services/api";
 
 const emit = defineEmits(["submit", "previousPage"]);
-const sellerStore = useSellerStore();
-const companyType = ref([
-  {
-    id: 1,
-    name: "Type A",
-    title: "Type A",
-    description: "Description for Type A",
-  },
-  {
-    id: 2,
-    name: "Type B",
-    title: "Type B",
-    description: "Description for Type B",
-  },
-  {
-    id: 3,
-    name: "Type C",
-    title: "Type C",
-    description: "Description for Type C",
-  },
-]);
 
-const items = ref(["Programming", "Design", "Vue", "Vuetify"]);
-const item = ref({ items: [] });
-const cities = ref([]);
-const required = [(v) => !!v || "Field is required"];
+const props = defineProps({
+  userId: { type: String, default: "" },
+  category: { type: Array, default: [] },
+  subCategory: { type: Array, default: [] },
+  countries: { type: Array, default: [] },
+  orderUnit: { type: Array, default: [] },
+  companyId: { type: String, default: "" },
+});
+
 const isLoading = ref(false);
 const showDialog = ref(false);
-const validateCompanyName = ref(0);
-const selectedItem = ref(null);
-const checkAcceptTerms = ref(false);
+const target_resale_market = ref([]);
+const required = [(v) => !!v || "Field is required"];
+const formRef = ref(null);
+const company = ref({});
 
-const fetchCity = () => {};
-const submit = () => {
-  emit("submit");
+const submit = async () => {
+  try {
+    const { valid } = await formRef.value.validate();
+    if (valid) {
+      const body = {
+        company_id: props.companyId,
+        order_volume_id: company.value.order_volume_id,
+        import_markets: extract_import_market(),
+        target_markets: extract_target_market(),
+      };
+      console.log(body);
+      const req = await directApi("/onboard-company", "POST", body);
+      if (req) {
+        emit("submit");
+      } else {
+        console.log(req);
+        return;
+      }
+    }
+  } catch (err) {}
 };
-const onValidateCompanyName = () => {
-  console.log(item.value);
-  validateCompanyName.value = 2;
+
+const remove_item = (param) => {
+  const city_ids = [];
+  console.log(param);
+  if (item.value.targetResaleMarketCountry[0].country_id) {
+    const extractCn = item.value.targetResaleMarketCountry.filter(
+      (item) => item.id !== param.country.id
+    );
+    item.value.targetResaleMarketCountry = extractCn;
+  }
 };
-const checkTerms = () => {};
+
+const applyOption = (param) => {
+  target_resale_market.value = param;
+  company.value.target_markets_city = format_location_city(param);
+  company.value.target_markets_country = format_location_country(param);
+};
+
+const format_location_city = (param) => {
+  const formattedArray = param.flatMap((entry) =>
+    entry.city.map((city) => ({
+      country_name: entry.country.name,
+      country_id: entry.country.country_id,
+      city_id: city.id,
+      city_name: city.name,
+    }))
+  );
+
+  return formattedArray;
+};
+const format_location_country = (param) => {
+  const formattedArray = param.map((entry) => ({
+    country_id: entry.country.country_id,
+    name: entry.country.name,
+  }));
+
+  return formattedArray;
+};
+
+const extract_target_market = () => {
+  const res = target_resale_market.value.map((item) => ({
+    country_id: item.country.country_id,
+    country_name: item.country.name,
+    cities: item.city.map((city) => ({
+      city_id: city.city_id,
+      city_name: city.city_name,
+    })),
+  }));
+  return res;
+};
+
+const extract_import_market = () => {
+  const res = {
+    country_id: company.value.import_markets.country_id,
+    country_name: company.value.import_markets.name,
+  };
+
+  return [res];
+};
 </script>
 <style>
 .custom-icon > .v-overlay__content {

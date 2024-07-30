@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { lmsApi } from "~/services/api";
+import { lmsApi, directApi } from "~/services/api";
 
 export const useSellerStore = defineStore("seller", {
   state: () => {
@@ -26,26 +26,55 @@ export const useSellerStore = defineStore("seller", {
         { id: 5, title: "Logistics", description: "Fulfillment Facility" },
         { id: 6, title: "Retailer", description: "Sells direct to consumer" },
       ],
-      sellerCompanyTypes: [],
-      sellerLiquidate: [],
+      seller_company_types: [],
+      seller_liquidate: [],
       sellerProfile: {},
-      category: [],
+      category: [
+        {
+          category_id: 1,
+          category_name: "Hair Care",
+        },
+        {
+          category_id: 2,
+          category_name: "Skin Care",
+        },
+      ],
       subCategory: [],
+      order_unit: [
+        {
+          id: 1,
+          name: "Carton",
+        },
+        {
+          id: 2,
+          name: "Pallet",
+        },
+        {
+          id: 3,
+          name: "20ft Container",
+        },
+        {
+          id: 4,
+          name: "40ft Container",
+        },
+      ],
     };
   },
   actions: {
-    async getCompanyTypes() {
+    async get_company_types() {
+      // TODO change to directApi
       const data = await lmsApi(`/onboard-company/company-type`);
-      this.sellerCompanyTypes = data;
+      this.seller_company_types = data;
     },
-    async getLiquidateUnit() {
+    async get_liquidation_unit() {
       const data = await lmsApi(`/onboard-company/liquidate-unit`);
-      this.sellerLiquidate = data;
+      this.seller_liquidate = data;
     },
-    async validateCompanyNameExist(param: string) {
+    async validate_company_exist(param: string) {
       const body = {
         company_name: param,
       };
+      // TODO change to directApi
       const data = await lmsApi(
         `/onboard-company?${new URLSearchParams(body).toString()}`
       );
@@ -66,6 +95,16 @@ export const useSellerStore = defineStore("seller", {
     async get_user_channel(param: any) {
       const req = await lmsApi(`/users/channel/${param}`);
       return req;
+    },
+    async get_category(param: any) {
+      // const req = await lmsApi(`/users/category`);
+      // return req;
+      return this.category;
+    },
+    async get_order_unit(param: any) {
+      // const req = await lmsApi(`/users/category`);
+      // return req;
+      return this.order_unit;
     },
   },
 });

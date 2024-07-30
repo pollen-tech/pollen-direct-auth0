@@ -10,9 +10,8 @@
         :width="$vuetify.display.mobile ? 300 : 450"
         elevation="0"
         class="align-center my-4"
-        :disabled="true"
       >
-        <v-form ref="form">
+        <v-form ref="formRef">
           <div class="my-2 text-start flex-1-0">
             <div class="d-flex">
               <label class="d-flex font-weight-medium"
@@ -47,7 +46,7 @@
             </div>
 
             <v-text-field
-              v-model="item.companyName"
+              v-model="company.name"
               variant="outlined"
               placeholder="Enter Company Name"
               :rules="required"
@@ -59,8 +58,10 @@
               >Company Type <span class="red--text">*</span>
             </label>
             <v-combobox
-              v-model="item.types"
-              :items="sellerStore.companyType"
+              v-model="company.types"
+              :items="companyTypes"
+              item-value="id"
+              item-title="name"
               :return-object="false"
               placeholder="Select Company Type"
               variant="outlined"
@@ -126,31 +127,16 @@
             <v-row>
               <v-col>
                 <v-autocomplete
-                  v-model="item.country"
+                  v-model="company.country"
                   item-value="id"
                   item-title="name"
-                  :items="[]"
-                  :return-object="false"
+                  :items="countries"
+                  :return-object="true"
                   placeholder="Choose One"
                   variant="outlined"
                   :rules="required"
                   clearable
-                  @update:model-value="fetchCity"
               /></v-col>
-              <v-col>
-                <v-autocomplete
-                  v-model="item.city"
-                  item-value="id"
-                  item-title="name"
-                  :items="cities"
-                  :return-object="false"
-                  placeholder="Choose One"
-                  hint="*Optional"
-                  variant="outlined"
-                  :disabled="!item.country"
-                  persistent-hint
-                ></v-autocomplete
-              ></v-col>
             </v-row>
           </div>
           <v-checkbox
@@ -174,6 +160,7 @@
             </template>
           </v-checkbox>
           <v-btn
+            :disabled="!checkAcceptTerms"
             class="my-4 me-auto text-capitalize rounded-lg"
             color="#8431E7"
             block
@@ -181,9 +168,18 @@
             @click="submit"
             >Continue</v-btn
           >
+          <v-btn
+            variant="outlined"
+            class="me-auto text-capitalize rounded-lg"
+            block
+            :loading="isLoading"
+            style="z-index: 999"
+            @click="$emit('skip')"
+            >Skip Onboarding</v-btn
+          >
         </v-form>
       </v-card>
-      <v-card elevation="0" class="align-center px-8 w-100">
+      <!-- <v-card elevation="0" class="align-center px-8 w-100">
         <v-btn
           variant="outlined"
           class="me-auto text-capitalize rounded-lg"
@@ -192,7 +188,7 @@
           @click="$emit('skip')"
           >Skip Onboarding</v-btn
         >
-      </v-card>
+      </v-card> -->
 
       <v-dialog
         v-model="showDialog"
@@ -226,47 +222,67 @@
 <script setup>
 import { ref } from "vue";
 import { useSellerStore } from "@/stores/seller";
+import { directApi } from "@/services/api";
 
 const emit = defineEmits(["submit", "skip"]);
-const sellerStore = useSellerStore();
-const companyType = ref([
-  {
-    id: 1,
-    name: "Type A",
-    title: "Type A",
-    description: "Description for Type A",
-  },
-  {
-    id: 2,
-    name: "Type B",
-    title: "Type B",
-    description: "Description for Type B",
-  },
-  {
-    id: 3,
-    name: "Type C",
-    title: "Type C",
-    description: "Description for Type C",
-  },
-]);
+const props = defineProps({
+  userId: { type: String, default: "" },
+  companyTypes: { type: Array, default: [] },
+  countries: { type: Array, default: [] },
+});
 
-const items = ref(["Programming", "Design", "Vue", "Vuetify"]);
-const item = ref({ items: [] });
-const cities = ref([]);
+const sellerStore = useSellerStore();
+
+const company = ref({});
+
 const required = [(v) => !!v || "Field is required"];
 const isLoading = ref(false);
 const showDialog = ref(false);
 const validateCompanyName = ref(0);
-const selectedItem = ref(null);
 const checkAcceptTerms = ref(false);
+const formRef = ref(null);
 
-const fetchCity = () => {};
-const submit = () => {
-  emit("submit");
+// const fetchCity = async (val) => {
+//   if (val?.country_id) {
+//     const city = await countryStore.get_cities(val?.country_id);
+//     console.log(city);
+//   }
+// };
+const submit = async () => {
+  try {
+    const { valid } = await formRef.value.validate();
+    if (valid) {
+      const body = {
+        name: company.value.name,
+        company_type_id: company.value.types,
+        operation_country_id: company.value.country.country_id,
+        liquidate_unit_id: 0,
+      };
+      console.log(body);
+      const req = await directApi("/onboard-company", "POST", body);
+      if (req) {
+        const res = { company_id: 100 };
+        emit("submit", res);
+      } else {
+        console.log(req);
+        return;
+      }
+    }
+  } catch (err) {}
 };
-const onValidateCompanyName = () => {
-  console.log(item.value);
-  validateCompanyName.value = 2;
+
+const onValidateCompanyName = async () => {
+  try {
+    const req = await sellerStore.validate_company_exist(company.value.name);
+
+    if (req?.id) {
+      validateCompanyName.value = 2;
+    } else {
+      validateCompanyName.value = 1;
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 const checkTerms = () => {};
 </script>

@@ -115,7 +115,7 @@
           </h5>
           <h6 class="font-weight-regular">
             Member ID:
-            {{ profile?.auth_id || "-" }}
+            {{ profile?.pollen_pass_id || "-" }}
           </h6>
         </div>
       </v-skeleton-loader>
@@ -253,6 +253,8 @@ const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
   url.searchParams.append("channel", "CH_POLLEN_DIRECT");
   url.searchParams.append("action", param);
+  console.log(url);
+  debugger;
   navigateTo(url.toString(), { external: true });
 };
 

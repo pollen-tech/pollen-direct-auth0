@@ -9,8 +9,8 @@
           class="text-grey-darken-1 cursor-pointer text-decoration-none text-capitalize text-body-2"
           external
         >
-          <v-icon>mdi-chevron-left</v-icon> Previous</NuxtLink
-        >
+          <v-icon>mdi-chevron-left</v-icon> Previous
+        </NuxtLink>
       </div>
       <v-row
         no-gutters
@@ -26,16 +26,23 @@
           <OnboardingSideBar />
         </v-col>
         <v-col cols="12" md="7" class="d-flex justify-center">
-          <div class="w-75 d-flex flex-column h-100 py-8 mt-10">
+          <div v-if="user_id" class="w-75 d-flex flex-column h-100 py-8 mt-10">
             <OnboardingStepper :step="step" :name="profile?.first_name" />
             <OnboardingCompanyInformation
-              v-if="step == '1'"
+              v-if="step == 1"
+              :company-types="company_type"
+              :countries="countries"
               @submit="next_step"
               @skip="goto_home_page"
             />
             <OnboardingCompanyInterest
-              v-if="step == '2'"
-              @previous-page="step = '1'"
+              v-else
+              :category="category"
+              :sub-category="sub_category"
+              :order-unit="order_unit"
+              :countries="countries"
+              :company-id="company_id"
+              @previous-page="previous_step"
               @submit="goto_home_page"
             />
           </div>
@@ -46,40 +53,67 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-
+import { ref, onBeforeMount, nextTick } from "vue";
+import { useAuth } from "~/composables/auth0";
 import { useSellerStore } from "~/stores/seller";
+import { useCountryStore } from "~/stores/country";
+
+definePageMeta({
+  middleware: "auth",
+});
 
 const { get_user_id } = useAuth();
 
+const countryStore = useCountryStore();
+const { countries } = storeToRefs(countryStore);
+
 const seller_store = useSellerStore();
-const { get_user_profile } = seller_store;
+const { get_user_profile, get_company_profile } = seller_store;
+const company_type = computed(() => seller_store.seller_company_types);
+const category = computed(() => seller_store.category);
+const order_unit = computed(() => seller_store.order_unit);
+const sub_category = ref([{ id: 1, name: "test" }]);
 
 const user_id = get_user_id();
 
-const step = ref("1");
+const step = ref(1);
 const profile = ref({});
-
-onBeforeMount(async () => {
-  if (user_id) {
-    await get_profile();
-  }
-});
+const company_id = ref("");
 
 const get_profile = async () => {
   const req = await get_user_profile(user_id);
   if (req) {
-    if (JSON.stringify(profile.value) !== JSON.stringify(req)) {
-      profile.value = req.data ? req.data : req;
-    }
+    profile.value = req.data ? req.data : req;
   }
 };
+
+onBeforeMount(async () => {
+  if (user_id) {
+    const companyProfile = await get_company_profile(user_id);
+    if (!companyProfile?.data) {
+      await get_profile();
+      await seller_store.get_company_types();
+      await seller_store.get_liquidation_unit();
+      await seller_store.get_category();
+      await seller_store.get_order_unit();
+      await countryStore.get_countries();
+    }
+  }
+});
 
 const goto_home_page = () => {
   window.location.href = "/";
 };
-const next_step = () => {
+
+const next_step = async (param) => {
   step.value = 2;
+  company_id.value = param.company_id;
+  await nextTick();
+};
+
+const previous_step = async () => {
+  step.value = 1;
+  await nextTick();
 };
 </script>
 

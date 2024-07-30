@@ -90,7 +90,7 @@
               <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="0">
                   <v-container fluid>
-                    <v-row>
+                    <v-row class="mb-6">
                       <v-col class="ma-2">
                         <p class="font-weight-bold text-body-1 mb-6">
                           Contact Information
@@ -128,9 +128,24 @@
                           </div>
                           <div class="my-2">
                             <label class="font-weight-medium text-body-2"
-                              >Phone Number
-                              <span class="red--text">*</span></label
-                            >
+                              >Phone Number <span class="red--text">*</span>
+                              <v-chip
+                                v-if="profile.phone_verified"
+                                variant="tonal"
+                                color="#15803D"
+                                density="comfortable"
+                                size="x-small"
+                                text="Verified"
+                                class="mt-n1 ml-1" />
+                              <v-chip
+                                v-else
+                                variant="tonal"
+                                color="#B45309"
+                                density="comfortable"
+                                size="x-small"
+                                text="Not Verified"
+                                class="mt-n1 ml-1"
+                            /></label>
                             <VueTelInput
                               v-model="profile.phone_no"
                               mode="international"
@@ -157,8 +172,26 @@
                           </div>
                           <div class="my-2">
                             <label class="font-weight-medium text-body-2"
-                              >Email <span class="red--text">*</span></label
-                            >
+                              >Email <span class="red--text">*</span>
+                              <v-chip
+                                v-if="profile.email"
+                                variant="tonal"
+                                color="#15803D"
+                                density="comfortable"
+                                size="x-small"
+                                text="Verified"
+                                class="mt-n1 ml-1"
+                              />
+                              <v-chip
+                                v-else
+                                variant="tonal"
+                                color="#B45309"
+                                density="comfortable"
+                                size="x-small"
+                                text="Not Verified"
+                                class="mt-n1 ml-1"
+                              />
+                            </label>
 
                             <v-text-field
                               v-model="profile.email"
@@ -169,7 +202,7 @@
                             ></v-text-field>
                           </div>
                         </v-sheet>
-                        <v-sheet class="ma-2 pa-6 bg-white">
+                        <v-sheet class="mt-4 pa-6 pb-4 bg-white">
                           <v-btn
                             text="Save Changes"
                             color="#8431e7"
@@ -231,6 +264,8 @@
                         </div>
                       </v-col>
                     </v-row>
+
+                    <ProfileAccount />
                   </v-container>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="1">

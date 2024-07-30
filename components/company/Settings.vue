@@ -145,7 +145,7 @@
                         </label>
                         <v-combobox
                           v-model="company.company_type_id"
-                          :items="seller_store.sellerCompanyTypes"
+                          :items="seller_store.seller_company_types"
                           item-value="id"
                           item-title="name"
                           :return-object="true"
@@ -213,7 +213,7 @@
                           v-model="company.category"
                           item-value="id"
                           item-title="name"
-                          :items="seller_store.sellerLiquidate"
+                          :items="seller_store.seller_liquidate"
                           :return-object="true"
                           placeholder="Choose Multiple"
                           variant="outlined"
@@ -330,14 +330,14 @@ const required = [(v) => !!v || "Field is required"];
 
 onUpdated(async () => {
   if (props.dialog_value && !company.value.id) {
-    seller_store.getCompanyTypes();
-    seller_store.getLiquidateUnit();
-    countryStore.getCountries();
-    await getCompany();
+    seller_store.get_company_types();
+    seller_store.get_liquidation_unit();
+    countryStore.get_countries();
+    await get_company();
   }
 });
 
-const getCompany = async () => {
+const get_company = async () => {
   const req = await get_company_profile(props.user_id);
   if (req) {
     if (JSON.stringify(company.value) !== JSON.stringify(req)) {

@@ -18,7 +18,9 @@
     </ul>
     <p class="text-start text-white font-weight-medium mt-4">
       - Powered by
-      <a class="text-decoration-underline font-weight-bold" style="color: white"
+      <a
+        class="text-decoration-underline font-weight-bold"
+        style="color: #fde68a"
         >Pollen.tech</a
       >
     </p>
