@@ -16,7 +16,7 @@
         class="py-0"
         :style="{
           height: '15px',
-          backgroundColor: step !== '2' ? '#e5e7eb' : '#8431e7',
+          backgroundColor: step !== 2 ? '#e5e7eb' : '#8431e7',
         }"
       >
       </v-col>

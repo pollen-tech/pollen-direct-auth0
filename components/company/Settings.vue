@@ -214,7 +214,7 @@
                           v-model="company.category"
                           item-value="id"
                           item-title="name"
-                          :items="seller_store.seller_liquidate"
+                          :items="seller_store.category"
                           :return-object="true"
                           placeholder="Choose Multiple"
                           variant="outlined"
@@ -229,12 +229,12 @@
                           <span class="red--text">*</span></label
                         >
                         <v-autocomplete
-                          v-model="company.category"
+                          v-model="company.import_markets"
                           item-value="id"
                           item-title="name"
-                          :items="seller_store.sellerLiquidate"
+                          :items="seller_store.countries"
                           :return-object="true"
-                          placeholder="Choose Multiple"
+                          placeholder="Choose one or more"
                           variant="outlined"
                           :rules="required"
                           clearable
@@ -256,7 +256,6 @@
                                 v-if="target?.country?.name"
                                 :key="target.country.country_id"
                                 class="my-2 text-truncate multiline-text"
-                                closable
                                 @click:close="remove_item(target)"
                               >
                                 <template
@@ -295,12 +294,12 @@
                           </template>
                         </div>
                         <v-autocomplete
-                          v-model="company.category"
+                          v-model="company.target_markets"
                           item-value="id"
                           item-title="name"
-                          :items="seller_store.sellerLiquidate"
+                          :items="countries"
                           :return-object="true"
-                          placeholder="Choose Multiple"
+                          placeholder="Choose one or more"
                           variant="outlined"
                           :rules="required"
                           clearable
@@ -373,7 +372,6 @@ const company = ref({
   name: "",
   company_type_id: "",
   country: "",
-  liquidate_unit_id: "",
 });
 const required = [(v) => !!v || "Field is required"];
 const target_resale_market = ref([]);
@@ -381,7 +379,8 @@ const target_resale_market = ref([]);
 onUpdated(async () => {
   if (props.dialog_value && !company.value.id) {
     seller_store.get_company_types();
-    seller_store.get_liquidation_unit();
+    seller_store.get_order_unit();
+    seller_store.get_category();
     countryStore.get_countries();
     await get_company();
   }
@@ -400,16 +399,38 @@ const get_company = async () => {
 const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
-    company.value.interest_categories = req.data.interest_categories;
-    company.value.import_markets = req.data.import_markets;
-    company.value.target_markets = req.data.target_markets;
+    company.value.category = extract_data_interest_category(
+      req.data.interest_categories
+    );
+    company.value.import_markets = extract_data_market_resale(
+      req.data.import_markets
+    );
     target_resale_market.value = extract_data_target_resale(
       req.data.target_markets
     );
-
-    console.log(company.value);
-    console.log(target_resale_market.value);
   }
+};
+
+const extract_data_market_resale = (param) => {
+  const formattedArray = param.map((entry) => {
+    const res = {};
+    res.id = entry.country_id;
+    res.name = entry.country_name;
+    return res;
+  });
+
+  return formattedArray;
+};
+
+const extract_data_interest_category = (param) => {
+  const formattedArray = param.map((entry) => {
+    const res = {};
+    res.id = entry.category_id;
+    res.name = entry.category_name;
+    return res;
+  });
+
+  return formattedArray;
 };
 
 const extract_data_target_resale = (param) => {

@@ -265,7 +265,7 @@
                       </v-col>
                     </v-row>
 
-                    <ProfileAccount />
+                    <!-- <ProfileAccount /> -->
                   </v-container>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="1">
