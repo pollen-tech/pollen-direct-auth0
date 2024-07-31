@@ -37,7 +37,6 @@
               variant="outlined"
               persistent-hint="true"
               class="mb-5"
-              :rules="required"
               :disabled="true"
               :hint="'message'"
             >
@@ -157,7 +156,6 @@
             variant="outlined"
             class="my-4 me-auto text-capitalize rounded-lg"
             block
-            :loading="isLoading"
             @click="$emit('previousPage')"
             >Return to Previous Step</v-btn
           >
@@ -240,6 +238,8 @@ const submit = async () => {
         emit("error", req);
         return;
       }
+    } else {
+      isLoading.value = false;
     }
   } catch (err) {
     isLoading.value = false;

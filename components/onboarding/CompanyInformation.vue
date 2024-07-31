@@ -242,7 +242,7 @@ const formRef = ref(null);
 const submit = async () => {
   try {
     const { valid } = await formRef.value.validate();
-    if (valid && validateCompanyName == 1) {
+    if (valid && validateCompanyName.value == 1) {
       const body = {
         user_id: props.userId,
         name: company.value.name,
