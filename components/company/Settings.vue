@@ -392,7 +392,6 @@ const get_company = async () => {
   if (req?.data) {
     if (JSON.stringify(company.value) !== JSON.stringify(req)) {
       company.value = req.data;
-      debugger;
       get_interest();
     }
   }
