@@ -18,7 +18,7 @@
         <v-autocomplete
           v-model="city"
           item-value="city_id"
-          item-title="city_name"
+          item-title="name"
           :items="cityList"
           :return-object="true"
           placeholder="City"

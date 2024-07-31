@@ -1,10 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-column align-center">
-      <h3>
-        Complete your Company Information
-        <span class="text-caption text-grey">(NOT AVAILABLE)</span>
-      </h3>
+      <h3>Complete your Company Information</h3>
 
       <v-card
         :width="$vuetify.display.mobile ? 300 : 450"
@@ -242,12 +239,6 @@ const validateCompanyName = ref(0);
 const checkAcceptTerms = ref(false);
 const formRef = ref(null);
 
-// const fetchCity = async (val) => {
-//   if (val?.country_id) {
-//     const city = await countryStore.get_cities(val?.country_id);
-//     console.log(city);
-//   }
-// };
 const submit = async () => {
   try {
     const { valid } = await formRef.value.validate();

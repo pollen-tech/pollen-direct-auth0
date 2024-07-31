@@ -18,9 +18,9 @@
             <v-combobox
               v-model="company.categories"
               :items="category"
-              item-value="name"
+              item-value="id"
               item-title="name"
-              :return-object="false"
+              :return-object="true"
               placeholder="Main Category, Multi-Select (Mandatory)"
               variant="outlined"
               :rules="required"
@@ -35,8 +35,16 @@
               :return-object="false"
               placeholder="Sub Category (Optional)"
               variant="outlined"
+              persistent-hint="true"
+              class="mb-5"
               :rules="required"
-            ></v-combobox>
+              :disabled="true"
+              :hint="'message'"
+            >
+              <template #message>
+                <div class="ml-n3">Not Available</div>
+              </template></v-combobox
+            >
           </div>
 
           <div class="my-2 text-start flex-1-0">
@@ -80,14 +88,20 @@
                   <v-chip
                     v-if="target?.country?.name"
                     :key="target.country.country_id"
-                    class="ma-2 text-truncate multiline-text"
+                    class="my-2 text-truncate multiline-text"
                     closable
                     @click:close="remove_item(target)"
                   >
                     <template v-for="(city, c) in target.city" v-bind:key="c">
-                      <span v-if="c < 1"> {{ city.city_name }} , </span>
+                      <span
+                        v-if="c < 1"
+                        class="text-truncate"
+                        style="max-width: 90px"
+                      >
+                        {{ city.name }} ,
+                      </span>
                       <span v-if="c === 1">
-                        &nbsp; ( +{{ target.city.length - 1 }} others ), &nbsp;
+                        ( +{{ target.city.length - 1 }} others ),&nbsp;
                         <v-tooltip activator="parent" location="end">
                           <div
                             v-for="(additionalCity, index) in target.city.slice(
@@ -95,7 +109,7 @@
                             )"
                             :key="index"
                           >
-                            {{ additionalCity.city_name }}
+                            {{ additionalCity.name }}
                           </div>
                         </v-tooltip>
                       </span>
@@ -203,12 +217,13 @@ const company = ref({});
 
 const submit = async () => {
   try {
+    isLoading.value = true;
     const { valid } = await formRef.value.validate();
     if (valid) {
       const body = {
         company_id: props.companyId,
         order_volume_id: company.value.order_volume_id,
-        interest_categories: [], // company.value.categories,
+        interest_categories: extract_categories(), // company.value.categories,
         import_markets: extract_import_market(),
         target_markets: extract_target_market(),
       };
@@ -218,6 +233,7 @@ const submit = async () => {
         "POST",
         body
       );
+      isLoading.value = false;
       if (!req.statusCode) {
         emit("submit");
       } else {
@@ -225,17 +241,18 @@ const submit = async () => {
         return;
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    isLoading.value = false;
+  }
 };
 
 const remove_item = (param) => {
-  const city_ids = [];
   console.log(param);
-  if (item.value.targetResaleMarketCountry[0].country_id) {
-    const extractCn = item.value.targetResaleMarketCountry.filter(
-      (item) => item.id !== param.country.id
+  if (target_resale_market.value[0]) {
+    const extract_cn = target_resale_market.value.filter(
+      (item) => item.country.country_id !== param.country.country_id
     );
-    item.value.targetResaleMarketCountry = extractCn;
+    target_resale_market.value = extract_cn;
   }
 };
 
@@ -272,7 +289,7 @@ const extract_target_market = () => {
     country_name: item.country.name,
     cities: item.city.map((city) => ({
       city_id: city.city_id,
-      city_name: city.city_name,
+      city_name: city.name,
     })),
   }));
   return res;
@@ -285,6 +302,15 @@ const extract_import_market = () => {
   };
 
   return [res];
+};
+
+const extract_categories = () => {
+  const formattedArray = company.value.categories.map((entry) => ({
+    category_id: entry.id,
+    category_name: entry.name,
+  }));
+
+  return formattedArray;
 };
 </script>
 <style>
