@@ -86,6 +86,7 @@
               <v-container fluid>
                 <p class="font-weight-bold text-body-1 mb-6 mx-2">
                   Pollen Direct Company Information
+                  <span class="text-caption text-grey">(NOT AVAILABLE)</span>
                 </p>
                 <v-row>
                   <v-col class="ma-2">
@@ -99,7 +100,7 @@
                         >
 
                         <v-text-field
-                          v-model="company.id"
+                          v-model="company.account_id"
                           variant="outlined"
                           placeholder="Enter First Name"
                           :rules="required"
@@ -148,7 +149,7 @@
                           :items="seller_store.seller_company_types"
                           item-value="id"
                           item-title="name"
-                          :return-object="true"
+                          :return-object="false"
                           placeholder="Select Company Type"
                           variant="outlined"
                           :rules="required"
@@ -245,6 +246,54 @@
                           >Target Resale Market
                           <span class="red--text">*</span></label
                         >
+                        <div>
+                          <template v-if="target_resale_market.length >= 0">
+                            <span
+                              v-for="(target, i) in target_resale_market"
+                              v-bind:key="i"
+                            >
+                              <v-chip
+                                v-if="target?.country?.name"
+                                :key="target.country.country_id"
+                                class="my-2 text-truncate multiline-text"
+                                closable
+                                @click:close="remove_item(target)"
+                              >
+                                <template
+                                  v-for="(city, c) in target.city"
+                                  v-bind:key="c"
+                                >
+                                  <span
+                                    v-if="c < 1"
+                                    class="text-truncate"
+                                    style="max-width: 90px"
+                                  >
+                                    {{ city.name }} ,
+                                  </span>
+                                  <span v-if="c === 1">
+                                    ( +{{ target.city.length - 1 }} others
+                                    ),&nbsp;
+                                    <v-tooltip
+                                      activator="parent"
+                                      location="end"
+                                    >
+                                      <div
+                                        v-for="(
+                                          additionalCity, index
+                                        ) in target.city.slice(1)"
+                                        :key="index"
+                                      >
+                                        {{ additionalCity.name }}
+                                      </div>
+                                    </v-tooltip>
+                                  </span>
+                                </template>
+
+                                {{ target?.country?.name }}
+                              </v-chip>
+                            </span>
+                          </template>
+                        </div>
                         <v-autocomplete
                           v-model="company.category"
                           item-value="id"
@@ -264,11 +313,11 @@
                           <span class="red--text">*</span></label
                         >
                         <v-autocomplete
-                          v-model="company.category"
+                          v-model="company.order_volume_id"
                           item-value="id"
                           item-title="name"
-                          :items="seller_store.sellerLiquidate"
-                          :return-object="true"
+                          :items="seller_store.order_unit"
+                          :return-object="false"
                           placeholder="Select"
                           variant="outlined"
                           :rules="required"
@@ -312,7 +361,7 @@ const emit = defineEmits(["close"]);
 const runtimeConfig = useRuntimeConfig();
 
 const seller_store = useSellerStore();
-const { get_company_profile } = seller_store;
+const { get_company_profile, get_company_interest } = seller_store;
 const countryStore = useCountryStore();
 const { countries } = storeToRefs(countryStore);
 
@@ -320,13 +369,14 @@ const dialogVisible = ref(false);
 const is_available = ref(false);
 const form_disabled = ref(true);
 const company = ref({
-  id: "",
+  account_id: "",
   name: "",
   company_type_id: "",
   country: "",
   liquidate_unit_id: "",
 });
 const required = [(v) => !!v || "Field is required"];
+const target_resale_market = ref([]);
 
 onUpdated(async () => {
   if (props.dialog_value && !company.value.id) {
@@ -339,13 +389,48 @@ onUpdated(async () => {
 
 const get_company = async () => {
   const req = await get_company_profile(props.user_id);
-  if (req) {
+  if (req?.data) {
     if (JSON.stringify(company.value) !== JSON.stringify(req)) {
-      company.value = req;
+      company.value = req.data;
+      debugger;
+      get_interest();
     }
   }
 };
 
+const get_interest = async () => {
+  const req = await get_company_interest(company.value.id);
+  if (req?.data) {
+    company.value.interest_categories = req.data.interest_categories;
+    company.value.import_markets = req.data.import_markets;
+    company.value.target_markets = req.data.target_markets;
+    target_resale_market.value = extract_data_target_resale(
+      req.data.target_markets
+    );
+
+    console.log(company.value);
+    console.log(target_resale_market.value);
+  }
+};
+
+const extract_data_target_resale = (param) => {
+  const formattedArray = param.map((entry) => {
+    const res = {};
+    res.country = {
+      country_id: entry.country_id,
+      name: entry.country_name,
+    };
+    res.city = entry.cities.map((ct) => {
+      ct.name = ct.city_name;
+      delete ct.city_name;
+      return ct;
+    });
+
+    return res;
+  });
+
+  return formattedArray;
+};
 const closeDialog = () => {
   dialogVisible.value = false;
   emit("close");

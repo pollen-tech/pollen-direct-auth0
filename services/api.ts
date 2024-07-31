@@ -17,10 +17,10 @@ export const directApi = async (
   }
 
   try {
-    const fetchData = await fetch(
-      new URL(url, config.public.directBackendUrl),
-      init
+    const combinedUrl = new URL(
+      config.public.directBackendUrl.replace(/\/$/, "") + url
     );
+    const fetchData = await fetch(combinedUrl, init);
 
     if (fetchData.status !== 204) {
       return await fetchData.json();
@@ -49,11 +49,10 @@ export const onboardingApi = async (
   }
 
   try {
-    const fetchData = await fetch(
-      new URL(url, config.public.userOnboardBackendUrl),
-      init
+    const combinedUrl = new URL(
+      config.public.userOnboardBackendUrl.replace(/\/$/, "") + url
     );
-
+    const fetchData = await fetch(combinedUrl, init);
     if (fetchData.status !== 204) {
       return await fetchData.json();
     }

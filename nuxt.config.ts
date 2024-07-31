@@ -52,8 +52,10 @@ export default defineNuxtConfig({
       // pollenPassUrl: "http://localhost:3001/",
       pollenLMSUrl:
         "http://sandbox.web.lms.s3-website-ap-southeast-1.amazonaws.com",
-      directBackendUrl: "http://localhost:3070/",
-      userOnboardBackendUrl: "http://localhost:3090/",
+      directBackendUrl:
+        "https://bh23fm4b05.execute-api.ap-southeast-1.amazonaws.com/dev/",
+      userOnboardBackendUrl:
+        "https://47ekwsnw5d.execute-api.ap-southeast-1.amazonaws.com/dev/",
       appName: "Pollen LMS",
       appVersion: "2.0.0",
     },

@@ -94,5 +94,9 @@ export const useSellerStore = defineStore("seller", {
       const { data } = await directApi(`/onboard-company/order-volume`);
       this.order_unit = data;
     },
+    async get_company_interest(param: any) {
+      const data = await directApi(`/onboard-company/${param}/interest`);
+      return data;
+    },
   },
 });

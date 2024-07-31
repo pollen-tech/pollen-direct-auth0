@@ -14,9 +14,11 @@ definePageMeta({
 });
 
 const auth = useAuth();
+const { get_user_id } = useAuth();
 const route = useRoute();
 const router = useRouter();
 const is_visible = ref(false);
+const user_id = get_user_id();
 
 onMounted(() => {
   setTimeout(async () => {
@@ -30,7 +32,11 @@ onMounted(() => {
         console.error("Navigation error:", error);
       }
     } else {
-      is_visible.value = true;
+      if (user_id) {
+        window.location.href = "/";
+      } else {
+        is_visible.value = true;
+      }
     }
   }, 800);
 });
