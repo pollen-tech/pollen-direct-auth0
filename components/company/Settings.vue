@@ -154,6 +154,7 @@
                           variant="outlined"
                           :rules="required"
                           :disabled="form_disabled"
+                          hide-details
                         >
                           <template v-slot:item="data">
                             <v-list-item
@@ -322,10 +323,11 @@
                           :rules="required"
                           clearable
                           :disabled="form_disabled"
+                          hide-details
                         />
                       </div>
                     </v-sheet>
-                    <v-sheet class="ma-2 pa-6 bg-white">
+                    <v-sheet class="mt-4 ma-2 pa-4 bg-white">
                       <v-btn
                         block
                         text="Save Changes"
@@ -408,6 +410,7 @@ const get_interest = async () => {
     target_resale_market.value = extract_data_target_resale(
       req.data.target_markets
     );
+    company.value.country = req.data.operation_country_name;
   }
 };
 
