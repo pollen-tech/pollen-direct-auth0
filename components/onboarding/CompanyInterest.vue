@@ -204,6 +204,7 @@ const props = defineProps({
   countries: { type: Array, default: [] },
   orderUnit: { type: Array, default: [] },
   companyId: { type: String, default: "" },
+  profile: { type: Object, default: {} },
 });
 
 const isLoading = ref(false);
@@ -216,6 +217,8 @@ const company = ref({});
 const submit = async () => {
   try {
     isLoading.value = true;
+    await notify_admin_by_email();
+
     const { valid } = await formRef.value.validate();
     if (valid) {
       const body = {
@@ -233,6 +236,7 @@ const submit = async () => {
       );
       isLoading.value = false;
       if (!req.statusCode) {
+        await notify_admin_by_email();
         emit("submit");
       } else {
         emit("error", req);
@@ -243,6 +247,28 @@ const submit = async () => {
     }
   } catch (err) {
     isLoading.value = false;
+  }
+};
+
+const notify_admin_by_email = async () => {
+  try {
+    const body = {
+      first_name: props.profile.first_name,
+      last_name: props.profile.last_name,
+      email: props.profile.email,
+      country_code: props.profile.country_code,
+      phone_no: props.profile.phone_no,
+    };
+    const req = await directApi(
+      `/onboard-company/${props.companyId}/notify-admin-by-email`,
+      "POST",
+      body
+    );
+    if (req.status_code != "OK") {
+      emit("error", req);
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 

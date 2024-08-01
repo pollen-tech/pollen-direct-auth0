@@ -44,6 +44,7 @@
               :order-unit="order_unit"
               :countries="countries"
               :company-id="company_id"
+              :profile="profile"
               @previous-page="previous_step"
               @submit="goto_home_page"
               @error="show_error"
