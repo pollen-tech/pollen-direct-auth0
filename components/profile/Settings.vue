@@ -381,6 +381,9 @@ const get_profile = async () => {
           "+" + profile.value.country_code + profile.value.phone_no;
         console.log(profile.value.phone_no);
       }
+      if (profile.value?.phone_no == 0) {
+        profile.value.phone_no = "";
+      }
     }
   }
 };
