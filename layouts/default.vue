@@ -251,7 +251,7 @@ const on_logout = async () => {
 
 const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
-  url.searchParams.append("channel", "CH_POLLEN_DIRECT");
+  url.searchParams.append("channel", "CH_DIRECT");
   url.searchParams.append("action", param);
   console.log(url);
   navigateTo(url.toString(), { external: true });

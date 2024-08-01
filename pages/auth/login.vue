@@ -13,7 +13,11 @@
       </v-col>
       <v-col cols="12" md="8">
         <div class="ma-8">
-          <AuthLogin v-if="!isEmailSent" @submit="send_otp" />
+          <AuthLogin
+            v-if="!isEmailSent"
+            @submit="send_otp"
+            @not-register="not_register"
+          />
           <AuthVerification
             v-else
             :email="email"
@@ -25,6 +29,7 @@
       </v-col>
     </v-row>
     <NotificationStatus />
+    <AuthUserExist />
   </div>
 </template>
 
@@ -69,7 +74,7 @@ const verify_otp = async (param) => {
     isOtpValid.value = true;
     const body = {
       code: otp.value,
-      channel_code: "CH_POLLEN_DIRECT",
+      channel_code: "CH_DIRECT",
     };
     // http://localhost:3080/auth0/password-less-email-otp-validate/rajesh.hofo%40gmail.com?code=967060&channel_code=CH_LMS
     const url = `/auth0/password-less-email-otp-validate/${encodeURIComponent(
@@ -131,6 +136,16 @@ const getErrorMessage = (req) => {
     msg: errorMsg,
   });
 };
+
+const not_register = (param) => {
+  commonStore.setShowNotification({
+    display: true,
+    status: "error",
+    msg: param.msg,
+    title: param.title,
+  });
+};
+
 const go_to_redirect = () => {
   navigateTo("/onboarding");
 };

@@ -88,9 +88,11 @@
 
 <script setup>
 import { ref, reactive } from "vue";
+import { useSellerStore } from "~/stores/seller";
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["submit", "notRegister"]);
 
+const seller_store = useSellerStore();
 const runtimeConfig = useRuntimeConfig();
 const title = ref({
   title: "Enter your information",
@@ -109,17 +111,27 @@ const required_email = [
 ];
 const is_loading = ref(false);
 const show_dialog = ref(false);
-const check_accept_terms = ref(false);
 const formRef = ref(null);
 
 const submit = async () => {
   is_loading.value = true;
   const { valid } = await formRef.value.validate();
   if (valid) {
-    emit("submit", email.value);
-    setTimeout(() => {
+    const validate_user_exist = await seller_store.validate_user_exist(
+      email.value
+    );
+    if (validate_user_exist?.status_code === "OK") {
+      emit("submit", email.value);
+      setTimeout(() => {
+        is_loading.value = false;
+      }, 1500);
+    } else {
       is_loading.value = false;
-    }, 1500);
+      emit("notRegister", {
+        title: "Email Not Registered",
+        msg: 'It looks like the email address you entered is not registered in our system. Please check the email address and try again. If you are new here, you can sign up to create a new Pollen Pass  account. For assistance please send us a message at <a href="mailto:cs@pollen.tech">cs@pollen.tech.</a>',
+      });
+    }
   }
 };
 
@@ -129,7 +141,7 @@ const on_signup = async () => {
 
 const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
-  url.searchParams.append("channel", "CH_POLLEN_DIRECT");
+  url.searchParams.append("channel", "CH_DIRECT");
   url.searchParams.append("action", param);
   console.log(url);
   navigateTo(url.toString(), { external: true });

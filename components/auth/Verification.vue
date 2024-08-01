@@ -182,7 +182,7 @@ const go_to_signup = () => {
 
 const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
-  url.searchParams.append("channel", "CH_POLLEN_DIRECT");
+  url.searchParams.append("channel", "CH_DIRECT");
   url.searchParams.append("action", param);
   navigateTo(url.toString(), { external: true });
 };
