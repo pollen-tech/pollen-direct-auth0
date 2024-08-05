@@ -217,13 +217,13 @@ const company = ref({});
 const submit = async () => {
   try {
     isLoading.value = true;
-    await notify_admin_by_email();
 
     const { valid } = await formRef.value.validate();
     if (valid) {
       const body = {
         company_id: props.companyId,
-        order_volume_id: company.value.order_volume_id,
+        order_volume_id: company.value.order_volume?.id || "",
+        order_volume_name: company.value.order_volume?.name || "",
         interest_categories: extract_categories(), // company.value.categories,
         import_markets: extract_import_market(),
         target_markets: extract_target_market(),
@@ -258,7 +258,7 @@ const notify_admin_by_email = async () => {
       email: props.profile.email,
       country_code: props.profile.country_code,
       phone_no: props.profile.phone_no,
-      pollenpassid: props.profile.pollen_pass_id,
+      pollen_pass_id: props.profile.pollen_pass_id,
     };
     const req = await directApi(
       `/onboard-company/${props.companyId}/notify-admin-by-email`,
