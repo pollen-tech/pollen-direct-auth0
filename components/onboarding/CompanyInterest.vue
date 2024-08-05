@@ -133,11 +133,11 @@
             </div>
 
             <v-combobox
-              v-model="company.order_volume_id"
+              v-model="company.order_volume"
               item-value="id"
               item-title="name"
               :items="orderUnit"
-              :return-object="false"
+              :return-object="true"
               placeholder="Choose one or more"
               variant="outlined"
               :rules="required"
@@ -258,6 +258,7 @@ const notify_admin_by_email = async () => {
       email: props.profile.email,
       country_code: props.profile.country_code,
       phone_no: props.profile.phone_no,
+      pollenpassid: props.profile.pollen_pass_id,
     };
     const req = await directApi(
       `/onboard-company/${props.companyId}/notify-admin-by-email`,
