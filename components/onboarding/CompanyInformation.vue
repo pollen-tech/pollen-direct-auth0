@@ -165,7 +165,7 @@
             @click="submit"
             >Continue</v-btn
           >
-          <v-btn
+          <!-- <v-btn
             variant="outlined"
             class="me-auto text-capitalize rounded-lg"
             block
@@ -173,7 +173,7 @@
             style="z-index: 999"
             @click="$emit('skip')"
             >Skip Onboarding</v-btn
-          >
+          > -->
         </v-form>
       </v-card>
       <!-- <v-card elevation="0" class="align-center px-8 w-100">
