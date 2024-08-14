@@ -13,14 +13,18 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       if (to.name === "onboarding") {
         return navigateTo("/");
       }
-
-      // const companyProfile = await seller_store.get_company_profile(user_id);
-      // if (!companyProfile?.data) {  }
     }
   } else {
     const { data } = await seller_store.get_company_profile(user_id);
     if (data?.id) {
-      window.location.href = "/"; // Redirect to home if not authenticated
+      const interest = await seller_store.get_company_interest(data?.id);
+      if (to.name === "onboarding") {
+        if (interest?.data?.order_volume_name) {
+          window.location.href = "/";
+        }
+      } else {
+        window.location.href = "/"; // Redirect to home if not authenticated
+      }
     }
   }
 });

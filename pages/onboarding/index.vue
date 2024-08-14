@@ -33,6 +33,7 @@
               :user-id="user_id"
               :company-types="company_type"
               :countries="countries"
+              :company="company_profile"
               @submit="next_step"
               @skip="goto_home_page"
               @error="show_error"
@@ -81,6 +82,7 @@ const company_type = computed(() => seller_store.seller_company_types);
 const category = computed(() => seller_store.category);
 const order_unit = computed(() => seller_store.order_unit);
 const sub_category = ref([{ id: 1, name: "test" }]);
+const company_profile = ref();
 
 const user_id = get_user_id();
 
@@ -104,6 +106,10 @@ onBeforeMount(async () => {
       await seller_store.get_category();
       await seller_store.get_order_unit();
       await countryStore.get_countries();
+    } else {
+      await seller_store.get_company_types();
+      await countryStore.get_countries();
+      company_profile.value = companyProfile?.data;
     }
   }
 });
@@ -112,15 +118,32 @@ const goto_home_page = () => {
   window.location.href = "/";
 };
 
-const next_step = async (param) => {
+const next_step = async (param, paramBool) => {
   step.value = 2;
   company_id.value = param.id;
+  if (paramBool) {
+    commonStore.setShowNotification({
+      display: true,
+      status: "success",
+      msg: "Company Successfully Registered",
+    });
+  } else {
+    await get_profile();
+    await seller_store.get_category();
+    await seller_store.get_order_unit();
+  }
   await nextTick();
 };
 
 const previous_step = async () => {
   step.value = 1;
+  get_company();
   await nextTick();
+};
+
+const get_company = async () => {
+  const companyProfile = await get_company_profile(user_id);
+  company_profile.value = companyProfile?.data;
 };
 
 const show_error = (req) => {
