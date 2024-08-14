@@ -36,7 +36,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { lmsApi } from "~/services/api";
+import { onboardingApi } from "~/services/api";
 import { useAuth } from "~/composables/auth0";
 import { useCommonStore } from "~/stores/common";
 
@@ -83,7 +83,7 @@ const verify_otp = async (param) => {
     const queryParams = new URLSearchParams(body).toString();
     const fullUrl = `${url}?${queryParams}`;
 
-    const req = await lmsApi(fullUrl, "POST");
+    const req = await onboardingApi(fullUrl, "POST");
 
     if (req) {
       auth.handleAuth0Response(req);
@@ -106,7 +106,7 @@ const send_otp = async (param) => {
   try {
     email.value = param;
     isOtpValid.value = true;
-    const req = await lmsApi(
+    const req = await onboardingApi(
       `/auth0/password-less-email-login/${email.value}`,
       "POST"
     );

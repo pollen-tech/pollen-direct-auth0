@@ -45,17 +45,14 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      lmsBackendUrl:
-        "https://47ekwsnw5d.execute-api.ap-southeast-1.amazonaws.com/dev/", // https://47ekwsnw5d.execute-api.ap-southeast-1.amazonaws.com/dev/
-      pollenPassUrl:
-        "http://sandbox.web.pollen-pass.s3-website-ap-southeast-1.amazonaws.com",
-      // pollenPassUrl: "http://localhost:3001/",
-      pollenLMSUrl:
-        "http://sandbox.web.lms.s3-website-ap-southeast-1.amazonaws.com",
-      directBackendUrl:
-        "https://bh23fm4b05.execute-api.ap-southeast-1.amazonaws.com/dev/",
+      // pollenPassUrl:
+      //   "http://web.pollen-pass.s3-website-ap-southeast-1.amazonaws.com", // "http://sandbox.web.pollen-pass.s3-website-ap-southeast-1.amazonaws.com",
+      pollenPassUrl: "https://pollen-pass-sb.pollentech.cloud/",
+      pollenLMSUrl: "https://lms-sb.pollentech.cloud", //"http://sandbox.web.lms.s3-website-ap-southeast-1.amazonaws.com",
+      lmsBackendUrl: "https://helix-sb.pollentech.cloud/liquidate/api/v1/", // https://47ekwsnw5d.execute-api.ap-southeast-1.amazonaws.com/dev/
+      directBackendUrl: "https://helix-sb.pollentech.cloud/direct/api/v1/",
       userOnboardBackendUrl:
-        "https://47ekwsnw5d.execute-api.ap-southeast-1.amazonaws.com/dev/",
+        "https://helix-sb.pollentech.cloud/user-onboard/api/v1/",
       appName: "Pollen LMS",
       appVersion: "2.0.0",
     },
