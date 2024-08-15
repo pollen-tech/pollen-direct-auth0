@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (data?.id) {
       const interest = await seller_store.get_company_interest(data?.id);
       if (to.name === "onboarding") {
-        if (interest?.data?.order_volume_name) {
+        if (interest?.data?.import_markets.length >= 1) {
           window.location.href = "/";
         }
       } else {
