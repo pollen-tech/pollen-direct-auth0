@@ -222,7 +222,6 @@
 <script setup>
 import { ref } from "vue";
 import { useSellerStore } from "@/stores/seller";
-import { directApi } from "@/services/api";
 
 const emit = defineEmits(["submit", "skip", "error"]);
 const props = defineProps({
@@ -246,26 +245,16 @@ const is_company_registered = ref(false);
 
 const submit = async () => {
   try {
-    if (is_company_registered.value) {
-      emit("submit", props.company);
-    } else {
-      const { valid } = await formRef.value.validate();
-      if (valid && validateCompanyName.value == 1) {
-        const body = {
-          user_id: props.userId,
-          name: company.value.name,
-          company_type_id: company.value.types,
-          operation_country_id: company.value.country.country_id,
-          operation_country_name: company.value.country.name,
-        };
-        const req = await directApi("/onboard-company", "POST", body);
-        if (req.status_code == "CREATED") {
-          emit("submit", req?.data, true);
-        } else {
-          emit("error", req);
-          console.log(req);
-        }
-      }
+    const { valid } = await formRef.value.validate();
+    if (valid && validateCompanyName.value == 1) {
+      const body = {
+        user_id: props.userId,
+        name: company.value.name,
+        company_type_id: company.value.types,
+        operation_country_id: company.value.country.country_id,
+        operation_country_name: company.value.country.name,
+      };
+      emit("submit", body);
     }
   } catch (err) {}
 };

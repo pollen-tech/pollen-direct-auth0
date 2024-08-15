@@ -193,7 +193,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { directApi } from "@/services/api";
 
 const emit = defineEmits(["submit", "previousPage", "error"]);
 
@@ -221,7 +220,6 @@ const submit = async () => {
     const { valid } = await formRef.value.validate();
     if (valid) {
       const body = {
-        company_id: props.companyId,
         order_volume_id: company.value.order_volume?.id || "",
         order_volume_name: company.value.order_volume?.name || "",
         interest_categories: extract_categories(), // company.value.categories,
@@ -229,47 +227,12 @@ const submit = async () => {
         target_markets: extract_target_market(),
       };
       console.log(body);
-      const req = await directApi(
-        `/onboard-company/${props.companyId}/interest`,
-        "POST",
-        body
-      );
-      isLoading.value = false;
-      if (!req.statusCode) {
-        await notify_admin_by_email();
-        emit("submit");
-      } else {
-        emit("error", req);
-        return;
-      }
+      emit("submit", body);
     } else {
       isLoading.value = false;
     }
   } catch (err) {
     isLoading.value = false;
-  }
-};
-
-const notify_admin_by_email = async () => {
-  try {
-    const body = {
-      first_name: props.profile.first_name,
-      last_name: props.profile.last_name,
-      email: props.profile.email,
-      country_code: props.profile.country_code,
-      phone_no: props.profile.phone_no,
-      pollen_pass_id: props.profile.pollen_pass_id,
-    };
-    const req = await directApi(
-      `/onboard-company/${props.companyId}/notify-admin-by-email`,
-      "POST",
-      body
-    );
-    if (req.status_code != "OK") {
-      emit("error", req);
-    }
-  } catch (err) {
-    console.log(err);
   }
 };
 
