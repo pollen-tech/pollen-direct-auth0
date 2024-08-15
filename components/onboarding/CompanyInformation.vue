@@ -246,7 +246,7 @@ const is_company_registered = ref(false);
 
 const submit = async () => {
   try {
-    if (is_company_registered) {
+    if (is_company_registered.value) {
       emit("submit", props.company);
     } else {
       const { valid } = await formRef.value.validate();
@@ -260,7 +260,7 @@ const submit = async () => {
         };
         const req = await directApi("/onboard-company", "POST", body);
         if (req.status_code == "CREATED") {
-          emit("submit", req?.data);
+          emit("submit", req?.data, true);
         } else {
           emit("error", req);
           console.log(req);
