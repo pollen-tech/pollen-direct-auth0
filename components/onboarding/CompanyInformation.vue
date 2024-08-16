@@ -41,12 +41,12 @@
                 text="Already Exist"
               />
             </div>
-
             <v-text-field
               v-model="company.name"
               variant="outlined"
               placeholder="Enter Company Name"
               :rules="required"
+              :disabled="is_company_registered"
               @blur="onValidateCompanyName"
             ></v-text-field>
           </div>
@@ -63,6 +63,7 @@
               placeholder="Select Company Type"
               variant="outlined"
               :rules="required"
+              :disabled="is_company_registered"
             >
               <template v-slot:item="data">
                 <v-list-item
@@ -133,12 +134,14 @@
                   variant="outlined"
                   :rules="required"
                   clearable
+                  :disabled="is_company_registered"
               /></v-col>
             </v-row>
           </div>
           <v-checkbox
             v-model="checkAcceptTerms"
             hide-details
+            :disabled="is_company_registered"
             @change="checkTerms()"
           >
             <template v-slot:label>
@@ -165,7 +168,7 @@
             @click="submit"
             >Continue</v-btn
           >
-          <v-btn
+          <!-- <v-btn
             variant="outlined"
             class="me-auto text-capitalize rounded-lg"
             block
@@ -173,7 +176,7 @@
             style="z-index: 999"
             @click="$emit('skip')"
             >Skip Onboarding</v-btn
-          >
+          > -->
         </v-form>
       </v-card>
       <!-- <v-card elevation="0" class="align-center px-8 w-100">
@@ -219,13 +222,13 @@
 <script setup>
 import { ref } from "vue";
 import { useSellerStore } from "@/stores/seller";
-import { directApi } from "@/services/api";
 
 const emit = defineEmits(["submit", "skip", "error"]);
 const props = defineProps({
   userId: { type: String, default: "" },
   companyTypes: { type: Array, default: [] },
   countries: { type: Array, default: [] },
+  company: { type: Object, default: {} },
 });
 
 const sellerStore = useSellerStore();
@@ -238,6 +241,7 @@ const showDialog = ref(false);
 const validateCompanyName = ref(0);
 const checkAcceptTerms = ref(false);
 const formRef = ref(null);
+const is_company_registered = ref(false);
 
 const submit = async () => {
   try {
@@ -250,14 +254,7 @@ const submit = async () => {
         operation_country_id: company.value.country.country_id,
         operation_country_name: company.value.country.name,
       };
-      console.log(body);
-      const req = await directApi("/onboard-company", "POST", body);
-      if (req.status_code == "CREATED") {
-        emit("submit", req?.data);
-      } else {
-        emit("error", req);
-        console.log(req);
-      }
+      emit("submit", body);
     }
   } catch (err) {}
 };
@@ -276,6 +273,17 @@ const onValidateCompanyName = async () => {
   }
 };
 const checkTerms = () => {};
+
+onUpdated(() => {
+  if (props.company?.id) {
+    const res = props.company;
+    company.value.name = res.name;
+    company.value.types = res.company_type_id;
+    company.value.country = res.operation_country_name;
+    checkAcceptTerms.value = true;
+    is_company_registered.value = true;
+  }
+});
 </script>
 <style>
 .custom-icon > .v-overlay__content {

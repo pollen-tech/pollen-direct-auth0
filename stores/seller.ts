@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { lmsApi, directApi } from "~/services/api";
+import { directApi, onboardingApi } from "~/services/api";
 
 export const useSellerStore = defineStore("seller", {
   state: () => {
@@ -58,7 +58,7 @@ export const useSellerStore = defineStore("seller", {
       this.seller_company_types = req.data;
     },
     async get_liquidation_unit() {
-      const data = await lmsApi(`/onboard-company/liquidate-unit`);
+      const data = await onboardingApi(`/onboard-company/liquidate-unit`);
       this.seller_liquidate = data;
     },
     async validate_company_exist(param: string) {
@@ -75,15 +75,15 @@ export const useSellerStore = defineStore("seller", {
       return data;
     },
     async validate_user_exist(param: any) {
-      const req = await lmsApi(`/users/pollen-pass-by-email/${param}`);
+      const req = await onboardingApi(`/users/pollen-pass-by-email/${param}`);
       return req;
     },
     async get_user_profile(param: any) {
-      const req = await lmsApi(`/users/${param}`);
+      const req = await onboardingApi(`/users/${param}`);
       return req;
     },
     async get_user_channel(param: any) {
-      const req = await lmsApi(`/users/channel/${param}`);
+      const req = await onboardingApi(`/users/channel/${param}`);
       return req;
     },
     async get_category() {

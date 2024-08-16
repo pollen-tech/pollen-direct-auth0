@@ -33,6 +33,7 @@
               :user-id="user_id"
               :company-types="company_type"
               :countries="countries"
+              :company="company_profile"
               @submit="next_step"
               @skip="goto_home_page"
               @error="show_error"
@@ -43,10 +44,9 @@
               :sub-category="sub_category"
               :order-unit="order_unit"
               :countries="countries"
-              :company-id="company_id"
               :profile="profile"
               @previous-page="previous_step"
-              @submit="goto_home_page"
+              @submit="save_company_information"
               @error="show_error"
             />
           </div>
@@ -59,6 +59,8 @@
 
 <script setup>
 import { ref, onBeforeMount, nextTick } from "vue";
+import { directApi } from "@/services/api";
+
 import { useAuth } from "~/composables/auth0";
 import { useSellerStore } from "~/stores/seller";
 import { useCountryStore } from "~/stores/country";
@@ -81,12 +83,13 @@ const company_type = computed(() => seller_store.seller_company_types);
 const category = computed(() => seller_store.category);
 const order_unit = computed(() => seller_store.order_unit);
 const sub_category = ref([{ id: 1, name: "test" }]);
+const company_profile = ref();
 
 const user_id = get_user_id();
 
 const step = ref(1);
 const profile = ref({});
-const company_id = ref("");
+const company_body = ref();
 
 const get_profile = async () => {
   const req = await get_user_profile(user_id);
@@ -104,6 +107,10 @@ onBeforeMount(async () => {
       await seller_store.get_category();
       await seller_store.get_order_unit();
       await countryStore.get_countries();
+    } else {
+      await seller_store.get_company_types();
+      await countryStore.get_countries();
+      company_profile.value = companyProfile?.data;
     }
   }
 });
@@ -114,13 +121,80 @@ const goto_home_page = () => {
 
 const next_step = async (param) => {
   step.value = 2;
-  company_id.value = param.id;
+  company_body.value = param;
   await nextTick();
+};
+
+const save_company_information = async (paramBody) => {
+  try {
+    const req = await directApi("/onboard-company", "POST", company_body.value);
+    if (req.status_code == "CREATED") {
+      await save_company_interest(req?.data, paramBody);
+    } else {
+      show_error(req);
+    }
+  } catch (err) {
+    show_error(err);
+  }
+};
+
+const save_company_interest = async (param, paramBody) => {
+  try {
+    paramBody.company_id = param.id;
+    const req = await directApi(
+      `/onboard-company/${param.id}/interest`,
+      "POST",
+      paramBody
+    );
+    if (!req.statusCode) {
+      await notify_admin_by_email();
+      commonStore.setShowNotification({
+        display: true,
+        status: "success",
+        msg: "Company Successfully Registered",
+      });
+      goto_home_page();
+    } else {
+      show_error(err);
+      return;
+    }
+  } catch (err) {
+    show_error(err);
+  }
+};
+
+const notify_admin_by_email = async () => {
+  try {
+    const body = {
+      first_name: profile.value.first_name,
+      last_name: profile.value.last_name,
+      email: profile.value.email,
+      country_code: profile.value.country_code,
+      phone_no: profile.value.phone_no,
+      pollen_pass_id: profile.value.pollen_pass_id,
+    };
+    const req = await directApi(
+      `/onboard-company/${props.companyId}/notify-admin-by-email`,
+      "POST",
+      body
+    );
+    if (req.status_code != "OK") {
+      show_error(req);
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const previous_step = async () => {
   step.value = 1;
+  get_company();
   await nextTick();
+};
+
+const get_company = async () => {
+  const companyProfile = await get_company_profile(user_id);
+  company_profile.value = companyProfile?.data;
 };
 
 const show_error = (req) => {

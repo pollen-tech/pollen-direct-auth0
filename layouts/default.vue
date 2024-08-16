@@ -71,19 +71,25 @@
                 rounded="lg"
                 v-bind="props"
               />
+              <v-tooltip v-if="!is_company_display" activator="parent">
+                Please complete the onboarding process.
+              </v-tooltip>
             </div>
           </template>
 
-          <v-card class="rounded pa-1">
+          <v-card v-if="is_company_display" class="rounded pa-1">
             <v-card-text class="pa-0">
               <v-list density="compact">
                 <v-list-item
                   class="text-grey-darken-1 text-body-2"
+                  :disabled="!is_company_display"
                   @click="show_profile_setting()"
                 >
                   Pollen Pass Profile Settings
                 </v-list-item>
+
                 <v-list-item
+                  v-if="is_company_display"
                   class="text-grey-darken-1 text-body-2"
                   @click="show_company_setting()"
                 >
@@ -209,7 +215,7 @@ const runtimeConfig = useRuntimeConfig();
 const { is_user_authenticated, get_user_id } = useAuth();
 
 const seller_store = useSellerStore();
-const { get_user_profile } = seller_store;
+const { get_user_profile, get_company_profile } = seller_store;
 
 const user_id = get_user_id();
 const is_authenticated = computed(() => {
@@ -220,10 +226,13 @@ const loading = ref(false);
 const profile = ref({});
 const dialog_visible = ref(false);
 const dialog_company = ref(false);
+const is_company_display = ref(false);
 
 onMounted(async () => {
   if (user_id) {
     await get_profile();
+    const companyProfile = await get_company_profile(user_id);
+    is_company_display.value = companyProfile?.data?.id ? true : false;
   }
 });
 
