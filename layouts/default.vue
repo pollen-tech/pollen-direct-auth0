@@ -3,7 +3,7 @@
     <v-app-bar class="px-8 py-2 bg-white">
       <v-list-item class="pl-1">
         <v-list-item-title class="d-flex align-center">
-          <a href="/"
+          <a @click="go_to_homepage"
             ><img
               src="~/assets/image/pollen-direct.svg"
               class="mt-2"
@@ -207,9 +207,11 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 import { useAuth } from "~/composables/auth0";
 import { useSellerStore } from "~/stores/seller";
 
+const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
 
 const { is_user_authenticated, get_user_id } = useAuth();
@@ -227,6 +229,7 @@ const profile = ref({});
 const dialog_visible = ref(false);
 const dialog_company = ref(false);
 const is_company_display = ref(false);
+const currentUrl = computed(() => route.fullPath);
 
 onMounted(async () => {
   if (user_id) {
@@ -272,6 +275,12 @@ const show_profile_setting = () => {
 
 const show_company_setting = () => {
   dialog_company.value = true;
+};
+
+const go_to_homepage = () => {
+  if (!currentUrl.value.includes("/onboarding")) {
+    window.location.href = "/";
+  }
 };
 </script>
 
