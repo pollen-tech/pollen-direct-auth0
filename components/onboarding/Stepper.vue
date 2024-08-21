@@ -10,16 +10,14 @@
     </div>
     <div class="my-4">Step {{ step }} of 2</div>
     <v-row class="ga-2 py-0 mb-6" style="height: 20px; flex: none">
-      <v-col class="py-0" style="height: 15px; background-color: #8431e7">
-      </v-col>
+      <v-col class="py-0" style="height: 15px; background-color: #8431e7" />
       <v-col
         class="py-0"
         :style="{
           height: '15px',
           backgroundColor: step !== 2 ? '#e5e7eb' : '#8431e7',
         }"
-      >
-      </v-col>
+      />
     </v-row>
   </div>
 </template>

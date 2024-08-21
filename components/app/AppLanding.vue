@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mx-4" v-if="is_authenticated">
+    <div v-if="is_authenticated" class="mx-4">
       <LandingLoginBanner />
     </div>
     <div>

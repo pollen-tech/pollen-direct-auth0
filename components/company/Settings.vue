@@ -67,8 +67,7 @@
                     !$vuetify.display.mobile ? 'justify-end' : 'justify-start'
                   "
                   class="d-flex"
-                >
-                </v-col>
+                />
               </v-row>
             </div>
             <div class="px-10 py-4">
@@ -105,7 +104,7 @@
                           placeholder="Enter First Name"
                           :rules="required"
                           :disabled="!is_available"
-                        ></v-text-field>
+                        />
                       </div>
                       <div class="my-2">
                         <label class="font-weight-medium text-body-2"
@@ -118,7 +117,7 @@
                           placeholder="Enter Last Name"
                           :rules="required"
                           :disabled="!isAvailable"
-                        ></v-text-field>
+                        />
                       </div>
 
                       <div class="my-2">
@@ -156,18 +155,18 @@
                           :disabled="form_disabled"
                           hide-details
                         >
-                          <template v-slot:item="data">
+                          <template #item="data">
                             <v-list-item
                               :key="data.item.id"
+                              v-bind="data.attrs"
                               @click="
                                 () => {
                                   console.log(data);
                                   data.props.onClick(data.item);
                                 }
                               "
-                              v-bind="data.attrs"
                             >
-                              <template v-slot:prepend> </template>
+                              <template #prepend />
 
                               <v-list-item-content>
                                 <v-list-item-title>
@@ -183,13 +182,13 @@
                                         data.item.raw.description
                                       }}</span>
                                     </div>
-                                    <template v-slot:activator="{ props }">
+                                    <template #activator="{ props }">
                                       <v-icon
                                         v-bind="props"
                                         size="x-small"
                                         color="grey"
                                         icon="mdi-information-outline"
-                                      ></v-icon>
+                                      />
                                     </template>
                                   </v-tooltip>
                                 </v-list-item-title>
@@ -251,7 +250,7 @@
                           <template v-if="target_resale_market.length >= 0">
                             <span
                               v-for="(target, i) in target_resale_market"
-                              v-bind:key="i"
+                              :key="i"
                             >
                               <v-chip
                                 v-if="target?.country?.name"
@@ -261,7 +260,7 @@
                               >
                                 <template
                                   v-for="(city, c) in target.city"
-                                  v-bind:key="c"
+                                  :key="c"
                                 >
                                   <span
                                     v-if="c < 1"
@@ -402,13 +401,13 @@ const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
     company.value.category = extract_data_interest_category(
-      req.data.interest_categories
+      req.data.interest_categories,
     );
     company.value.import_markets = extract_data_market_resale(
-      req.data.import_markets
+      req.data.import_markets,
     );
     target_resale_market.value = extract_data_target_resale(
-      req.data.target_markets
+      req.data.target_markets,
     );
     company.value.country = req.data.operation_country_name;
   }

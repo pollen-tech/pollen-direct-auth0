@@ -69,8 +69,7 @@
                     !$vuetify.display.mobile ? 'justify-end' : 'justify-start'
                   "
                   class="d-flex"
-                >
-                </v-col>
+                />
               </v-row>
             </div>
             <div class="px-10 py-4">
@@ -111,7 +110,7 @@
                               placeholder="Enter First Name"
                               :rules="required"
                               :disabled="!isAvailable"
-                            ></v-text-field>
+                            />
                           </div>
                           <div class="my-2">
                             <label class="font-weight-medium text-body-2"
@@ -124,7 +123,7 @@
                               placeholder="Enter Last Name"
                               :rules="required"
                               :disabled="!isAvailable"
-                            ></v-text-field>
+                            />
                           </div>
                           <div class="my-2">
                             <label class="font-weight-medium text-body-2"
@@ -160,8 +159,8 @@
                                 showSearchBox: true,
                                 showFlags: true,
                               }"
-                              @validate="phoneObject"
                               :disabled="!isAvailable"
+                              @validate="phoneObject"
                             />
                             <p
                               v-if="!phoneValid"
@@ -199,7 +198,7 @@
                               placeholder="Enter Email"
                               :rules="required"
                               :disabled="!isAvailable"
-                            ></v-text-field>
+                            />
                           </div>
                         </v-sheet>
                         <v-sheet class="mt-4 pa-6 pb-4 bg-white">
@@ -255,7 +254,7 @@
                               <p class="font-weight-bold text-body-2">
                                 {{
                                   moment(profile?.created_at).format(
-                                    "DD/MM/YYYY"
+                                    "DD/MM/YYYY",
                                   )
                                 }}
                               </p>

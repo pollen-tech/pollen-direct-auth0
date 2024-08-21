@@ -39,7 +39,7 @@
               variant="outlined"
               placeholder="Enter valid email address"
               :rules="required_email"
-            ></v-text-field>
+            />
           </div>
           <v-btn
             :disabled="!email"
@@ -52,7 +52,7 @@
           >
           <p class="text-center" style="font-size: 14px">
             Don't have Pollen Pass?
-            <a href="#" @click="on_signup" style="color: #8431e7"> Sign Up</a>
+            <a href="#" style="color: #8431e7" @click="on_signup"> Sign Up</a>
           </p>
         </v-form>
       </v-card>
@@ -72,7 +72,7 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
@@ -118,7 +118,7 @@ const submit = async () => {
   const { valid } = await formRef.value.validate();
   if (valid) {
     const validate_user_exist = await seller_store.validate_user_exist(
-      email.value
+      email.value,
     );
     if (validate_user_exist?.status_code === "OK") {
       emit("submit", email.value);

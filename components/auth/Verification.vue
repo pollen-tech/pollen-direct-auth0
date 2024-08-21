@@ -8,11 +8,11 @@
             prepend-icon="mdi-chevron-left"
             style="color: #6b7280"
             class="text-capitalize"
-            @click="$emit('previousPage')"
             alt="Back"
+            @click="$emit('previousPage')"
           >
-            <template v-slot:prepend>
-              <v-icon color="#6B7280"></v-icon>
+            <template #prepend>
+              <v-icon color="#6B7280" />
             </template>
             Previous
           </v-btn>
@@ -40,7 +40,7 @@
               v-model="otp"
               :length="otpLength"
               :loading="isOtpLoading"
-            ></v-otp-input>
+            />
           </div>
 
           <p v-if="!isOtpValid" class="red--text text-caption mt-2 text-center">
@@ -99,7 +99,7 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
@@ -149,7 +149,7 @@ const formatTime = computed(() => {
   const seconds = remainingTime.value % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
-    "0"
+    "0",
   )}`;
 });
 

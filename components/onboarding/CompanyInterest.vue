@@ -25,7 +25,7 @@
               variant="outlined"
               :rules="required"
               multiple
-            ></v-combobox>
+            />
 
             <v-combobox
               v-model="company.subCategory"
@@ -80,10 +80,7 @@
             </p>
             <div>
               <template v-if="target_resale_market.length >= 0">
-                <span
-                  v-for="(target, i) in target_resale_market"
-                  v-bind:key="i"
-                >
+                <span v-for="(target, i) in target_resale_market" :key="i">
                   <v-chip
                     v-if="target?.country?.name"
                     :key="target.country.country_id"
@@ -91,7 +88,7 @@
                     closable
                     @click:close="remove_item(target)"
                   >
-                    <template v-for="(city, c) in target.city" v-bind:key="c">
+                    <template v-for="(city, c) in target.city" :key="c">
                       <span
                         v-if="c < 1"
                         class="text-truncate"
@@ -104,7 +101,7 @@
                         <v-tooltip activator="parent" location="end">
                           <div
                             v-for="(additionalCity, index) in target.city.slice(
-                              1
+                              1,
                             )"
                             :key="index"
                           >
@@ -141,7 +138,7 @@
               placeholder="Choose one or more"
               variant="outlined"
               :rules="required"
-            ></v-combobox>
+            />
           </div>
 
           <v-btn
@@ -177,7 +174,7 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
@@ -240,7 +237,7 @@ const remove_item = (param) => {
   console.log(param);
   if (target_resale_market.value[0]) {
     const extract_cn = target_resale_market.value.filter(
-      (item) => item.country.country_id !== param.country.country_id
+      (item) => item.country.country_id !== param.country.country_id,
     );
     target_resale_market.value = extract_cn;
   }
@@ -259,7 +256,7 @@ const format_location_city = (param) => {
       country_id: entry.country.country_id,
       city_id: city.id,
       city_name: city.name,
-    }))
+    })),
   );
 
   return formattedArray;

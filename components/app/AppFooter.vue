@@ -110,7 +110,7 @@
                 >
                   Company Information
                 </p>
-                <v-divider :thickness="1"></v-divider>
+                <v-divider :thickness="1" />
               </div>
 
               <v-row class="my-2">
@@ -160,7 +160,7 @@
       </v-row>
 
       <div class="w-100 text-caption text-grey-darken-1 my-2">
-        <v-divider :thickness="2"></v-divider>
+        <v-divider :thickness="2" />
         <v-sheet
           :class="$vuetify.display.mobile ? 'd-flex flex-column  ' : 'd-flex  '"
         >
@@ -205,7 +205,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
   setup() {

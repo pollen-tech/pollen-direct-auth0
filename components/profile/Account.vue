@@ -19,7 +19,7 @@
                 :rules="required"
                 type="password"
                 :disabled="!isAvailable"
-              ></v-text-field>
+              />
             </div>
             <div class="my-2">
               <label class="font-weight-medium text-body-2"
@@ -30,7 +30,7 @@
                 v-model="account.new_password"
                 variant="outlined"
                 :rules="required"
-              ></v-text-field>
+              />
             </div>
             <div class="mt-2">
               <label class="font-weight-medium text-body-2"
@@ -41,7 +41,7 @@
                 v-model="account.confirm_password"
                 variant="outlined"
                 :rules="required"
-              ></v-text-field>
+              />
             </div>
           </v-sheet>
 

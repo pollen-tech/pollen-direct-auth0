@@ -56,7 +56,7 @@
           <v-col cols="12" md="4">
             <v-sheet color="#FFFFFF" theme="light" class="text-center pa-6">
               <h5 class="my-4">Pollen Direct Benefits</h5>
-              <v-divider></v-divider>
+              <v-divider />
 
               <p v-for="b in benefits" :key="b" class="text-start my-2">
                 <v-icon color="purple-darken-2" class="ma-2">mdi-check</v-icon>
@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
   setup() {
@@ -80,21 +80,21 @@ export default defineComponent({
 
   data() {
     return {
-      title: 'Pollen Direct',
-      contentTitle: 'Excess Inventory Direct from Global Manufacturers',
+      title: "Pollen Direct",
+      contentTitle: "Excess Inventory Direct from Global Manufacturers",
       contentDescription:
-        'Authentic & verified liquidation inventory direct from manufacturers, exclusively for Pollen Pass members',
+        "Authentic & verified liquidation inventory direct from manufacturers, exclusively for Pollen Pass members",
       items: [
-        { text: 'Real-Time', icon: 'mdi-clock' },
-        { text: 'Audience', icon: 'mdi-account' },
-        { text: 'Conversions', icon: 'mdi-flag' },
+        { text: "Real-Time", icon: "mdi-clock" },
+        { text: "Audience", icon: "mdi-account" },
+        { text: "Conversions", icon: "mdi-flag" },
       ],
       benefits: [
-        'Pollen Pass Exclusive',
-        '100% Authentic',
-        'Known & Loved Brands',
-        'Direct from Global Manufacturers',
-        'Regularly Refreshed',
+        "Pollen Pass Exclusive",
+        "100% Authentic",
+        "Known & Loved Brands",
+        "Direct from Global Manufacturers",
+        "Regularly Refreshed",
       ],
     };
   },

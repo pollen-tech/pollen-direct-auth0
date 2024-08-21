@@ -144,7 +144,7 @@ const save_company_interest = async (param, paramBody) => {
     const req = await directApi(
       `/onboard-company/${param.id}/interest`,
       "POST",
-      paramBody
+      paramBody,
     );
     if (!req.statusCode) {
       await notify_admin_by_email(req.company_id);
@@ -176,7 +176,7 @@ const notify_admin_by_email = async (companyId) => {
     const req = await directApi(
       `/onboard-company/${companyId}/notify-admin-by-email`,
       "POST",
-      body
+      body,
     );
     if (req.status_code != "OK") {
       show_error(req);

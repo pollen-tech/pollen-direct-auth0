@@ -72,7 +72,7 @@ watch(
   (newVal) => {
     location.value = Object.values(newVal);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // Lifecycle hook
@@ -96,7 +96,7 @@ const fetchCity = async (selectedCountry) => {
 
     // Update location to include new cities
     const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.country_id === selectedCountry.country_id
+      (loc) => loc.country?.country_id === selectedCountry.country_id,
     );
     if (countryIndex === -1) {
       location.value.push({
@@ -115,7 +115,7 @@ const fetchCity = async (selectedCountry) => {
 const selectLocation = (selectedCities) => {
   if (country.value?.country_id) {
     const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.country_id === country.value.country_id
+      (loc) => loc.country?.country_id === country.value.country_id,
     );
 
     if (countryIndex !== -1) {
@@ -138,8 +138,8 @@ const syncLocation = () => {
         const newCities = item.city.filter(
           (newCity) =>
             !existingCities.some(
-              (existingCity) => existingCity.city_id === newCity.city_id
-            )
+              (existingCity) => existingCity.city_id === newCity.city_id,
+            ),
         );
 
         combinedCountries[country_id].city = [...existingCities, ...newCities];

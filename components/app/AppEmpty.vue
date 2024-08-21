@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
   setup() {
@@ -31,14 +31,14 @@ export default defineComponent({
   },
   data() {
     return {
-      phoneLocal: '',
-      salesTeamNumber: '',
+      phoneLocal: "",
+      salesTeamNumber: "",
       config: null,
     };
   },
   mounted() {
     const config = useRuntimeConfig();
-    this.phoneLocal = '';
+    this.phoneLocal = "";
     this.salesTeamNumber = config.public.salesTeamNumber;
   },
 });

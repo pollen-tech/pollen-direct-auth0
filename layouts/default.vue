@@ -17,7 +17,7 @@
         <v-menu v-if="$vuetify.display.mobile && !is_authenticated">
           <template #activator="{ props }">
             <div>
-              <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
+              <v-btn icon="mdi-dots-vertical" v-bind="props" />
             </div>
           </template>
 
@@ -160,8 +160,8 @@
 
             <v-icon
               size="large"
-              @click="displayLogoutDialog = false"
               style="color: #6b7280"
+              @click="displayLogoutDialog = false"
               >mdi-close</v-icon
             >
           </div>
@@ -180,14 +180,13 @@
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
-              @click="displayLogoutDialog = false"
               style="color: #374151; font-size: 16px; letter-spacing: 0"
+              @click="displayLogoutDialog = false"
               >Back</v-btn
             >
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
-              @click="on_logout()"
               style="
                 background-color: #8431e7;
                 border: none;
@@ -195,6 +194,7 @@
                 font-size: 16px;
                 letter-spacing: 0;
               "
+              @click="on_logout()"
               >Logout</v-btn
             >
           </div>

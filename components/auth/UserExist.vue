@@ -11,15 +11,15 @@
         style="padding: 16px 24px 24px"
       >
         <span class="text-h5">{{ titleNotification }}</span>
-        <v-icon @click="hideDialog" class="close-icon">mdi-close</v-icon>
+        <v-icon class="close-icon" @click="hideDialog">mdi-close</v-icon>
       </v-card-title>
-      <v-card-text v-html="textNotification" class="text-body-2"> </v-card-text>
+      <v-card-text class="text-body-2" v-html="textNotification" />
       <v-card-actions class="justify-end">
         <v-btn
           variant="outlined"
           color="#374151"
-          @click="onSignUp()"
           style="border-color: #d1d5db"
+          @click="onSignUp()"
           >Sign Up</v-btn
         >
         <v-btn variant="flat" color="primary" @click="contactCS"

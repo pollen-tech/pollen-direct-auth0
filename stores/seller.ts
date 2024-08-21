@@ -54,11 +54,11 @@ export const useSellerStore = defineStore("seller", {
   actions: {
     async get_company_types() {
       // TODO change to directApi
-      const req = await directApi(`/onboard-company/company-type`);
+      const req = await directApi("/onboard-company/company-type");
       this.seller_company_types = req.data;
     },
     async get_liquidation_unit() {
-      const data = await onboardingApi(`/onboard-company/liquidate-unit`);
+      const data = await onboardingApi("/onboard-company/liquidate-unit");
       this.seller_liquidate = data;
     },
     async validate_company_exist(param: string) {
@@ -66,7 +66,7 @@ export const useSellerStore = defineStore("seller", {
         company_name: param,
       };
       const { data } = await directApi(
-        `/onboard-company?${new URLSearchParams(body).toString()}`
+        `/onboard-company?${new URLSearchParams(body).toString()}`,
       );
       return data;
     },
@@ -87,11 +87,11 @@ export const useSellerStore = defineStore("seller", {
       return req;
     },
     async get_category() {
-      const { data } = await directApi(`/onboard-company/category`);
+      const { data } = await directApi("/onboard-company/category");
       this.category = data;
     },
     async get_order_unit() {
-      const { data } = await directApi(`/onboard-company/order-volume`);
+      const { data } = await directApi("/onboard-company/order-volume");
       this.order_unit = data;
     },
     async get_company_interest(param: any) {
