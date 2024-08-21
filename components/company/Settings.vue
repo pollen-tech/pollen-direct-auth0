@@ -347,18 +347,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import "vue-tel-input/vue-tel-input.css";
-import { useSellerStore } from "~/stores/seller";
-import { useCountryStore } from "~/stores/country";
+import { ref } from 'vue';
+import 'vue-tel-input/vue-tel-input.css';
+import { useSellerStore } from '~/stores/seller';
+import { useCountryStore } from '~/stores/country';
 
 const props = defineProps({
-  dialog_value: { type: Boolean, default: false },
-  user_id: { type: String, default: "" },
+  dialogValue: { type: Boolean, default: false },
+  userId: { type: String, default: '' },
 });
-const emit = defineEmits(["close"]);
-
-const runtimeConfig = useRuntimeConfig();
+const emit = defineEmits(['close']);
 
 const seller_store = useSellerStore();
 const { get_company_profile, get_company_interest } = seller_store;
@@ -369,16 +367,16 @@ const dialogVisible = ref(false);
 const is_available = ref(false);
 const form_disabled = ref(true);
 const company = ref({
-  account_id: "",
-  name: "",
-  company_type_id: "",
-  country: "",
+  account_id: '',
+  name: '',
+  company_type_id: '',
+  country: '',
 });
-const required = [(v) => !!v || "Field is required"];
+const required = [(v) => !!v || 'Field is required'];
 const target_resale_market = ref([]);
 
 onUpdated(async () => {
-  if (props.dialog_value && !company.value.id) {
+  if (props.dialogValue && !company.value.id) {
     seller_store.get_company_types();
     seller_store.get_order_unit();
     seller_store.get_category();
@@ -388,7 +386,7 @@ onUpdated(async () => {
 });
 
 const get_company = async () => {
-  const req = await get_company_profile(props.user_id);
+  const req = await get_company_profile(props.userId);
   if (req?.data) {
     if (JSON.stringify(company.value) !== JSON.stringify(req)) {
       company.value = req.data;
@@ -401,13 +399,13 @@ const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
     company.value.category = extract_data_interest_category(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.import_markets = extract_data_market_resale(
-      req.data.import_markets,
+      req.data.import_markets
     );
     target_resale_market.value = extract_data_target_resale(
-      req.data.target_markets,
+      req.data.target_markets
     );
     company.value.country = req.data.operation_country_name;
   }
@@ -455,7 +453,7 @@ const extract_data_target_resale = (param) => {
 };
 const closeDialog = () => {
   dialogVisible.value = false;
-  emit("close");
+  emit('close');
 };
 </script>
 

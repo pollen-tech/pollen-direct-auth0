@@ -33,9 +33,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
-import _debounce from "lodash/debounce";
-import { useCountryStore } from "~/stores/country";
+import { ref, watch, onMounted } from 'vue';
+import _debounce from 'lodash/debounce';
+import { useCountryStore } from '~/stores/country';
 
 // Props
 const props = defineProps({
@@ -46,21 +46,17 @@ const props = defineProps({
   },
   countries: {
     type: Array,
-    default: [],
+    default: () => [],
   },
 });
 
 // Emit
-const emit = defineEmits(["applyOption"]);
+const emit = defineEmits(['applyOption']);
 
 // Store
 const country_store = useCountryStore();
 
 // Reactive data
-const selectedOption = ref([]);
-const menu = ref(false);
-const message = ref(false);
-const hints = ref(true);
 const location = ref([]);
 const cityList = ref([]);
 const city = ref([]);
@@ -72,21 +68,13 @@ watch(
   (newVal) => {
     location.value = Object.values(newVal);
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 // Lifecycle hook
 onMounted(() => {
   location.value = props.preselect;
 });
-
-// Methods
-const addLocation = () => {
-  location.value.push({
-    country: null,
-    city: [],
-  });
-};
 
 const fetchCity = async (selectedCountry) => {
   if (selectedCountry?.country_id) {
@@ -96,7 +84,7 @@ const fetchCity = async (selectedCountry) => {
 
     // Update location to include new cities
     const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.country_id === selectedCountry.country_id,
+      (loc) => loc.country?.country_id === selectedCountry.country_id
     );
     if (countryIndex === -1) {
       location.value.push({
@@ -115,7 +103,7 @@ const fetchCity = async (selectedCountry) => {
 const selectLocation = (selectedCities) => {
   if (country.value?.country_id) {
     const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.country_id === country.value.country_id,
+      (loc) => loc.country?.country_id === country.value.country_id
     );
 
     if (countryIndex !== -1) {
@@ -138,8 +126,8 @@ const syncLocation = () => {
         const newCities = item.city.filter(
           (newCity) =>
             !existingCities.some(
-              (existingCity) => existingCity.city_id === newCity.city_id,
-            ),
+              (existingCity) => existingCity.city_id === newCity.city_id
+            )
         );
 
         combinedCountries[country_id].city = [...existingCities, ...newCities];
@@ -157,7 +145,7 @@ const syncLocation = () => {
 };
 
 const commitLocation = _debounce((value) => {
-  emit("applyOption", value);
+  emit('applyOption', value);
 }, 500);
 </script>
 

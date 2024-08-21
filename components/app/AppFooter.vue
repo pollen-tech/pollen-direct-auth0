@@ -4,7 +4,7 @@
       <v-row class="text-caption">
         <v-col cols="12" md="3" lg="3">
           <v-sheet class="pa-2 ma-2 d-flex justify-start">
-            <img class="mb-4" src="~/assets/image/pollen_direct_logo_1x.webp" />
+            <img class="mb-4" src="~/assets/image/pollen_direct_logo_1x.webp" >
           </v-sheet>
           <p class="text-grey-darken-1 pr-10">
             Pollen is your liquidation operating system & AI co-pilot for aged,
@@ -205,7 +205,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   setup() {

@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   setup() {
@@ -46,23 +46,23 @@ export default defineComponent({
         {
           value: 1,
           title:
-            "How do I know that the products are authentic and catalogs are legitimate?",
-          desc: "All available liquidation items are listed by brands themselves, and shipped from manufacturers warehouses.",
+            'How do I know that the products are authentic and catalogs are legitimate?',
+          desc: 'All available liquidation items are listed by brands themselves, and shipped from manufacturers warehouses.',
         },
         {
           value: 2,
-          title: "What is Pollen Pass?",
-          desc: "Pollen Pass is Pollen’s membership program for buyers. Signing up for Pollen Pass on Pollen Direct allows buyers to view catalogs and make offers on Pollen Direct listings.",
+          title: 'What is Pollen Pass?',
+          desc: 'Pollen Pass is Pollen’s membership program for buyers. Signing up for Pollen Pass on Pollen Direct allows buyers to view catalogs and make offers on Pollen Direct listings.',
         },
         {
           value: 3,
-          title: "How much does Pollen Pass cost?",
-          desc: "Pollen Pass is free.",
+          title: 'How much does Pollen Pass cost?',
+          desc: 'Pollen Pass is free.',
         },
         {
           value: 4,
-          title: "What if the products I’m looking for aren’t on the catalogs?",
-          desc: "Pollen would be happy to assist you in sourcing your desired inventory. Please contact contact@pollen.tech",
+          title: 'What if the products I’m looking for aren’t on the catalogs?',
+          desc: 'Pollen would be happy to assist you in sourcing your desired inventory. Please contact contact@pollen.tech',
         },
       ],
     };

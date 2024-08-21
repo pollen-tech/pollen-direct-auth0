@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { useAuth } from "~/composables/auth0";
+import { useAuth } from '~/composables/auth0';
 const { is_user_authenticated } = useAuth();
 const is_authenticated = computed(() => {
   return is_user_authenticated();

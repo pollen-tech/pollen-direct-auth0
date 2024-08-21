@@ -101,7 +101,7 @@
                         <v-tooltip activator="parent" location="end">
                           <div
                             v-for="(additionalCity, index) in target.city.slice(
-                              1,
+                              1
                             )"
                             :key="index"
                           >
@@ -189,24 +189,25 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-const emit = defineEmits(["submit", "previousPage", "error"]);
+const emit = defineEmits(['submit', 'previousPage', 'error']);
 
-const props = defineProps({
-  userId: { type: String, default: "" },
-  category: { type: Array, default: [] },
-  subCategory: { type: Array, default: [] },
-  countries: { type: Array, default: [] },
-  orderUnit: { type: Array, default: [] },
-  companyId: { type: String, default: "" },
-  profile: { type: Object, default: {} },
+// eslint-disable-next-line no-unused-vars
+const _props = defineProps({
+  userId: { type: String, default: '' },
+  category: { type: Array, default: () => [] },
+  subCategory: { type: Array, default: () => [] },
+  countries: { type: Array, default: () => [] },
+  orderUnit: { type: Array, default: () => [] },
+  companyId: { type: String, default: '' },
+  profile: { type: Object, default: () => ({}) },
 });
 
 const isLoading = ref(false);
 const showDialog = ref(false);
 const target_resale_market = ref([]);
-const required = [(v) => !!v || "Field is required"];
+const required = [(v) => !!v || 'Field is required'];
 const formRef = ref(null);
 const company = ref({});
 
@@ -217,14 +218,14 @@ const submit = async () => {
     const { valid } = await formRef.value.validate();
     if (valid) {
       const body = {
-        order_volume_id: company.value.order_volume?.id || "",
-        order_volume_name: company.value.order_volume?.name || "",
+        order_volume_id: company.value.order_volume?.id || '',
+        order_volume_name: company.value.order_volume?.name || '',
         interest_categories: extract_categories(), // company.value.categories,
         import_markets: extract_import_market(),
         target_markets: extract_target_market(),
       };
       console.log(body);
-      emit("submit", body);
+      emit('submit', body);
     } else {
       isLoading.value = false;
     }
@@ -237,7 +238,7 @@ const remove_item = (param) => {
   console.log(param);
   if (target_resale_market.value[0]) {
     const extract_cn = target_resale_market.value.filter(
-      (item) => item.country.country_id !== param.country.country_id,
+      (item) => item.country.country_id !== param.country.country_id
     );
     target_resale_market.value = extract_cn;
   }
@@ -256,7 +257,7 @@ const format_location_city = (param) => {
       country_id: entry.country.country_id,
       city_id: city.id,
       city_name: city.name,
-    })),
+    }))
   );
 
   return formattedArray;
