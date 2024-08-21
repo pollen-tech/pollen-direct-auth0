@@ -11,15 +11,15 @@
         style="padding: 16px 24px 24px"
       >
         <span class="text-h5">{{ titleNotification }}</span>
-        <v-icon @click="hideDialog" class="close-icon">mdi-close</v-icon>
+        <v-icon class="close-icon" @click="hideDialog">mdi-close</v-icon>
       </v-card-title>
-      <v-card-text v-html="textNotification" class="text-body-2"> </v-card-text>
+      <v-card-text class="text-body-2">{{ textNotification }}</v-card-text>
       <v-card-actions class="justify-end">
         <v-btn
           variant="outlined"
           color="#374151"
-          @click="onSignUp()"
           style="border-color: #d1d5db"
+          @click="onSignUp()"
           >Sign Up</v-btn
         >
         <v-btn variant="flat" color="primary" @click="contactCS"
@@ -31,8 +31,8 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
-import { useCommonStore } from "~/stores/common";
+import { storeToRefs } from 'pinia';
+import { useCommonStore } from '~/stores/common';
 
 const config = useRuntimeConfig();
 const commonStore = useCommonStore();
@@ -40,20 +40,20 @@ const { showDialog, titleNotification, textNotification } =
   storeToRefs(commonStore);
 
 const onSignUp = () => {
-  navigateToPollenPass("signup");
+  navigateToPollenPass('signup');
 };
 
 const navigateToPollenPass = (param) => {
   const url = new URL(config.public.pollenPassUrl);
-  url.searchParams.append("channel", "CH_DIRECT");
-  url.searchParams.append("action", param);
+  url.searchParams.append('channel', 'CH_DIRECT');
+  url.searchParams.append('action', param);
   navigateTo(url.toString(), { external: true });
 };
 
 const contactCS = () => {
-  console.log("Contact CS button clicked");
+  console.log('Contact CS button clicked');
   commonStore.hideNotification();
-  window.location.href = "mailto:cs@pollen.tech";
+  window.location.href = 'mailto:cs@pollen.tech';
 };
 
 const hideDialog = () => {

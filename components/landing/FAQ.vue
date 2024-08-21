@@ -27,7 +27,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
-      <div></div>
+      <div />
     </v-container>
   </div>
 </template>

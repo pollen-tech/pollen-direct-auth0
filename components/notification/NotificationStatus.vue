@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import { mapState, storeToRefs, mapActions } from "pinia";
-import { useCommonStore } from "~/stores/common";
+import { mapState, storeToRefs, mapActions } from 'pinia';
+import { useCommonStore } from '~/stores/common';
 
 export default {
   setup() {
@@ -57,10 +57,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(useCommonStore, ["textNotification"]),
+    ...mapState(useCommonStore, ['textNotification']),
   },
   methods: {
-    ...mapActions(useCommonStore, ["setShowNotification"]),
+    ...mapActions(useCommonStore, ['setShowNotification']),
     hideNotification() {
       this.setShowNotification(false);
     },

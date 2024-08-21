@@ -26,10 +26,11 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
-        // @ts-expect-error
+        // @ts-expect-error: Adding Vuetify plugin to Vite config despite TypeScript type issues
         config.plugins.push(vuetify({ autoImport: true }));
       });
     },
+    //...
   ],
   build: {
     transpile: ["vuetify"],
@@ -47,12 +48,11 @@ export default defineNuxtConfig({
     public: {
       // pollenPassUrl:
       //   "http://web.pollen-pass.s3-website-ap-southeast-1.amazonaws.com", // "http://sandbox.web.pollen-pass.s3-website-ap-southeast-1.amazonaws.com",
-      pollenPassUrl: "https://pollen-pass-sb.pollentech.cloud/",
-      pollenLMSUrl: "https://lms-sb.pollentech.cloud", //"http://sandbox.web.lms.s3-website-ap-southeast-1.amazonaws.com",
+      pollenPassUrl: process.env.NUXT_POLLEN_PASS_URL,
+      pollenLMSUrl: process.env.NUXT_POLLEN_LMS_URL, //"http://sandbox.web.lms.s3-website-ap-southeast-1.amazonaws.com",
       lmsBackendUrl: "https://helix-sb.pollentech.cloud/liquidate/api/v1/", // https://47ekwsnw5d.execute-api.ap-southeast-1.amazonaws.com/dev/
-      directBackendUrl: "https://helix-sb.pollentech.cloud/direct/api/v1/",
-      userOnboardBackendUrl:
-        "https://helix-sb.pollentech.cloud/user-onboard/api/v1/",
+      directBackendUrl: process.env.NUXT_DIRECT_API,
+      userOnboardBackendUrl: process.env.NUXT_LMS_API,
       appName: "Pollen LMS",
       appVersion: "2.0.0",
     },

@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
-import { onboardingApi } from "~/services/api";
+import { defineStore } from 'pinia';
+import { onboardingApi } from '~/services/api';
 
-export const useCountryStore = defineStore("country", {
+export const useCountryStore = defineStore('country', {
   state: () => {
     return {
       countries: [],
@@ -9,7 +9,7 @@ export const useCountryStore = defineStore("country", {
   },
   actions: {
     async get_countries() {
-      const { data } = await onboardingApi(`/country`);
+      const { data } = await onboardingApi('/country');
       this.countries = data;
     },
     setCountries(param: never[]) {

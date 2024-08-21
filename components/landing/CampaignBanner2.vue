@@ -14,7 +14,7 @@
           max-height="250"
           cover
           class="bg-grey-lighten-2 my-6"
-        ></v-img>
+        />
         <div>
           Pollen Pass is Pollen’s free buyer membership program. By signing up
           as a Pollen Pass member on Pollen Direct, buyers gain access to

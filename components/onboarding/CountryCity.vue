@@ -33,9 +33,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
-import _debounce from "lodash/debounce";
-import { useCountryStore } from "~/stores/country";
+import { ref, watch, onMounted } from 'vue';
+import _debounce from 'lodash/debounce';
+import { useCountryStore } from '~/stores/country';
 
 // Props
 const props = defineProps({
@@ -46,21 +46,17 @@ const props = defineProps({
   },
   countries: {
     type: Array,
-    default: [],
+    default: () => [],
   },
 });
 
 // Emit
-const emit = defineEmits(["applyOption"]);
+const emit = defineEmits(['applyOption']);
 
 // Store
 const country_store = useCountryStore();
 
 // Reactive data
-const selectedOption = ref([]);
-const menu = ref(false);
-const message = ref(false);
-const hints = ref(true);
 const location = ref([]);
 const cityList = ref([]);
 const city = ref([]);
@@ -79,14 +75,6 @@ watch(
 onMounted(() => {
   location.value = props.preselect;
 });
-
-// Methods
-const addLocation = () => {
-  location.value.push({
-    country: null,
-    city: [],
-  });
-};
 
 const fetchCity = async (selectedCountry) => {
   if (selectedCountry?.country_id) {
@@ -157,7 +145,7 @@ const syncLocation = () => {
 };
 
 const commitLocation = _debounce((value) => {
-  emit("applyOption", value);
+  emit('applyOption', value);
 }, 500);
 </script>
 

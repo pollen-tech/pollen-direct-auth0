@@ -25,7 +25,7 @@
               variant="outlined"
               :rules="required"
               multiple
-            ></v-combobox>
+            />
 
             <v-combobox
               v-model="company.subCategory"
@@ -80,10 +80,7 @@
             </p>
             <div>
               <template v-if="target_resale_market.length >= 0">
-                <span
-                  v-for="(target, i) in target_resale_market"
-                  v-bind:key="i"
-                >
+                <span v-for="(target, i) in target_resale_market" :key="i">
                   <v-chip
                     v-if="target?.country?.name"
                     :key="target.country.country_id"
@@ -91,7 +88,7 @@
                     closable
                     @click:close="remove_item(target)"
                   >
-                    <template v-for="(city, c) in target.city" v-bind:key="c">
+                    <template v-for="(city, c) in target.city" :key="c">
                       <span
                         v-if="c < 1"
                         class="text-truncate"
@@ -141,7 +138,7 @@
               placeholder="Choose one or more"
               variant="outlined"
               :rules="required"
-            ></v-combobox>
+            />
           </div>
 
           <v-btn
@@ -177,7 +174,7 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
@@ -192,24 +189,25 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-const emit = defineEmits(["submit", "previousPage", "error"]);
+const emit = defineEmits(['submit', 'previousPage', 'error']);
 
-const props = defineProps({
-  userId: { type: String, default: "" },
-  category: { type: Array, default: [] },
-  subCategory: { type: Array, default: [] },
-  countries: { type: Array, default: [] },
-  orderUnit: { type: Array, default: [] },
-  companyId: { type: String, default: "" },
-  profile: { type: Object, default: {} },
+// eslint-disable-next-line no-unused-vars
+const _props = defineProps({
+  userId: { type: String, default: '' },
+  category: { type: Array, default: () => [] },
+  subCategory: { type: Array, default: () => [] },
+  countries: { type: Array, default: () => [] },
+  orderUnit: { type: Array, default: () => [] },
+  companyId: { type: String, default: '' },
+  profile: { type: Object, default: () => ({}) },
 });
 
 const isLoading = ref(false);
 const showDialog = ref(false);
 const target_resale_market = ref([]);
-const required = [(v) => !!v || "Field is required"];
+const required = [(v) => !!v || 'Field is required'];
 const formRef = ref(null);
 const company = ref({});
 
@@ -220,14 +218,14 @@ const submit = async () => {
     const { valid } = await formRef.value.validate();
     if (valid) {
       const body = {
-        order_volume_id: company.value.order_volume?.id || "",
-        order_volume_name: company.value.order_volume?.name || "",
+        order_volume_id: company.value.order_volume?.id || '',
+        order_volume_name: company.value.order_volume?.name || '',
         interest_categories: extract_categories(), // company.value.categories,
         import_markets: extract_import_market(),
         target_markets: extract_target_market(),
       };
       console.log(body);
-      emit("submit", body);
+      emit('submit', body);
     } else {
       isLoading.value = false;
     }

@@ -19,7 +19,7 @@
                 :rules="required"
                 type="password"
                 :disabled="!isAvailable"
-              ></v-text-field>
+              />
             </div>
             <div class="my-2">
               <label class="font-weight-medium text-body-2"
@@ -30,7 +30,7 @@
                 v-model="account.new_password"
                 variant="outlined"
                 :rules="required"
-              ></v-text-field>
+              />
             </div>
             <div class="mt-2">
               <label class="font-weight-medium text-body-2"
@@ -41,7 +41,7 @@
                 v-model="account.confirm_password"
                 variant="outlined"
                 :rules="required"
-              ></v-text-field>
+              />
             </div>
           </v-sheet>
 
@@ -74,7 +74,7 @@
                   height: auto;
                   margin-right: 10px;
                 "
-              />
+              >
               <span class="text-capitalize"> Registered with Google</span>
             </v-btn>
             <v-btn variant="outlined" class="pa-5 rounded-lg pa-5 my-5" block>
@@ -86,7 +86,7 @@
                   height: auto;
                   margin-right: 10px;
                 "
-              />
+              >
               <span class="text-capitalize"> Registered with Microsoft </span>
             </v-btn>
           </v-sheet>
@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
 const isAvailable = ref(false);
 const account = ref({});

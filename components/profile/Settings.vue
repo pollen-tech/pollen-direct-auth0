@@ -48,7 +48,7 @@
               <v-row>
                 <v-col sm="2" md="1" class="d-flex justify-start mx-2">
                   <v-avatar rounded="0" color="#FAF5FF" size="55">
-                    <img src="../../assets/image/pollen-pass.svg" />
+                    <img src="../../assets/image/pollen-pass.svg" >
                   </v-avatar>
                 </v-col>
 
@@ -69,8 +69,7 @@
                     !$vuetify.display.mobile ? 'justify-end' : 'justify-start'
                   "
                   class="d-flex"
-                >
-                </v-col>
+                />
               </v-row>
             </div>
             <div class="px-10 py-4">
@@ -111,7 +110,7 @@
                               placeholder="Enter First Name"
                               :rules="required"
                               :disabled="!isAvailable"
-                            ></v-text-field>
+                            />
                           </div>
                           <div class="my-2">
                             <label class="font-weight-medium text-body-2"
@@ -124,7 +123,7 @@
                               placeholder="Enter Last Name"
                               :rules="required"
                               :disabled="!isAvailable"
-                            ></v-text-field>
+                            />
                           </div>
                           <div class="my-2">
                             <label class="font-weight-medium text-body-2"
@@ -160,8 +159,8 @@
                                 showSearchBox: true,
                                 showFlags: true,
                               }"
-                              @validate="phoneObject"
                               :disabled="!isAvailable"
+                              @validate="phoneObject"
                             />
                             <p
                               v-if="!phoneValid"
@@ -199,7 +198,7 @@
                               placeholder="Enter Email"
                               :rules="required"
                               :disabled="!isAvailable"
-                            ></v-text-field>
+                            />
                           </div>
                         </v-sheet>
                         <v-sheet class="mt-4 pa-6 pb-4 bg-white">
@@ -218,13 +217,13 @@
                             <img
                               src="../../assets/image/avatar_pollen_white.webp"
                               style="height: 80px; width: auto"
-                            />
+                            >
                           </div>
 
                           <div class="d-flex ga-3">
                             <img
                               src="../../assets/image/profile_card_user.png"
-                            />
+                            >
                             <div class="text-white">
                               <p class="font-weight-bold">
                                 {{ profile?.first_name || "-" }}
@@ -281,7 +280,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(item, index) in channels">
+                        <tr v-for="(item, index) in channels" :key="index">
                           <td>{{ CHANNEL[item.channel] || "unknown" }}</td>
                           <td class="text-purple">
                             <a
@@ -311,20 +310,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import moment from "moment";
+import { ref } from 'vue';
+import moment from 'moment';
 
-import { VueTelInput } from "vue-tel-input";
-import "vue-tel-input/vue-tel-input.css";
-import { lmsApi } from "~/services/api";
-import { useSellerStore } from "~/stores/seller";
-import { CHANNEL } from "~/utils/constant";
+import { VueTelInput } from 'vue-tel-input';
+import 'vue-tel-input/vue-tel-input.css';
+import { useSellerStore } from '~/stores/seller';
+import { CHANNEL } from '~/utils/constant';
 
 const props = defineProps({
-  dialog_value: { type: Boolean, default: false },
-  user_id: { type: String, default: "" },
+  dialogValue: { type: Boolean, default: false },
+  userId: { type: String, default: '' },
 });
-const emit = defineEmits(["close"]);
+const emit = defineEmits(['close']);
 
 const runtimeConfig = useRuntimeConfig();
 
@@ -336,28 +334,28 @@ const dialogVisible = ref(false);
 const phoneValid = ref(true);
 const isAvailable = ref(false);
 const profile = ref({
-  auth_id: "",
-  first_name: "",
-  last_name: "",
-  country_code: "",
-  phone_no: "",
+  auth_id: '',
+  first_name: '',
+  last_name: '',
+  country_code: '',
+  phone_no: '',
   phone_verified: false,
-  email: "",
-  channel: "",
-  status: "",
-  created_at: "",
-  pollen_pass_id: "",
+  email: '',
+  channel: '',
+  status: '',
+  created_at: '',
+  pollen_pass_id: '',
 });
-const required = [(v) => !!v || "Field is required"];
+const required = [(v) => !!v || 'Field is required'];
 const channels = ref(null);
 const dialog_content = ref([
   {
-    title: "Pollen Pass Profile Settings",
-    description: "Here you can update and view your Pollen Pass credentials",
+    title: 'Pollen Pass Profile Settings',
+    description: 'Here you can update and view your Pollen Pass credentials',
   },
   {
-    title: "Connected Channels",
-    description: "Here you view the links connected to this account",
+    title: 'Connected Channels',
+    description: 'Here you view the links connected to this account',
   },
 ]);
 
@@ -365,31 +363,31 @@ onMounted(async () => {
   // await getUserInfo(""); TODO
 });
 onUpdated(async () => {
-  if (props.dialog_value && !profile.value.auth_id) {
+  if (props.dialogValue && !profile.value.auth_id) {
     await get_profile();
     await get_pp_channel();
   }
 });
 
 const get_profile = async () => {
-  const req = await get_user_profile(props.user_id);
+  const req = await get_user_profile(props.userId);
   if (req) {
     if (JSON.stringify(profile.value) !== JSON.stringify(req)) {
       profile.value = req.data ? req.data : req;
       if (profile.value?.phone_verified) {
         profile.value.phone_no =
-          "+" + profile.value.country_code + profile.value.phone_no;
+          '+' + profile.value.country_code + profile.value.phone_no;
         console.log(profile.value.phone_no);
       }
       if (profile.value?.phone_no == 0) {
-        profile.value.phone_no = "";
+        profile.value.phone_no = '';
       }
     }
   }
 };
 
 const get_pp_channel = async () => {
-  const req = await get_user_channel(props.user_id);
+  const req = await get_user_channel(props.userId);
   if (req) {
     channels.value = req?.data;
   }
@@ -402,7 +400,7 @@ const phoneObject = (object) => {
 
 const closeDialog = () => {
   dialogVisible.value = false;
-  emit("close");
+  emit('close');
 };
 </script>
 

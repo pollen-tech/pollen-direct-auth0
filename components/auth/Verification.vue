@@ -8,11 +8,11 @@
             prepend-icon="mdi-chevron-left"
             style="color: #6b7280"
             class="text-capitalize"
-            @click="$emit('previousPage')"
             alt="Back"
+            @click="$emit('previousPage')"
           >
-            <template v-slot:prepend>
-              <v-icon color="#6B7280"></v-icon>
+            <template #prepend>
+              <v-icon color="#6B7280" />
             </template>
             Previous
           </v-btn>
@@ -40,7 +40,7 @@
               v-model="otp"
               :length="otpLength"
               :loading="isOtpLoading"
-            ></v-otp-input>
+            />
           </div>
 
           <p v-if="!isOtpValid" class="red--text text-caption mt-2 text-center">
@@ -99,7 +99,7 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
@@ -114,26 +114,26 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-const emit = defineEmits(["verifyOtpEvent", "sendOtpEvent", "previousPage"]);
+const emit = defineEmits(['verifyOtpEvent', 'sendOtpEvent', 'previousPage']);
 
 const props = defineProps({
-  email: { type: String, default: "-" },
-  referenceId: { type: String, default: "" },
+  email: { type: String, default: '-' },
+  referenceId: { type: String, default: '' },
   isOtpValid: { type: Boolean, default: true },
   isOtpLoading: { type: Boolean, default: false },
   phoneVerified: { type: Boolean, default: false },
-  otpType: { type: String, default: "sms" },
+  otpType: { type: String, default: 'sms' },
 });
 
 const runtimeConfig = useRuntimeConfig();
-const title = ref("Enter Verification Code");
-const desc = ref("We have sent a 6-digit code to:");
+const title = ref('Enter Verification Code');
+const desc = ref('We have sent a 6-digit code to:');
 const isLoading = ref(false);
 const showDialog = ref(false);
 
-const otp = ref("");
+const otp = ref('');
 const otpLength = ref(6);
 const totalTime = ref(120);
 const remainingTime = ref(120);
@@ -142,14 +142,14 @@ const timerInterval = ref(null);
 
 const submit = () => {
   isLoading.value = true;
-  emit("verifyOtpEvent", otp.value);
+  emit('verifyOtpEvent', otp.value);
 };
 const formatTime = computed(() => {
   const minutes = Math.floor(remainingTime.value / 60);
   const seconds = remainingTime.value % 60;
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
     2,
-    "0"
+    '0',
   )}`;
 });
 
@@ -171,19 +171,19 @@ const updateTimer = () => {
 
 const resendOtp = async () => {
   remainingTime.value = totalTime.value;
-  await emit("sendOtpEvent", props.email);
+  await emit('sendOtpEvent', props.email);
   startTimer();
-  otp.value = "";
+  otp.value = '';
 };
 
 const go_to_signup = () => {
-  navigateToPollenPass("signup");
+  navigateToPollenPass('signup');
 };
 
 const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
-  url.searchParams.append("channel", "CH_DIRECT");
-  url.searchParams.append("action", param);
+  url.searchParams.append('channel', 'CH_DIRECT');
+  url.searchParams.append('action', param);
   navigateTo(url.toString(), { external: true });
 };
 </script>
