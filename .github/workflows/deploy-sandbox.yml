@@ -47,7 +47,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
-          AWS_ACCESS_KEY_ID: "ASIA2UC3EFZOCSKCRO65"
-          AWS_SECRET_ACCESS_KEY: "mi4Hl6D0YDy9J5AOKDc30L4AkhsOW8GcW7jmkyoU"
+          AWS_ACCESS_KEY_ID: "AKIA2UC3EFZOPUVAIMFP"
+          AWS_SECRET_ACCESS_KEY: "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"
           AWS_REGION: "ap-southeast-1" # optional: defaults to us-east-1
           SOURCE_DIR: ".output/public"
