@@ -1,14 +1,14 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia';
 
-export const useCommonStore = defineStore("common", {
+export const useCommonStore = defineStore('common', {
   state: () => {
     return {
       showNotification: false,
       showDialog: false,
-      colorNotification: "white",
-      textNotification: "",
-      statusNotification: "success",
-      titleNotification: "",
+      colorNotification: 'white',
+      textNotification: '',
+      statusNotification: 'success',
+      titleNotification: '',
     };
   },
   actions: {

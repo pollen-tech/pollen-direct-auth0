@@ -56,7 +56,7 @@
           <v-col cols="12" md="4">
             <v-sheet color="#FFFFFF" theme="light" class="text-center pa-6">
               <h5 class="my-4">Pollen Direct Benefits</h5>
-              <v-divider></v-divider>
+              <v-divider />
 
               <p v-for="b in benefits" :key="b" class="text-start my-2">
                 <v-icon color="purple-darken-2" class="ma-2">mdi-check</v-icon>

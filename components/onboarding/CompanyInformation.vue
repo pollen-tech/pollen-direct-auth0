@@ -48,7 +48,7 @@
               :rules="required"
               :disabled="is_company_registered"
               @blur="onValidateCompanyName"
-            ></v-text-field>
+            />
           </div>
           <div class="my-2 text-start flex-1-0">
             <label class="font-weight-medium"
@@ -65,18 +65,18 @@
               :rules="required"
               :disabled="is_company_registered"
             >
-              <template v-slot:item="data">
+              <template #item="data">
                 <v-list-item
                   :key="data.item.id"
+                  v-bind="data.attrs"
                   @click="
                     () => {
                       console.log(data);
                       data.props.onClick(data.item);
                     }
                   "
-                  v-bind="data.attrs"
                 >
-                  <template v-slot:prepend> </template>
+                  <template #prepend />
 
                   <v-list-item-content>
                     <v-list-item-title>
@@ -90,13 +90,13 @@
                           <b>{{ data.item.title }}</b>
                           <span>{{ data.item.raw.description }}</span>
                         </div>
-                        <template v-slot:activator="{ props }">
+                        <template #activator="{ props }">
                           <v-icon
                             v-bind="props"
                             size="x-small"
                             color="grey"
                             icon="mdi-information-outline"
-                          ></v-icon>
+                          />
                         </template>
                       </v-tooltip>
                     </v-list-item-title>
@@ -144,7 +144,7 @@
             :disabled="is_company_registered"
             @change="checkTerms()"
           >
-            <template v-slot:label>
+            <template #label>
               <div>
                 Accept Pollen
                 <a
@@ -205,7 +205,7 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
@@ -220,22 +220,22 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useSellerStore } from "@/stores/seller";
+import { ref } from 'vue';
+import { useSellerStore } from '@/stores/seller';
 
-const emit = defineEmits(["submit", "skip", "error"]);
+const emit = defineEmits(['submit', 'skip', 'error']);
 const props = defineProps({
-  userId: { type: String, default: "" },
-  companyTypes: { type: Array, default: [] },
-  countries: { type: Array, default: [] },
-  company: { type: Object, default: {} },
+  userId: { type: String, default: '' },
+  companyTypes: { type: Array, default: () => [] },
+  countries: { type: Array, default: () => [] },
+  companyProfile: { type: Object, default: () => ({}) },
 });
 
 const sellerStore = useSellerStore();
 
 const company = ref({});
 
-const required = [(v) => !!v || "Field is required"];
+const required = [(v) => !!v || 'Field is required'];
 const isLoading = ref(false);
 const showDialog = ref(false);
 const validateCompanyName = ref(0);
@@ -254,9 +254,11 @@ const submit = async () => {
         operation_country_id: company.value.country.country_id,
         operation_country_name: company.value.country.name,
       };
-      emit("submit", body);
+      emit('submit', body);
     }
-  } catch (err) {}
+  } catch (err) {
+    emit('error', err);
+  }
 };
 
 const onValidateCompanyName = async () => {
@@ -275,8 +277,8 @@ const onValidateCompanyName = async () => {
 const checkTerms = () => {};
 
 onUpdated(() => {
-  if (props.company?.id) {
-    const res = props.company;
+  if (props.companyProfile?.id) {
+    const res = props.companyProfile;
     company.value.name = res.name;
     company.value.types = res.company_type_id;
     company.value.country = res.operation_country_name;

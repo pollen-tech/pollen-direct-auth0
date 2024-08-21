@@ -33,7 +33,7 @@
               :user-id="user_id"
               :company-types="company_type"
               :countries="countries"
-              :company="company_profile"
+              :company-profile="company_profile"
               @submit="next_step"
               @skip="goto_home_page"
               @error="show_error"
@@ -58,16 +58,16 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, nextTick } from "vue";
-import { directApi } from "@/services/api";
+import { ref, onBeforeMount, nextTick } from 'vue';
+import { directApi } from '@/services/api';
 
-import { useAuth } from "~/composables/auth0";
-import { useSellerStore } from "~/stores/seller";
-import { useCountryStore } from "~/stores/country";
-import { useCommonStore } from "~/stores/common";
+import { useAuth } from '~/composables/auth0';
+import { useSellerStore } from '~/stores/seller';
+import { useCountryStore } from '~/stores/country';
+import { useCommonStore } from '~/stores/common';
 
 definePageMeta({
-  middleware: "auth",
+  middleware: 'auth',
 });
 
 const { get_user_id } = useAuth();
@@ -82,7 +82,7 @@ const { get_user_profile, get_company_profile } = seller_store;
 const company_type = computed(() => seller_store.seller_company_types);
 const category = computed(() => seller_store.category);
 const order_unit = computed(() => seller_store.order_unit);
-const sub_category = ref([{ id: 1, name: "test" }]);
+const sub_category = ref([{ id: 1, name: 'test' }]);
 const company_profile = ref();
 
 const user_id = get_user_id();
@@ -116,7 +116,7 @@ onBeforeMount(async () => {
 });
 
 const goto_home_page = () => {
-  window.location.href = "/";
+  window.location.href = '/';
 };
 
 const next_step = async (param) => {
@@ -127,8 +127,8 @@ const next_step = async (param) => {
 
 const save_company_information = async (paramBody) => {
   try {
-    const req = await directApi("/onboard-company", "POST", company_body.value);
-    if (req.status_code == "CREATED") {
+    const req = await directApi('/onboard-company', 'POST', company_body.value);
+    if (req.status_code == 'CREATED') {
       await save_company_interest(req?.data, paramBody);
     } else {
       show_error(req);
@@ -143,15 +143,15 @@ const save_company_interest = async (param, paramBody) => {
     paramBody.company_id = param.id;
     const req = await directApi(
       `/onboard-company/${param.id}/interest`,
-      "POST",
+      'POST',
       paramBody
     );
     if (!req.statusCode) {
       await notify_admin_by_email(req.company_id);
       commonStore.setShowNotification({
         display: true,
-        status: "success",
-        msg: "Company Successfully Registered",
+        status: 'success',
+        msg: 'Company Successfully Registered',
       });
       goto_home_page();
     } else {
@@ -175,10 +175,10 @@ const notify_admin_by_email = async (companyId) => {
     };
     const req = await directApi(
       `/onboard-company/${companyId}/notify-admin-by-email`,
-      "POST",
+      'POST',
       body
     );
-    if (req.status_code != "OK") {
+    if (req.status_code != 'OK') {
       show_error(req);
     }
   } catch (err) {
@@ -199,19 +199,19 @@ const get_company = async () => {
 
 const show_error = (req) => {
   let errorMsg = req.message;
-  if (typeof req.message !== "string") {
+  if (typeof req.message !== 'string') {
     const formattedMessages = req.message.map((message) => {
-      const words = message.split(" ");
-      words[0] = "• " + words[0];
-      return words.join(" ");
+      const words = message.split(' ');
+      words[0] = '• ' + words[0];
+      return words.join(' ');
     });
 
-    errorMsg = formattedMessages.join(",<br/>");
+    errorMsg = formattedMessages.join(',<br/>');
   }
 
   commonStore.setShowNotification({
     display: true,
-    status: "error",
+    status: 'error',
     msg: errorMsg,
   });
 };

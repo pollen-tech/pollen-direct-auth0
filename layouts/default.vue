@@ -8,7 +8,7 @@
               src="~/assets/image/pollen-direct.svg"
               class="mt-2"
               style="width: 55px"
-          /></a>
+          ></a>
         </v-list-item-title>
       </v-list-item>
 
@@ -17,7 +17,7 @@
         <v-menu v-if="$vuetify.display.mobile && !is_authenticated">
           <template #activator="{ props }">
             <div>
-              <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
+              <v-btn icon="mdi-dots-vertical" v-bind="props" />
             </div>
           </template>
 
@@ -134,14 +134,14 @@
       <slot />
       <ProfileSettings
         v-model="dialog_visible"
-        :dialog_value="dialog_visible"
-        :user_id="user_id"
+        :dialog-value="dialog_visible"
+        :user-id="user_id"
         @close="dialog_visible = false"
       />
       <CompanySettings
         v-model="dialog_company"
-        :dialog_value="dialog_company"
-        :user_id="user_id"
+        :dialog-value="dialog_company"
+        :user-id="user_id"
         @close="dialog_company = false"
       />
     </v-main>
@@ -160,8 +160,8 @@
 
             <v-icon
               size="large"
-              @click="displayLogoutDialog = false"
               style="color: #6b7280"
+              @click="displayLogoutDialog = false"
               >mdi-close</v-icon
             >
           </div>
@@ -180,14 +180,13 @@
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
-              @click="displayLogoutDialog = false"
               style="color: #374151; font-size: 16px; letter-spacing: 0"
+              @click="displayLogoutDialog = false"
               >Back</v-btn
             >
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
-              @click="on_logout()"
               style="
                 background-color: #8431e7;
                 border: none;
@@ -195,6 +194,7 @@
                 font-size: 16px;
                 letter-spacing: 0;
               "
+              @click="on_logout()"
               >Logout</v-btn
             >
           </div>
@@ -206,10 +206,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRoute } from "vue-router";
-import { useAuth } from "~/composables/auth0";
-import { useSellerStore } from "~/stores/seller";
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { useAuth } from '~/composables/auth0';
+import { useSellerStore } from '~/stores/seller';
 
 const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
@@ -249,22 +249,22 @@ const get_profile = async () => {
 };
 
 const on_login = async () => {
-  navigateTo("/auth/login");
+  navigateTo('/auth/login');
 };
 
 const on_signup = async () => {
-  navigateToPollenPass("signup");
+  navigateToPollenPass('signup');
 };
 
 const on_logout = async () => {
   localStorage.clear();
-  window.location.href = "/";
+  window.location.href = '/';
 };
 
 const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
-  url.searchParams.append("channel", "CH_DIRECT");
-  url.searchParams.append("action", param);
+  url.searchParams.append('channel', 'CH_DIRECT');
+  url.searchParams.append('action', param);
   console.log(url);
   navigateTo(url.toString(), { external: true });
 };
@@ -278,8 +278,8 @@ const show_company_setting = () => {
 };
 
 const go_to_homepage = () => {
-  if (!currentUrl.value.includes("/onboarding")) {
-    window.location.href = "/";
+  if (!currentUrl.value.includes('/onboarding')) {
+    window.location.href = '/';
   }
 };
 </script>

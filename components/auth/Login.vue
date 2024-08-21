@@ -7,7 +7,7 @@
       }"
     >
       <div class="text-caption justify-center mb-12 mx-10 d-flex">
-        <img src="~/assets/image/pollen-direct-1.svg" class="mx-4" />
+        <img src="~/assets/image/pollen-direct-1.svg" class="mx-4" >
         <div>
           <p class="font-weight-bold mb-1">
             {{ notification.title }}
@@ -39,7 +39,7 @@
               variant="outlined"
               placeholder="Enter valid email address"
               :rules="required_email"
-            ></v-text-field>
+            />
           </div>
           <v-btn
             :disabled="!email"
@@ -52,7 +52,7 @@
           >
           <p class="text-center" style="font-size: 14px">
             Don't have Pollen Pass?
-            <a href="#" @click="on_signup" style="color: #8431e7"> Sign Up</a>
+            <a href="#" style="color: #8431e7" @click="on_signup"> Sign Up</a>
           </p>
         </v-form>
       </v-card>
@@ -72,7 +72,7 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               variant="outlined"
               class="ma-2 text-capitalize"
@@ -87,27 +87,27 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
-import { useSellerStore } from "~/stores/seller";
+import { ref } from 'vue';
+import { useSellerStore } from '~/stores/seller';
 
-const emit = defineEmits(["submit", "notRegister"]);
+const emit = defineEmits(['submit', 'notRegister']);
 
 const seller_store = useSellerStore();
 const runtimeConfig = useRuntimeConfig();
 const title = ref({
-  title: "Enter your information",
-  desc: "Login to Pollen Direct with Pollen Pass",
+  title: 'Enter your information',
+  desc: 'Login to Pollen Direct with Pollen Pass',
 });
 const notification = ref({
   title:
-    "Get exclusive access to the latest Pollen Direct liquidation inventory catalogs with Pollen Pass",
-  desc: "Pollen Pass is Pollen’s free buyer membership program. By signing up as a Pollen Pass member on Pollen Save. Pollen Save delivers excess or discontinued products from global brands direct to your doorstep. Whether you're looking for shampoo, conditioner, face wash, make up, toys, shoes, or more - there's something for everyone at unbeatable prices on Pollen Save!",
+    'Get exclusive access to the latest Pollen Direct liquidation inventory catalogs with Pollen Pass',
+  desc: 'Pollen Pass is Pollen’s free buyer membership program. By signing up as a Pollen Pass member on Pollen Save. Pollen Save delivers excess or discontinued products from global brands direct to your doorstep. Whether you\'re looking for shampoo, conditioner, face wash, make up, toys, shoes, or more - there\'s something for everyone at unbeatable prices on Pollen Save!',
 });
-const email = ref("");
+const email = ref('');
 const required_email = [
   (v) =>
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v) ||
-    "E-mail must be valid",
+    'E-mail must be valid',
 ];
 const is_loading = ref(false);
 const show_dialog = ref(false);
@@ -120,15 +120,15 @@ const submit = async () => {
     const validate_user_exist = await seller_store.validate_user_exist(
       email.value
     );
-    if (validate_user_exist?.status_code === "OK") {
-      emit("submit", email.value);
+    if (validate_user_exist?.status_code === 'OK') {
+      emit('submit', email.value);
       setTimeout(() => {
         is_loading.value = false;
       }, 1500);
     } else {
       is_loading.value = false;
-      emit("notRegister", {
-        title: "Email Not Registered",
+      emit('notRegister', {
+        title: 'Email Not Registered',
         msg: 'It looks like the email address you entered is not registered in our system. Please check the email address and try again. If you are new here, you can sign up to create a new Pollen Pass  account. For assistance please send us a message at <a href="mailto:cs@pollen.tech">cs@pollen.tech.</a>',
       });
     }
@@ -136,13 +136,13 @@ const submit = async () => {
 };
 
 const on_signup = async () => {
-  navigateToPollenPass("signup");
+  navigateToPollenPass('signup');
 };
 
 const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
-  url.searchParams.append("channel", "CH_DIRECT");
-  url.searchParams.append("action", param);
+  url.searchParams.append('channel', 'CH_DIRECT');
+  url.searchParams.append('action', param);
   console.log(url);
   navigateTo(url.toString(), { external: true });
 };

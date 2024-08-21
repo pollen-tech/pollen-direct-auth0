@@ -1,7 +1,7 @@
 <template>
   <div class="pb-6">
     <div class="d-flex justify-center">
-      <img class="pa-4" height="700" src="~/assets/image/under-con.svg" />
+      <img class="pa-4" height="700" src="~/assets/image/under-con.svg" >
     </div>
     <div class="text-center text-body-2">
       <p class="pb-4">

@@ -5,9 +5,9 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useAuth } from "~/composables/auth0";
+import { ref, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useAuth } from '~/composables/auth0';
 
 definePageMeta({
   layout: false,
@@ -26,14 +26,14 @@ onMounted(() => {
       try {
         await auth.handleAuth0Response(route.query);
         await nextTick();
-        router.push("/onboarding");
+        router.push('/onboarding');
       } catch (error) {
         is_visible.value = true;
-        console.error("Navigation error:", error);
+        console.error('Navigation error:', error);
       }
     } else {
       if (user_id) {
-        window.location.href = "/";
+        window.location.href = '/';
       } else {
         is_visible.value = true;
       }

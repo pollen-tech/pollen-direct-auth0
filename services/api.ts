@@ -1,13 +1,13 @@
 export const directApi = async (
   url: string,
-  method = "GET",
-  data: Record<string, any> = {}
+  method = 'GET',
+  data: Record<string, any> = {},
 ): Promise<any> => {
   const config = useRuntimeConfig();
 
   const init: RequestInit = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     method,
   };
@@ -18,7 +18,7 @@ export const directApi = async (
 
   try {
     const combinedUrl = new URL(
-      config.public.directBackendUrl.replace(/\/$/, "") + url
+      config.public.directBackendUrl.replace(/\/$/, '') + url,
     );
     const fetchData = await fetch(combinedUrl, init);
 
@@ -32,14 +32,14 @@ export const directApi = async (
 
 export const onboardingApi = async (
   url: string,
-  method = "GET",
-  data: Record<string, any> = {}
+  method = 'GET',
+  data: Record<string, any> = {},
 ): Promise<any> => {
   const config = useRuntimeConfig();
 
   const init: RequestInit = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     method,
   };
@@ -50,7 +50,7 @@ export const onboardingApi = async (
 
   try {
     const combinedUrl = new URL(
-      config.public.userOnboardBackendUrl.replace(/\/$/, "") + url
+      config.public.userOnboardBackendUrl.replace(/\/$/, '') + url,
     );
     const fetchData = await fetch(combinedUrl, init);
     if (fetchData.status !== 204) {
@@ -63,13 +63,13 @@ export const onboardingApi = async (
 
 export const lmsApi = async (
   url: string,
-  method = "GET",
-  data: Record<string, any> = {}
+  method = 'GET',
+  data: Record<string, any> = {},
 ): Promise<any> => {
   const config = useRuntimeConfig(); // Assuming useRuntimeConfig is imported and available
   const init: RequestInit = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     method,
   };
@@ -80,7 +80,7 @@ export const lmsApi = async (
 
   try {
     const combinedUrl = new URL(
-      config.public.lmsBackendUrl.replace(/\/$/, "") + url
+      config.public.lmsBackendUrl.replace(/\/$/, '') + url,
     );
     const fetchData = await fetch(combinedUrl, init);
 
@@ -94,13 +94,13 @@ export const lmsApi = async (
 
 export const auth0Api = async (
   url: string,
-  method = "GET",
-  data: Record<string, any> = {}
+  method = 'GET',
+  data: Record<string, any> = {},
 ): Promise<any> => {
   const config = useRuntimeConfig(); // Assuming useRuntimeConfig is imported and available
   const init: RequestInit = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     method,
   };
@@ -112,7 +112,7 @@ export const auth0Api = async (
   try {
     const fetchData = await fetch(
       new URL(url, config.public.lmsBackendUrl),
-      init
+      init,
     );
 
     if (fetchData.status !== 204) {
