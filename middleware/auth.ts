@@ -25,6 +25,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       } else {
         window.location.href = "/"; // Redirect to home if not authenticated
       }
+    } else if (to.name == "index") {
+      window.location.href = "/onboarding";
     }
   }
 });
