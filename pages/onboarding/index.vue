@@ -147,7 +147,7 @@ const save_company_interest = async (param, paramBody) => {
       paramBody
     );
     if (!req.statusCode) {
-      await notify_admin_by_email();
+      await notify_admin_by_email(req.company_id);
       commonStore.setShowNotification({
         display: true,
         status: "success",
@@ -163,7 +163,7 @@ const save_company_interest = async (param, paramBody) => {
   }
 };
 
-const notify_admin_by_email = async () => {
+const notify_admin_by_email = async (companyId) => {
   try {
     const body = {
       first_name: profile.value.first_name,
@@ -174,7 +174,7 @@ const notify_admin_by_email = async () => {
       pollen_pass_id: profile.value.pollen_pass_id,
     };
     const req = await directApi(
-      `/onboard-company/${props.companyId}/notify-admin-by-email`,
+      `/onboard-company/${companyId}/notify-admin-by-email`,
       "POST",
       body
     );
