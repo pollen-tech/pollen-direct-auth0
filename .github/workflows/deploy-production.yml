@@ -32,9 +32,9 @@ jobs:
         uses: allenevans/set-env@v2.0.0
         with:
           NUXT_POLLEN_PASS_URL: ${{ secrets.POLLEN_PASS_URL }}
-          NUXT_POLLEN_PASS_URL_PROD: ${{ secrets.POLLEN_PASS_URL_PROD }}
+          NUXT_POLLEN_PASS_URL_PROD: ${{ secrets.PROD_POLLEN_PASS_URL }}
           NUXT_POLLEN_LMS_URL: ${{ secrets.POLLEN_LMS_URL }}
-          NUXT_POLLEN_LMS_URL_PROD: ${{ secrets.POLLEN_LMS_URL_PROD }}
+          NUXT_POLLEN_LMS_URL_PROD: ${{ secrets.PROD_POLLEN_LMS_URL }}
           NUXT_DIRECT_API: ${{ secrets.DIRECT_API }}
       - name: Clean up
         run: yarn clean:nuxt
@@ -58,5 +58,5 @@ jobs:
           PATHS: "/*"
           AWS_REGION: "ap-southeast-1"
           DISTRIBUTION: "E2BX391S9D7VRQ"
-          AWS_ACCESS_KEY_ID: "AKIAZKDIC63XOQPCN6OG"
-          AWS_SECRET_ACCESS_KEY: "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"
+          AWS_ACCESS_KEY_ID: "AKIA2UC3EFZOGBXDFVWY"
+          AWS_SECRET_ACCESS_KEY: "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"
