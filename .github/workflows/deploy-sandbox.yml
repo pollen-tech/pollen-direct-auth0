@@ -8,7 +8,7 @@ env:
   AWS_S3_BUCKET: sandbox.web.direct
 jobs:
   deploy:
-    name: Deploy assets to Sandbox S3
+    name: Deploy assets to Sandbox S3 
     runs-on: ubuntu-latest
 
     strategy:
