@@ -22,8 +22,6 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
         if (interest?.data?.import_markets.length >= 1) {
           window.location.href = "/";
         }
-      } else {
-        window.location.href = "/"; // Redirect to home if not authenticated
       }
     } else if (to.name == "index") {
       window.location.href = "/onboarding";
