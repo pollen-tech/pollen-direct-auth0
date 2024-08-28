@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_S3_BUCKET: sandbox.web.direct
+  AWS_S3_BUCKET: web.direct
 jobs:
   deploy:
-    name: Deploy assets to Sandbox S3
+    name: Deploy assets to Production S3
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,11 +30,10 @@ jobs:
       - name: set-env
         uses: allenevans/set-env@v2.0.0
         with:
-          NUXT_POLLEN_PASS_URL: ${{ secrets.POLLEN_PASS_URL }}
-          NUXT_POLLEN_PASS_URL_PROD: ${{ secrets.POLLEN_PASS_URL_PROD }}
-          NUXT_POLLEN_LMS_URL: ${{ secrets.POLLEN_LMS_URL }}
-          NUXT_POLLEN_LMS_URL_PROD: ${{ secrets.POLLEN_LMS_URL_PROD }}
+          NUXT_POLLEN_PASS_URL: ${{ secrets.PROD_POLLEN_PASS_URL }}
+          NUXT_POLLEN_LMS_URL: ${{ secrets.PROD_POLLEN_LMS_URL }}
           NUXT_DIRECT_API: ${{ secrets.DIRECT_API }}
+          NUXT_LMS_API: ${{ secrets.LMS_API }}
       - name: Clean up
         run: yarn clean:nuxt
 
@@ -46,7 +45,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
-          AWS_ACCESS_KEY_ID: "AKIA2UC3EFZOGBXDFVWY"
-          AWS_SECRET_ACCESS_KEY: "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"
+          AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "ap-southeast-1" # optional: defaults to us-east-1
           SOURCE_DIR: ".output/public"
