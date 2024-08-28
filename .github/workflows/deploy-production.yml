@@ -32,8 +32,8 @@ jobs:
         with:
           NUXT_POLLEN_PASS_URL: ${{ secrets.PROD_POLLEN_PASS_URL }}
           NUXT_POLLEN_LMS_URL: ${{ secrets.PROD_POLLEN_LMS_URL }}
-          NUXT_DIRECT_API: ${{ secrets.DIRECT_API }}
-          NUXT_LMS_API: ${{ secrets.LMS_API }}
+          NUXT_DIRECT_API: ${{ secrets.PROD_DIRECT_API }}
+          NUXT_LMS_API: ${{ secrets.PROD_LMS_API }}
       - name: Clean up
         run: yarn clean:nuxt
 
