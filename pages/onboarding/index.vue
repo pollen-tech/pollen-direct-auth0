@@ -127,7 +127,7 @@ const next_step = async (param) => {
 
 const save_company_information = async (paramBody) => {
   try {
-    const req = await directApi("/onboard-company", "POST", company_body.value);
+    const req = await directApi("/direct/onboard-company", "POST", company_body.value);
     if (req.status_code == "CREATED") {
       await save_company_interest(req?.data, paramBody);
     } else {
@@ -142,7 +142,7 @@ const save_company_interest = async (param, paramBody) => {
   try {
     paramBody.company_id = param.id;
     const req = await directApi(
-      `/onboard-company/${param.id}/interest`,
+      `/direct/onboard-company/${param.id}/interest`,
       "POST",
       paramBody
     );
@@ -174,7 +174,7 @@ const notify_admin_by_email = async (companyId) => {
       pollen_pass_id: profile.value.pollen_pass_id,
     };
     const req = await directApi(
-      `/onboard-company/${companyId}/notify-admin-by-email`,
+      `/direct/onboard-company/${companyId}/notify-admin-by-email`,
       "POST",
       body
     );

@@ -18,7 +18,7 @@ export const directApi = async (
 
   try {
     const combinedUrl = new URL(
-      config.public.directBackendUrl.replace(/\/$/, '') + url,
+      config.public.userOnboardBackendUrl.replace(/\/$/, '') + url,
     );
     const fetchData = await fetch(combinedUrl, init);
 
