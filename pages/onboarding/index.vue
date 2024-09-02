@@ -59,6 +59,7 @@
 
 <script setup>
 import { ref, onBeforeMount, nextTick } from "vue";
+import { DIRECT_ONBOARD_COMPANY } from "~/utils/constant.js";
 import { directApi } from "@/services/api";
 
 import { useAuth } from "~/composables/auth0";
@@ -127,7 +128,11 @@ const next_step = async (param) => {
 
 const save_company_information = async (paramBody) => {
   try {
-    const req = await directApi("/direct/onboard-company", "POST", company_body.value);
+    const req = await directApi(
+      `${DIRECT_ONBOARD_COMPANY}`,
+      "POST",
+      company_body.value
+    );
     if (req.status_code == "CREATED") {
       await save_company_interest(req?.data, paramBody);
     } else {
@@ -142,7 +147,7 @@ const save_company_interest = async (param, paramBody) => {
   try {
     paramBody.company_id = param.id;
     const req = await directApi(
-      `/direct/onboard-company/${param.id}/interest`,
+      `${DIRECT_ONBOARD_COMPANY}/${param.id}/interest`,
       "POST",
       paramBody
     );
@@ -174,7 +179,7 @@ const notify_admin_by_email = async (companyId) => {
       pollen_pass_id: profile.value.pollen_pass_id,
     };
     const req = await directApi(
-      `/direct/onboard-company/${companyId}/notify-admin-by-email`,
+      `${DIRECT_ONBOARD_COMPANY}/${companyId}/notify-admin-by-email`,
       "POST",
       body
     );
