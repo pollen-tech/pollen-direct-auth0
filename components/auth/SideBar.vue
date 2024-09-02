@@ -7,7 +7,7 @@
       src="~/assets/image/pollen-direct-white.svg"
       alt="Pollen image"
       width="70px"
-    >
+    />
     <p class="font-weight-bold mt-8 mb-8 text-white" style="font-size: 24px">
       {{ title }}
     </p>
@@ -19,6 +19,7 @@
     <p class="text-start text-white font-weight-medium mt-4">
       - Powered by
       <a
+        href="https://pollen.tech/"
         class="text-decoration-underline font-weight-bold"
         style="color: #fde68a"
         >Pollen.tech</a
@@ -33,19 +34,19 @@ const _props = defineProps({
   title: {
     type: String,
     required: false,
-    default: 'Bulk buy liquidation inventory from global brands today',
+    default: "Bulk buy liquidation inventory from global brands today",
   },
   context: {
     type: Array,
     required: false,
     default: () => [
-      'Pollen Pass Exclusive',
-      '100% Authentic',
-      'Known & Loved Brands',
-      'Direct from Global Manufacturers',
-      'Regularly Refreshed',
+      "Pollen Pass Exclusive",
+      "100% Authentic",
+      "Known & Loved Brands",
+      "Direct from Global Manufacturers",
+      "Regularly Refreshed",
     ],
   },
-  type: { type: String, required: false, default: 'pollenpass' },
+  type: { type: String, required: false, default: "pollenpass" },
 });
 </script>
