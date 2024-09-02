@@ -27,17 +27,17 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: set-env
+      - name: Setup Environment Variable
         uses: allenevans/set-env@v2.0.0
         with:
           NUXT_POLLEN_PASS_URL: ${{ secrets.PROD_POLLEN_PASS_URL }}
           NUXT_POLLEN_LMS_URL: ${{ secrets.PROD_POLLEN_LMS_URL }}
           NUXT_DIRECT_API: ${{ secrets.PROD_DIRECT_API }}
           NUXT_LMS_API: ${{ secrets.PROD_LMS_API }}
-      - name: Clean up
+      - name: Clean up nuxt file
         run: yarn clean:nuxt
 
-      - name: Build SPA
+      - name: Build Application
         run: yarn generate
 
       - name: Sync assets to Production S3
