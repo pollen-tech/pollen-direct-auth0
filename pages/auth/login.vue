@@ -85,7 +85,7 @@ const verify_otp = async (param) => {
 
     const req = await onboardingApi(fullUrl, "POST");
     if (req.status_code) {
-      req.message = req.message ? req.message : req.desc;
+      req.message = req.message ? req.message : "OTP is not valid";
       getErrorMessage(req);
       console.log(req);
     } else {
