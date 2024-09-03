@@ -11,7 +11,12 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
       meta: [{ name: "robots", content: "noindex" }],
       link: [
-        { rel: "icon", type: "image/x-icon", href: "/icon.png" },
+        {
+          rel: "icon",
+          type: "image/x-icon",
+          href: "/pollen.svg",
+        },
+
         {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap",
