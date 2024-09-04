@@ -41,7 +41,6 @@
             <OnboardingCompanyInterest
               v-else
               :category="category"
-              :sub-category="sub_category"
               :order-unit="order_unit"
               :countries="countries"
               :profile="profile"
@@ -83,7 +82,6 @@ const { get_user_profile, get_company_profile } = seller_store;
 const company_type = computed(() => seller_store.seller_company_types);
 const category = computed(() => seller_store.category);
 const order_unit = computed(() => seller_store.order_unit);
-const sub_category = ref([{ id: 1, name: "test" }]);
 const company_profile = ref();
 
 const user_id = get_user_id();
@@ -111,6 +109,7 @@ onBeforeMount(async () => {
     } else {
       await seller_store.get_company_types();
       await countryStore.get_countries();
+      await seller_store.get_category();
       company_profile.value = companyProfile?.data;
     }
   }
@@ -158,7 +157,9 @@ const save_company_interest = async (param, paramBody) => {
         status: "success",
         msg: "Company Successfully Registered",
       });
-      goto_home_page();
+      setTimeout(() => {
+        goto_home_page();
+      }, 2000);
     } else {
       show_error(err);
       return;

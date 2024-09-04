@@ -15,35 +15,55 @@
                 >Categories of Interest <span class="red--text">*</span>
               </label>
             </div>
-            <v-combobox
-              v-model="company.categories"
-              :items="category"
-              item-value="id"
-              item-title="name"
-              :return-object="true"
-              placeholder="Main Category, Multi-Select (Mandatory)"
-              variant="outlined"
-              :rules="required"
-              multiple
-            />
+            <p
+              v-if="interest_categories.length < 1"
+              class="red--text text-caption"
+            >
+              Field is required
+            </p>
+            <div>
+              <template v-if="interest_categories.length >= 0">
+                <span v-for="(cat, i) in interest_categories" :key="i">
+                  <v-chip
+                    v-if="cat?.category?.category_name"
+                    :key="cat.category.category_id"
+                    class="my-2 text-truncate multiline-text"
+                    closable
+                    @click:close="remove_category_item(cat)"
+                  >
+                    {{ cat?.category?.category_name }} ,
+                    <template v-for="(sub_cat, c) in cat.sub_category" :key="c">
+                      <span
+                        v-if="c < 1"
+                        class="text-truncate"
+                        style="max-width: 90px"
+                      >
+                        {{ sub_cat.sub_category_name }}
+                      </span>
+                      <span v-if="c === 1">
+                        ( +{{ cat.sub_category.length - 1 }} others )&nbsp;
+                        <v-tooltip activator="parent" location="end">
+                          <div
+                            v-for="(
+                              additional_sub_cat, index
+                            ) in cat.sub_category.slice(1)"
+                            :key="index"
+                          >
+                            {{ additional_sub_cat.sub_category_name }}
+                          </div>
+                        </v-tooltip>
+                      </span>
+                    </template>
+                  </v-chip>
+                </span>
+              </template>
+            </div>
 
-            <v-combobox
-              v-model="company.subCategory"
-              :items="subCategory"
-              item-value="id"
-              item-title="name"
-              :return-object="false"
-              placeholder="Sub Category (Optional)"
-              variant="outlined"
-              persistent-hint="true"
-              class="mb-5"
-              :disabled="true"
-              :hint="'message'"
-            >
-              <template #message>
-                <div class="ml-n3">Not Available</div>
-              </template></v-combobox
-            >
+            <onboarding-category
+              :preselect="interest_categories"
+              :categories="category"
+              @apply-option="applyOptionCategory"
+            />
           </div>
 
           <div class="my-2 text-start flex-1-0">
@@ -189,25 +209,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const emit = defineEmits(['submit', 'previousPage', 'error']);
+const emit = defineEmits(["submit", "previousPage", "error"]);
 
 // eslint-disable-next-line no-unused-vars
 const _props = defineProps({
-  userId: { type: String, default: '' },
+  userId: { type: String, default: "" },
   category: { type: Array, default: () => [] },
-  subCategory: { type: Array, default: () => [] },
   countries: { type: Array, default: () => [] },
   orderUnit: { type: Array, default: () => [] },
-  companyId: { type: String, default: '' },
+  companyId: { type: String, default: "" },
   profile: { type: Object, default: () => ({}) },
 });
 
 const isLoading = ref(false);
 const showDialog = ref(false);
 const target_resale_market = ref([]);
-const required = [(v) => !!v || 'Field is required'];
+const interest_categories = ref([]);
+const required = [(v) => !!v || "Field is required"];
 const formRef = ref(null);
 const company = ref({});
 
@@ -218,14 +238,13 @@ const submit = async () => {
     const { valid } = await formRef.value.validate();
     if (valid) {
       const body = {
-        order_volume_id: company.value.order_volume?.id || '',
-        order_volume_name: company.value.order_volume?.name || '',
-        interest_categories: extract_categories(), // company.value.categories,
+        order_volume_id: company.value.order_volume?.id || "",
+        order_volume_name: company.value.order_volume?.name || "",
+        interest_categories: extract_categories() || [],
         import_markets: extract_import_market(),
         target_markets: extract_target_market(),
       };
-      console.log(body);
-      emit('submit', body);
+      emit("submit", body);
     } else {
       isLoading.value = false;
     }
@@ -235,7 +254,6 @@ const submit = async () => {
 };
 
 const remove_item = (param) => {
-  console.log(param);
   if (target_resale_market.value[0]) {
     const extract_cn = target_resale_market.value.filter(
       (item) => item.country.country_id !== param.country.country_id
@@ -243,7 +261,30 @@ const remove_item = (param) => {
     target_resale_market.value = extract_cn;
   }
 };
+const remove_category_item = (param) => {
+  if (interest_categories.value[0]) {
+    const extract_cat = interest_categories.value.filter(
+      (item) => item.category.category_id !== param.category.category_id
+    );
+    interest_categories.value = extract_cat;
+  }
+};
 
+const applyOptionCategory = (param) => {
+  interest_categories.value = param;
+  company.value.interest_categories = format_category(param);
+};
+
+const format_category = (param) => {
+  const formattedArray = param.map((category) => {
+    category.sub_category = category.sub_category.map(
+      ({ sub_category_description, ...rest }) => rest
+    );
+
+    return category;
+  });
+  return formattedArray;
+};
 const applyOption = (param) => {
   target_resale_market.value = param;
   company.value.target_markets_city = format_location_city(param);
@@ -293,12 +334,16 @@ const extract_import_market = () => {
 };
 
 const extract_categories = () => {
-  const formattedArray = company.value.categories.map((entry) => ({
-    category_id: entry.id,
-    category_name: entry.name,
+  const transformedData = company.value.interest_categories.map((item) => ({
+    category_id: item.category.category_id,
+    category_name: item.category.category_name,
+    sub_category: item.sub_category.map((sub) => ({
+      category_id: sub.category_id,
+      sub_category_id: sub.sub_category_id,
+      sub_category_name: sub.sub_category_name,
+    })),
   }));
-
-  return formattedArray;
+  return transformedData;
 };
 </script>
 <style>
