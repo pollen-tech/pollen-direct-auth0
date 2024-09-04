@@ -31,7 +31,7 @@ export const useSellerStore = defineStore("seller", {
       seller_liquidate: [],
       sellerProfile: {},
       category: [],
-      subCategory: [],
+      sub_category: [],
       order_unit: [
         {
           id: 1,
@@ -88,11 +88,18 @@ export const useSellerStore = defineStore("seller", {
       return req;
     },
     async get_category() {
-      const { data } = await directApi(`${DIRECT_ONBOARD_COMPANY}/category`);
+      const { data } = await onboardingApi(`/product-category`);
       this.category = data;
     },
+    async get_sub_category(id: number) {
+      const { data } = await onboardingApi(
+        `/product-category/${id}/sub-category`
+      );
+      this.sub_category = data;
+      return data;
+    },
     async get_order_unit() {
-      const { data } = await directApi(
+      const { data } = await onboardingApi(
         `${DIRECT_ONBOARD_COMPANY}/order-volume`
       );
       this.order_unit = data;
