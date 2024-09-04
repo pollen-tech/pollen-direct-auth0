@@ -144,7 +144,7 @@
                           >Company Type <span class="red--text">*</span>
                         </label>
                         <v-combobox
-                          v-model="company.company_type_id"
+                          v-model="company.company_type_description"
                           :items="seller_store.seller_company_types"
                           item-value="id"
                           item-title="name"
@@ -347,16 +347,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import 'vue-tel-input/vue-tel-input.css';
-import { useSellerStore } from '~/stores/seller';
-import { useCountryStore } from '~/stores/country';
+import { ref } from "vue";
+import "vue-tel-input/vue-tel-input.css";
+import { useSellerStore } from "~/stores/seller";
+import { useCountryStore } from "~/stores/country";
 
 const props = defineProps({
   dialogValue: { type: Boolean, default: false },
-  userId: { type: String, default: '' },
+  userId: { type: String, default: "" },
 });
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 const seller_store = useSellerStore();
 const { get_company_profile, get_company_interest } = seller_store;
@@ -367,12 +367,12 @@ const dialogVisible = ref(false);
 const is_available = ref(false);
 const form_disabled = ref(true);
 const company = ref({
-  account_id: '',
-  name: '',
-  company_type_id: '',
-  country: '',
+  account_id: "",
+  name: "",
+  company_type_id: "",
+  country: "",
 });
-const required = [(v) => !!v || 'Field is required'];
+const required = [(v) => !!v || "Field is required"];
 const target_resale_market = ref([]);
 
 onUpdated(async () => {
@@ -453,7 +453,7 @@ const extract_data_target_resale = (param) => {
 };
 const closeDialog = () => {
   dialogVisible.value = false;
-  emit('close');
+  emit("close");
 };
 </script>
 
