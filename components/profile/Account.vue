@@ -74,7 +74,7 @@
                   height: auto;
                   margin-right: 10px;
                 "
-              >
+              />
               <span class="text-capitalize"> Registered with Google</span>
             </v-btn>
             <v-btn variant="outlined" class="pa-5 rounded-lg pa-5 my-5" block>
@@ -86,7 +86,7 @@
                   height: auto;
                   margin-right: 10px;
                 "
-              >
+              />
               <span class="text-capitalize"> Registered with Microsoft </span>
             </v-btn>
           </v-sheet>
@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const isAvailable = ref(false);
 const account = ref({});

@@ -220,12 +220,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useSellerStore } from '@/stores/seller';
+import { ref } from "vue";
+import { useSellerStore } from "@/stores/seller";
 
-const emit = defineEmits(['submit', 'skip', 'error']);
+const emit = defineEmits(["submit", "skip", "error"]);
 const props = defineProps({
-  userId: { type: String, default: '' },
+  userId: { type: String, default: "" },
   companyTypes: { type: Array, default: () => [] },
   countries: { type: Array, default: () => [] },
   companyProfile: { type: Object, default: () => ({}) },
@@ -235,7 +235,7 @@ const sellerStore = useSellerStore();
 
 const company = ref({});
 
-const required = [(v) => !!v || 'Field is required'];
+const required = [(v) => !!v || "Field is required"];
 const isLoading = ref(false);
 const showDialog = ref(false);
 const validateCompanyName = ref(0);
@@ -254,10 +254,10 @@ const submit = async () => {
         operation_country_id: company.value.country.country_id,
         operation_country_name: company.value.country.name,
       };
-      emit('submit', body);
+      emit("submit", body);
     }
   } catch (err) {
-    emit('error', err);
+    emit("error", err);
   }
 };
 

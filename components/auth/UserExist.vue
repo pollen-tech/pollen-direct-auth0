@@ -31,8 +31,8 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
-import { useCommonStore } from '~/stores/common';
+import { storeToRefs } from "pinia";
+import { useCommonStore } from "~/stores/common";
 
 const config = useRuntimeConfig();
 const commonStore = useCommonStore();
@@ -40,20 +40,20 @@ const { showDialog, titleNotification, textNotification } =
   storeToRefs(commonStore);
 
 const onSignUp = () => {
-  navigateToPollenPass('signup');
+  navigateToPollenPass("signup");
 };
 
 const navigateToPollenPass = (param) => {
   const url = new URL(config.public.pollenPassUrl);
-  url.searchParams.append('channel', 'CH_DIRECT');
-  url.searchParams.append('action', param);
+  url.searchParams.append("channel", "CH_DIRECT");
+  url.searchParams.append("action", param);
   navigateTo(url.toString(), { external: true });
 };
 
 const contactCS = () => {
-  console.log('Contact CS button clicked');
+  console.log("Contact CS button clicked");
   commonStore.hideNotification();
-  window.location.href = 'mailto:cs@pollen.tech';
+  window.location.href = "mailto:cs@pollen.tech";
 };
 
 const hideDialog = () => {

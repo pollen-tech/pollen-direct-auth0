@@ -48,7 +48,7 @@
               <v-row>
                 <v-col sm="2" md="1" class="d-flex justify-start mx-2">
                   <v-avatar rounded="0" color="#FAF5FF" size="55">
-                    <img src="../../assets/image/pollen-pass.svg" >
+                    <img src="../../assets/image/pollen-pass.svg" />
                   </v-avatar>
                 </v-col>
 
@@ -217,13 +217,13 @@
                             <img
                               src="../../assets/image/avatar_pollen_white.webp"
                               style="height: 80px; width: auto"
-                            >
+                            />
                           </div>
 
                           <div class="d-flex ga-3">
                             <img
                               src="../../assets/image/profile_card_user.png"
-                            >
+                            />
                             <div class="text-white">
                               <p class="font-weight-bold">
                                 {{ profile?.first_name || "-" }}
@@ -254,7 +254,7 @@
                               <p class="font-weight-bold text-body-2">
                                 {{
                                   moment(profile?.created_at).format(
-                                    "DD/MM/YYYY"
+                                    "DD/MM/YYYY",
                                   )
                                 }}
                               </p>
@@ -310,19 +310,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import moment from 'moment';
+import { ref } from "vue";
+import moment from "moment";
 
-import { VueTelInput } from 'vue-tel-input';
-import 'vue-tel-input/vue-tel-input.css';
-import { useSellerStore } from '~/stores/seller';
-import { CHANNEL } from '~/utils/constant';
+import { VueTelInput } from "vue-tel-input";
+import "vue-tel-input/vue-tel-input.css";
+import { useSellerStore } from "~/stores/seller";
+import { CHANNEL } from "~/utils/constant";
 
 const props = defineProps({
   dialogValue: { type: Boolean, default: false },
-  userId: { type: String, default: '' },
+  userId: { type: String, default: "" },
 });
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 const runtimeConfig = useRuntimeConfig();
 
@@ -334,28 +334,28 @@ const dialogVisible = ref(false);
 const phoneValid = ref(true);
 const isAvailable = ref(false);
 const profile = ref({
-  auth_id: '',
-  first_name: '',
-  last_name: '',
-  country_code: '',
-  phone_no: '',
+  auth_id: "",
+  first_name: "",
+  last_name: "",
+  country_code: "",
+  phone_no: "",
   phone_verified: false,
-  email: '',
-  channel: '',
-  status: '',
-  created_at: '',
-  pollen_pass_id: '',
+  email: "",
+  channel: "",
+  status: "",
+  created_at: "",
+  pollen_pass_id: "",
 });
-const required = [(v) => !!v || 'Field is required'];
+const required = [(v) => !!v || "Field is required"];
 const channels = ref(null);
 const dialog_content = ref([
   {
-    title: 'Pollen Pass Profile Settings',
-    description: 'Here you can update and view your Pollen Pass credentials',
+    title: "Pollen Pass Profile Settings",
+    description: "Here you can update and view your Pollen Pass credentials",
   },
   {
-    title: 'Connected Channels',
-    description: 'Here you view the links connected to this account',
+    title: "Connected Channels",
+    description: "Here you view the links connected to this account",
   },
 ]);
 
@@ -376,11 +376,11 @@ const get_profile = async () => {
       profile.value = req.data ? req.data : req;
       if (profile.value?.phone_verified) {
         profile.value.phone_no =
-          '+' + profile.value.country_code + profile.value.phone_no;
+          "+" + profile.value.country_code + profile.value.phone_no;
         console.log(profile.value.phone_no);
       }
       if (profile.value?.phone_no == 0) {
-        profile.value.phone_no = '';
+        profile.value.phone_no = "";
       }
     }
   }
@@ -400,7 +400,7 @@ const phoneObject = (object) => {
 
 const closeDialog = () => {
   dialogVisible.value = false;
-  emit('close');
+  emit("close");
 };
 </script>
 

@@ -103,7 +103,7 @@
                 <span v-for="(target, i) in target_resale_market" :key="i">
                   <v-chip
                     v-if="target?.country?.name"
-                    :key="target.country.country_id"
+                    :key="target.country.id"
                     class="my-2 text-truncate multiline-text"
                     closable
                     @click:close="remove_item(target)"
@@ -114,18 +114,18 @@
                         class="text-truncate"
                         style="max-width: 90px"
                       >
-                        {{ city.name }} ,
+                        {{ city.city_name }} ,
                       </span>
                       <span v-if="c === 1">
                         ( +{{ target.city.length - 1 }} others ),&nbsp;
                         <v-tooltip activator="parent" location="end">
                           <div
                             v-for="(additionalCity, index) in target.city.slice(
-                              1
+                              1,
                             )"
                             :key="index"
                           >
-                            {{ additionalCity.name }}
+                            {{ additionalCity.city_name }}
                           </div>
                         </v-tooltip>
                       </span>
@@ -256,7 +256,7 @@ const submit = async () => {
 const remove_item = (param) => {
   if (target_resale_market.value[0]) {
     const extract_cn = target_resale_market.value.filter(
-      (item) => item.country.country_id !== param.country.country_id
+      (item) => item.country.id !== param.country.id,
     );
     target_resale_market.value = extract_cn;
   }
@@ -264,7 +264,7 @@ const remove_item = (param) => {
 const remove_category_item = (param) => {
   if (interest_categories.value[0]) {
     const extract_cat = interest_categories.value.filter(
-      (item) => item.category.category_id !== param.category.category_id
+      (item) => item.category.category_id !== param.category.category_id,
     );
     interest_categories.value = extract_cat;
   }
@@ -278,7 +278,7 @@ const applyOptionCategory = (param) => {
 const format_category = (param) => {
   const formattedArray = param.map((category) => {
     category.sub_category = category.sub_category.map(
-      ({ sub_category_description, ...rest }) => rest
+      ({ sub_category_description, ...rest }) => rest,
     );
 
     return category;
@@ -295,17 +295,17 @@ const format_location_city = (param) => {
   const formattedArray = param.flatMap((entry) =>
     entry.city.map((city) => ({
       country_name: entry.country.name,
-      country_id: entry.country.country_id,
+      country_id: entry.country.id,
       city_id: city.id,
-      city_name: city.name,
-    }))
+      city_name: city.city_name,
+    })),
   );
 
   return formattedArray;
 };
 const format_location_country = (param) => {
   const formattedArray = param.map((entry) => ({
-    country_id: entry.country.country_id,
+    country_id: entry.country.id,
     name: entry.country.name,
   }));
 
@@ -314,11 +314,11 @@ const format_location_country = (param) => {
 
 const extract_target_market = () => {
   const res = target_resale_market.value.map((item) => ({
-    country_id: item.country.country_id,
+    country_id: item.country.id,
     country_name: item.country.name,
     cities: item.city.map((city) => ({
       city_id: city.city_id,
-      city_name: city.name,
+      city_name: city.city_name,
     })),
   }));
   return res;
@@ -326,7 +326,7 @@ const extract_target_market = () => {
 
 const extract_import_market = () => {
   const res = {
-    country_id: company.value.import_markets.country_id,
+    country_id: company.value.import_markets.id,
     country_name: company.value.import_markets.name,
   };
 
