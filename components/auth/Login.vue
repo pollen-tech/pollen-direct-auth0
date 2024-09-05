@@ -118,7 +118,7 @@ const submit = async () => {
   const { valid } = await formRef.value.validate();
   if (valid) {
     const validate_user_exist = await seller_store.validate_user_exist(
-      email.value,
+      email.value
     );
     if (validate_user_exist?.status_code === "OK") {
       emit("submit", email.value);
@@ -129,7 +129,7 @@ const submit = async () => {
       is_loading.value = false;
       emit("notRegister", {
         title: "Email Not Registered",
-        msg: 'It looks like the email address you entered is not registered in our system. Please check the email address and try again. If you are new here, you can sign up to create a new Pollen Pass  account. For assistance please send us a message at <a href="mailto:cs@pollen.tech">cs@pollen.tech.</a>',
+        msg: "It looks like the email address you entered is not registered in our system. Please check the email address and try again. If you are new here, you can sign up to create a new Pollen Pass  account. For assistance please send us a message at cs@pollen.tech.",
       });
     }
   }
