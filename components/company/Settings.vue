@@ -225,14 +225,14 @@
                       </div>
                       <div class="my-2">
                         <label class="font-weight-medium text-body-2"
-                          >Market You Buy from*
+                          >Market You Buy from
                           <span class="red--text">*</span></label
                         >
                         <v-autocomplete
                           v-model="company.import_markets"
                           item-value="id"
                           item-title="name"
-                          :items="seller_store.countries"
+                          :items="countries"
                           :return-object="true"
                           placeholder="Choose one or more"
                           variant="outlined"

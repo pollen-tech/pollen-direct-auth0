@@ -4,7 +4,7 @@
       <v-col>
         <v-autocomplete
           v-model="country"
-          item-value="country_id"
+          item-value="id"
           item-title="name"
           :items="countries"
           :return-object="true"
@@ -18,7 +18,7 @@
         <v-autocomplete
           v-model="city"
           item-value="city_id"
-          item-title="name"
+          item-title="city_name"
           :items="cityList"
           :return-object="true"
           placeholder="City"
@@ -33,9 +33,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import _debounce from 'lodash/debounce';
-import { useCountryStore } from '~/stores/country';
+import { ref, watch, onMounted } from "vue";
+import _debounce from "lodash/debounce";
+import { useCountryStore } from "~/stores/country";
 
 // Props
 const props = defineProps({
@@ -51,7 +51,7 @@ const props = defineProps({
 });
 
 // Emit
-const emit = defineEmits(['applyOption']);
+const emit = defineEmits(["applyOption"]);
 
 // Store
 const country_store = useCountryStore();
@@ -77,14 +77,15 @@ onMounted(() => {
 });
 
 const fetchCity = async (selectedCountry) => {
-  if (selectedCountry?.country_id) {
-    const cities = await country_store.get_cities(selectedCountry.country_id);
+  if (selectedCountry?.id) {
+    const cities = await country_store.get_cities(selectedCountry.id);
     cityList.value = cities;
     city.value = [];
+    console.log(cities);
 
     // Update location to include new cities
     const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.country_id === selectedCountry.country_id
+      (loc) => loc.country?.id === selectedCountry.id
     );
     if (countryIndex === -1) {
       location.value.push({
@@ -101,9 +102,9 @@ const fetchCity = async (selectedCountry) => {
 };
 
 const selectLocation = (selectedCities) => {
-  if (country.value?.country_id) {
+  if (country.value?.id) {
     const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.country_id === country.value.country_id
+      (loc) => loc.country?.id === country.value.id
     );
 
     if (countryIndex !== -1) {
@@ -118,11 +119,11 @@ const syncLocation = () => {
 
   location.value.forEach((item) => {
     if (item.country) {
-      const { country_id, name } = item.country;
+      const { id, name } = item.country;
 
-      if (combinedCountries[country_id]) {
+      if (combinedCountries[id]) {
         // Combine cities if the country already exists
-        const existingCities = combinedCountries[country_id].city;
+        const existingCities = combinedCountries[id].city;
         const newCities = item.city.filter(
           (newCity) =>
             !existingCities.some(
@@ -130,11 +131,11 @@ const syncLocation = () => {
             )
         );
 
-        combinedCountries[country_id].city = [...existingCities, ...newCities];
+        combinedCountries[id].city = [...existingCities, ...newCities];
       } else {
         // Add new country
-        combinedCountries[country_id] = {
-          country: { country_id, name },
+        combinedCountries[id] = {
+          country: { id, name },
           city: [...item.city],
         };
       }
@@ -145,7 +146,7 @@ const syncLocation = () => {
 };
 
 const commitLocation = _debounce((value) => {
-  emit('applyOption', value);
+  emit("applyOption", value);
 }, 500);
 </script>
 
