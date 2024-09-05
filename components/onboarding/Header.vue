@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-const title = 'Pollen Direct';
+const title = "Pollen Direct";
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,7 +1,7 @@
 <template>
   <div class="pb-6">
     <div class="d-flex justify-center">
-      <img class="pa-4" height="700" src="~/assets/image/under-con.svg" >
+      <img class="pa-4" height="700" src="~/assets/image/under-con.svg" />
     </div>
     <div class="text-center text-body-2">
       <p class="pb-4">
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
   setup() {
@@ -31,14 +31,14 @@ export default defineComponent({
   },
   data() {
     return {
-      phoneLocal: '',
-      salesTeamNumber: '',
+      phoneLocal: "",
+      salesTeamNumber: "",
       config: null,
     };
   },
   mounted() {
     const config = useRuntimeConfig();
-    this.phoneLocal = '';
+    this.phoneLocal = "";
     this.salesTeamNumber = config.public.salesTeamNumber;
   },
 });

@@ -68,7 +68,7 @@ watch(
   (newVal) => {
     res_category.value = Object.values(newVal);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // Lifecycle hook
@@ -79,13 +79,13 @@ onMounted(() => {
 const fetch_sub_category = async (val) => {
   if (val?.category_id) {
     const req_sub_category = await seller_store.get_sub_category(
-      val.category_id
+      val.category_id,
     );
     sub_category_list.value = req_sub_category;
     sub_category.value = [];
     // Update res_category to include new cities
     const categoryIndex = res_category.value.findIndex(
-      (cat) => cat.category_id === val.category_id
+      (cat) => cat.category_id === val.category_id,
     );
     if (categoryIndex === -1) {
       res_category.value.push({
@@ -104,7 +104,7 @@ const fetch_sub_category = async (val) => {
 const select_sub_category = (selected_category) => {
   if (category.value?.category_id) {
     const categoryIndex = res_category.value.findIndex(
-      (cat) => cat.category?.category_id === category.value.category_id
+      (cat) => cat.category?.category_id === category.value.category_id,
     );
 
     if (categoryIndex !== -1) {
@@ -129,8 +129,8 @@ const sync_category = () => {
           (new_sub) =>
             !existingCategories.some(
               (existingCategory) =>
-                existingCategory.sub_category_id === new_sub.sub_category_id
-            )
+                existingCategory.sub_category_id === new_sub.sub_category_id,
+            ),
         );
 
         combinedCategory[category_id].sub_category = [

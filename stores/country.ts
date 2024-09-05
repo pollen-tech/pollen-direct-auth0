@@ -29,7 +29,7 @@ export const useCountryStore = defineStore("country", {
     },
     async get_cities(param: any) {
       return cities_list_typed.filter(
-        (city: { country_id: any }) => city.country_id === param
+        (city: { country_id: any }) => city.country_id === param,
       ) as City[];
       // const { data } = await onboardingApi(`/country/${param}/city`);
       // return data;

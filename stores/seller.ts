@@ -67,7 +67,7 @@ export const useSellerStore = defineStore("seller", {
         company_name: param,
       };
       const { data } = await directApi(
-        `${DIRECT_ONBOARD_COMPANY}?${new URLSearchParams(body).toString()}`
+        `${DIRECT_ONBOARD_COMPANY}?${new URLSearchParams(body).toString()}`,
       );
       return data;
     },
@@ -88,25 +88,25 @@ export const useSellerStore = defineStore("seller", {
       return req;
     },
     async get_category() {
-      const { data } = await onboardingApi(`/product-category`);
+      const { data } = await onboardingApi("/product-category");
       this.category = data;
     },
     async get_sub_category(id: number) {
       const { data } = await onboardingApi(
-        `/product-category/${id}/sub-category`
+        `/product-category/${id}/sub-category`,
       );
       this.sub_category = data;
       return data;
     },
     async get_order_unit() {
       const { data } = await onboardingApi(
-        `${DIRECT_ONBOARD_COMPANY}/order-volume`
+        `${DIRECT_ONBOARD_COMPANY}/order-volume`,
       );
       this.order_unit = data;
     },
     async get_company_interest(param: any) {
       const data = await directApi(
-        `${DIRECT_ONBOARD_COMPANY}/${param}/interest`
+        `${DIRECT_ONBOARD_COMPANY}/${param}/interest`,
       );
       return data;
     },

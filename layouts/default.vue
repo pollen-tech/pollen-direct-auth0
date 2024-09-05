@@ -8,7 +8,7 @@
               src="~/assets/image/pollen-direct.svg"
               class="mt-2"
               style="width: 55px"
-          ></a>
+          /></a>
         </v-list-item-title>
       </v-list-item>
 
@@ -206,10 +206,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { useAuth } from '~/composables/auth0';
-import { useSellerStore } from '~/stores/seller';
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+import { useAuth } from "~/composables/auth0";
+import { useSellerStore } from "~/stores/seller";
 
 const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
@@ -249,22 +249,22 @@ const get_profile = async () => {
 };
 
 const on_login = async () => {
-  navigateTo('/auth/login');
+  navigateTo("/auth/login");
 };
 
 const on_signup = async () => {
-  navigateToPollenPass('signup');
+  navigateToPollenPass("signup");
 };
 
 const on_logout = async () => {
   localStorage.clear();
-  window.location.href = '/';
+  window.location.href = "/";
 };
 
 const navigateToPollenPass = (param) => {
   const url = new URL(runtimeConfig.public.pollenPassUrl);
-  url.searchParams.append('channel', 'CH_DIRECT');
-  url.searchParams.append('action', param);
+  url.searchParams.append("channel", "CH_DIRECT");
+  url.searchParams.append("action", param);
   console.log(url);
   navigateTo(url.toString(), { external: true });
 };
@@ -278,8 +278,8 @@ const show_company_setting = () => {
 };
 
 const go_to_homepage = () => {
-  if (!currentUrl.value.includes('/onboarding')) {
-    window.location.href = '/';
+  if (!currentUrl.value.includes("/onboarding")) {
+    window.location.href = "/";
   }
 };
 </script>

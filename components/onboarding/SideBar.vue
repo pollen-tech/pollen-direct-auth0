@@ -35,30 +35,30 @@
         src="../../assets/image/onboarding-side-bar-bg.svg"
         alt="Pollen image"
         class="w-100"
-      >
+      />
     </v-sheet>
   </div>
 </template>
 
 <script>
 export default defineNuxtComponent({
-  name: 'OnboardingSideBar',
+  name: "OnboardingSideBar",
   data() {
     return {
-      columnTitle: 'PollenOS',
+      columnTitle: "PollenOS",
       columnContext: [
         {
-          title: 'Global Brands',
-          description: '',
+          title: "Global Brands",
+          description: "",
         },
         {
-          title: 'Regular Refreshed Catalogs',
-          description: '',
+          title: "Regular Refreshed Catalogs",
+          description: "",
         },
         {
           title:
-            'Multiple Categories: personal care, house hold items, food and more',
-          description: '',
+            "Multiple Categories: personal care, house hold items, food and more",
+          description: "",
         },
       ],
     };
