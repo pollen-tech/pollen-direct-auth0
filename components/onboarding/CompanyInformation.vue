@@ -251,7 +251,7 @@ const submit = async () => {
         user_id: props.userId,
         name: company.value.name,
         company_type_id: company.value.types,
-        operation_country_id: company.value.country.country_id,
+        operation_country_id: company.value.country.id,
         operation_country_name: company.value.country.name,
       };
       emit("submit", body);
@@ -280,10 +280,11 @@ onUpdated(() => {
   if (props.companyProfile?.id) {
     const res = props.companyProfile;
     company.value.name = res.name;
-    company.value.types = res.company_type_id;
+    company.value.types = res.company_type_description;
     company.value.country = res.operation_country_name;
     checkAcceptTerms.value = true;
     is_company_registered.value = true;
+    validateCompanyName.value = 1;
   }
 });
 </script>
