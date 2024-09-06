@@ -210,8 +210,55 @@
                           >Categories of Interest
                           <span class="red--text">*</span></label
                         >
+                        <div>
+                          <template v-if="interest_categories.length >= 0">
+                            <span
+                              v-for="(cat, i) in interest_categories"
+                              :key="i"
+                            >
+                              <v-chip
+                                v-if="cat?.category?.category_name"
+                                :key="cat.category.category_id"
+                                class="my-2 text-truncate multiline-text"
+                              >
+                                {{ cat?.category?.category_name }} ,
+                                <template
+                                  v-for="(sub_cat, c) in cat.sub_category"
+                                  :key="c"
+                                >
+                                  <span
+                                    v-if="c < 1"
+                                    class="text-truncate"
+                                    style="max-width: 90px"
+                                  >
+                                    {{ sub_cat.sub_category_name }}
+                                  </span>
+                                  <span v-if="c === 1">
+                                    ( +{{ cat.sub_category.length - 1 }} others
+                                    )&nbsp;
+                                    <v-tooltip
+                                      activator="parent"
+                                      location="end"
+                                    >
+                                      <div
+                                        v-for="(
+                                          additional_sub_cat, index
+                                        ) in cat.sub_category.slice(1)"
+                                        :key="index"
+                                      >
+                                        {{
+                                          additional_sub_cat.sub_category_name
+                                        }}
+                                      </div>
+                                    </v-tooltip>
+                                  </span>
+                                </template>
+                              </v-chip>
+                            </span>
+                          </template>
+                        </div>
+                        <!-- v-model="company.category" -->
                         <v-autocomplete
-                          v-model="company.category"
                           item-value="id"
                           item-title="name"
                           :items="seller_store.category"
@@ -374,6 +421,7 @@ const company = ref({
 });
 const required = [(v) => !!v || "Field is required"];
 const target_resale_market = ref([]);
+const interest_categories = ref([]);
 
 onUpdated(async () => {
   if (props.dialogValue && !company.value.id) {
@@ -399,13 +447,16 @@ const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
     company.value.category = extract_data_interest_category(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.import_markets = extract_data_market_resale(
-      req.data.import_markets,
+      req.data.import_markets
     );
     target_resale_market.value = extract_data_target_resale(
-      req.data.target_markets,
+      req.data.target_markets
+    );
+    interest_categories.value = extract_data_interest_categories(
+      req.data.interest_categories
     );
     company.value.country = req.data.operation_country_name;
   }
@@ -430,6 +481,19 @@ const extract_data_interest_category = (param) => {
     return res;
   });
 
+  return formattedArray;
+};
+const extract_data_interest_categories = (param) => {
+  const formattedArray = param.map((item) => ({
+    category: {
+      category_id: item.category_id,
+      category_name: item.category_name,
+    },
+    sub_category: item.sub_category.map((subItem) => ({
+      sub_category_id: subItem.sub_category_id,
+      sub_category_name: subItem.sub_category_name,
+    })),
+  }));
   return formattedArray;
 };
 
