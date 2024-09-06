@@ -130,7 +130,7 @@ const save_company_information = async (paramBody) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}`,
       "POST",
-      company_body.value,
+      company_body.value
     );
     if (req.status_code == "CREATED") {
       await save_company_interest(req?.data, paramBody);
@@ -148,7 +148,7 @@ const save_company_interest = async (param, paramBody) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}/${param.id}/interest`,
       "POST",
-      paramBody,
+      paramBody
     );
     if (!req.statusCode) {
       await notify_admin_by_email(req.company_id);
@@ -182,7 +182,7 @@ const notify_admin_by_email = async (companyId) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}/${companyId}/notify-admin-by-email`,
       "POST",
-      body,
+      body
     );
     if (req.status_code != "OK") {
       show_error(req);
