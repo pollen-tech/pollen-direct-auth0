@@ -1,6 +1,7 @@
 <template>
   <div>
     <AppEmpty v-if="is_visible" />
+    <NotificationStatus />
   </div>
 </template>
 
@@ -8,37 +9,52 @@
 import { ref, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuth } from "~/composables/auth0";
+import { useUserStore } from "~/stores/user";
+import { useCommonStore } from "~/stores/common";
 
 definePageMeta({
   layout: false,
 });
 
 const auth = useAuth();
-const { get_user_id } = useAuth();
 const route = useRoute();
 const router = useRouter();
 const is_visible = ref(false);
-const user_id = get_user_id();
+const is_authenticated = computed(() => auth.is_user_authenticated());
+
+const user_Store = useUserStore();
+const { get_user_profile_channel } = user_Store;
+
+const common_store = useCommonStore();
 
 onMounted(() => {
   setTimeout(async () => {
     if (route.query.user_id) {
       try {
-        await auth.handleAuth0Response(route.query);
-        await nextTick();
-        router.push("/onboarding");
+        const req = await get_user_profile_channel(route.query);
+        if (req.status_code == "OK") {
+          await auth.handleAuth0Response(route.query);
+          await auth.set_user_id(req.data.user_id);
+          await nextTick();
+          router.push("/onboarding");
+        } else {
+          common_store.setShowNotification({
+            display: true,
+            status: "error",
+            msg: req.desc,
+          });
+          setTimeout(() => {
+            router.push("/");
+          }, 400);
+        }
       } catch (error) {
-        is_visible.value = true;
         console.error("Navigation error:", error);
       }
-    } else {
-      if (user_id) {
-        window.location.href = "/";
-      } else {
-        is_visible.value = true;
-      }
+    } else if (is_authenticated.value) {
+      window.location.href = "/";
+      isLoading.value = false;
     }
-  }, 800);
+  }, 500);
 });
 </script>
 

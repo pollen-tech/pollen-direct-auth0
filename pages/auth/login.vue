@@ -35,11 +35,10 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { onboardingApi } from "~/services/api";
 import { useAuth } from "~/composables/auth0";
 import { useCommonStore } from "~/stores/common";
-import { useUserStore } from "~/stores/user";
 
 definePageMeta({
   layout: false,
@@ -47,11 +46,8 @@ definePageMeta({
 });
 
 const router = useRouter();
-const route = useRoute();
 const auth = useAuth();
 const commonStore = useCommonStore();
-const user_Store = useUserStore();
-const { get_user_profile_channel } = user_Store;
 
 const isEmailSent = ref(false);
 const email = ref("");
@@ -63,26 +59,11 @@ const is_authenticated = computed(() => auth.is_user_authenticated());
 
 onMounted(() => {
   isLoading.value = true;
-  console.log(route.query);
-  setTimeout(async () => {
-    if (route.query.user_id) {
-      try {
-        showLogin.value = !is_authenticated.value;
-        await auth.handleAuth0Response(route.query);
-        const req = await get_user_profile_channel(route.query);
-        if (req.status_code == "OK") {
-          await auth.set_user_id(req.data.user_id);
-          await nextTick();
-          router.push("/onboarding");
-        } else {
-          router.push("/");
-        }
-      } catch (error) {
-        console.error("Navigation error:", error);
-      }
-    } else if (is_authenticated.value) {
+  setTimeout(() => {
+    isLoading.value = false;
+    showLogin.value = !is_authenticated.value;
+    if (is_authenticated.value) {
       router.push("/");
-      isLoading.value = false;
     }
   }, 800);
 });
@@ -97,7 +78,7 @@ const verify_otp = async (param) => {
     };
     // http://localhost:3080/auth0/password-less-email-otp-validate/rajesh.hofo%40gmail.com?code=967060&channel_code=CH_LMS
     const url = `/auth0/password-less-email-otp-validate/${encodeURIComponent(
-      email.value,
+      email.value
     )}`;
     const queryParams = new URLSearchParams(body).toString();
     const fullUrl = `${url}?${queryParams}`;
@@ -127,7 +108,7 @@ const send_otp = async (param) => {
     isOtpValid.value = true;
     const req = await onboardingApi(
       `/auth0/password-less-email-login/${email.value}`,
-      "POST",
+      "POST"
     );
     if (req) {
       isEmailSent.value = true;
@@ -166,7 +147,7 @@ const not_register = (param) => {
 };
 
 const go_to_redirect = () => {
-  // navigateTo("/onboarding");
+  navigateTo("/onboarding");
 };
 </script>
 
