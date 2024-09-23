@@ -35,10 +35,11 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { onboardingApi } from "~/services/api";
 import { useAuth } from "~/composables/auth0";
 import { useCommonStore } from "~/stores/common";
+import { useUserStore } from "~/stores/user";
 
 definePageMeta({
   layout: false,
@@ -46,8 +47,11 @@ definePageMeta({
 });
 
 const router = useRouter();
+const route = useRoute();
 const auth = useAuth();
 const commonStore = useCommonStore();
+const user_Store = useUserStore();
+const { get_user_profile_channel } = user_Store;
 
 const isEmailSent = ref(false);
 const email = ref("");
@@ -59,11 +63,26 @@ const is_authenticated = computed(() => auth.is_user_authenticated());
 
 onMounted(() => {
   isLoading.value = true;
-  setTimeout(() => {
-    isLoading.value = false;
-    showLogin.value = !is_authenticated.value;
-    if (is_authenticated.value) {
+  console.log(route.query);
+  setTimeout(async () => {
+    if (route.query.user_id) {
+      try {
+        showLogin.value = !is_authenticated.value;
+        await auth.handleAuth0Response(route.query);
+        const req = await get_user_profile_channel(route.query);
+        if (req.status_code == "OK") {
+          await auth.set_user_id(req.data.user_id);
+          await nextTick();
+          router.push("/onboarding");
+        } else {
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Navigation error:", error);
+      }
+    } else if (is_authenticated.value) {
       router.push("/");
+      isLoading.value = false;
     }
   }, 800);
 });
@@ -147,7 +166,7 @@ const not_register = (param) => {
 };
 
 const go_to_redirect = () => {
-  navigateTo("/onboarding");
+  // navigateTo("/onboarding");
 };
 </script>
 

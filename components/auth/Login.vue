@@ -118,7 +118,7 @@ const submit = async () => {
   const { valid } = await formRef.value.validate();
   if (valid) {
     const validate_user_exist = await seller_store.validate_user_exist(
-      email.value
+      email.value,
     );
     if (validate_user_exist?.status_code === "OK") {
       emit("submit", email.value);

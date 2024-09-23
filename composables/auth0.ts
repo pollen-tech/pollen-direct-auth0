@@ -31,6 +31,13 @@ export const useAuth = () => {
     return null;
   };
 
+  const set_user_id = (param) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user_id", param);
+    }
+    return null;
+  };
+
   const is_token_expired = () => {
     if (typeof window !== "undefined") {
       const expiresAt = localStorage.getItem("expires_at");
@@ -69,5 +76,6 @@ export const useAuth = () => {
     handleAuth0Response,
     is_user_authenticated,
     is_token_expired,
+    set_user_id,
   };
 };
