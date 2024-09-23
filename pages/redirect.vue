@@ -28,8 +28,8 @@ const { get_user_profile_channel } = user_Store;
 const common_store = useCommonStore();
 
 onMounted(() => {
-  setTimeout(async () => {
-    console.log(route.query);
+
+  console.log(route.query);
     debugger;
     if (route.query.user_id) {
       try {
@@ -56,7 +56,6 @@ onMounted(() => {
       window.location.href = "/";
       isLoading.value = false;
     }
-  }, 500);
 });
 </script>
 
