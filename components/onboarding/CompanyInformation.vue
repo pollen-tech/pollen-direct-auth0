@@ -146,9 +146,17 @@
           >
             <template #label>
               <div>
-                Accept Pollen
+                Accept
                 <a
-                  href="https://www.pollen.tech/privacy"
+                  :href="config.public.privacyPolicy"
+                  target="_blank"
+                  style="color: #6a27b9"
+                  v-bind="props"
+                  @click.stop
+                >
+                  Privacy Policy </a
+                >&<a
+                  :href="config.public.termCondition"
                   target="_blank"
                   style="color: #6a27b9"
                   v-bind="props"
@@ -231,6 +239,7 @@ const props = defineProps({
   companyProfile: { type: Object, default: () => ({}) },
 });
 
+const config = useRuntimeConfig();
 const sellerStore = useSellerStore();
 
 const company = ref({});

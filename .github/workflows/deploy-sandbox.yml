@@ -35,6 +35,8 @@ jobs:
           NUXT_POLLEN_LMS_URL: ${{ secrets.POLLEN_LMS_URL }}
           NUXT_DIRECT_API: ${{ secrets.DIRECT_API }}
           NUXT_LMS_API: ${{ secrets.LMS_API }}
+          NUXT_POLLEN_PRIVACY_POLICY: ${{ secrets.POLLEN_PRIVACY_POLICY }}
+          NUXT_POLLEN_TERM_CONDITION: ${{ secrets.POLLEN_TERM_CONDITION }}
       - name: Clean up nuxt file
         run: yarn clean:nuxt
 
