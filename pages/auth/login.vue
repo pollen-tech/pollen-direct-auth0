@@ -97,7 +97,7 @@ const verify_otp = async (param) => {
     };
     // http://localhost:3080/auth0/password-less-email-otp-validate/rajesh.hofo%40gmail.com?code=967060&channel_code=CH_LMS
     const url = `/auth0/password-less-email-otp-validate/${encodeURIComponent(
-      email.value
+      email.value,
     )}`;
     const queryParams = new URLSearchParams(body).toString();
     const fullUrl = `${url}?${queryParams}`;
@@ -127,7 +127,7 @@ const send_otp = async (param) => {
     isOtpValid.value = true;
     const req = await onboardingApi(
       `/auth0/password-less-email-login/${email.value}`,
-      "POST"
+      "POST",
     );
     if (req) {
       isEmailSent.value = true;

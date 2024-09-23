@@ -28,7 +28,7 @@ export const useUserStore = defineStore("user", {
     },
     async get_user_profile_channel(param: any) {
       const req = await directApi(
-        `/users?email=${param.email}&channel=${param.channel}`
+        `/users?email=${param.email}&channel=${param.channel}`,
       );
       this.user_profile = req.data || req;
       return req;
