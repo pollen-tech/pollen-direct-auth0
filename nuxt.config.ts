@@ -60,6 +60,8 @@ export default defineNuxtConfig({
       userOnboardBackendUrl: process.env.NUXT_LMS_API,
       appName: "Pollen LMS",
       appVersion: "2.0.0",
+      privacyPolicy: process.env.NUXT_POLLEN_PRIVACY_POLICY,
+      termCondition: process.env.NUXT_POLLEN_TERM_CONDITION,
     },
   },
 });
