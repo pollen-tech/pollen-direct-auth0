@@ -10,6 +10,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuth } from "~/composables/auth0";
 import { useUserStore } from "~/stores/user";
 import { useCommonStore } from "~/stores/common";
+
 definePageMeta({
   middleware: "auth",
 });
