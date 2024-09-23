@@ -17,7 +17,6 @@ definePageMeta({
 const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
-const is_authenticated = computed(() => auth.is_user_authenticated());
 
 const user_Store = useUserStore();
 const { get_user_profile_channel } = user_Store;
