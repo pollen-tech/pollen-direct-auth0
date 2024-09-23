@@ -30,7 +30,7 @@ const common_store = useCommonStore();
 onMounted(() => {
 
   console.log(route.query);
-    debugger;
+
     if (route.query.user_id) {
       try {
         const req = await get_user_profile_channel(route.query);
