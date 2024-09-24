@@ -39,6 +39,7 @@ import { useRouter } from "vue-router";
 import { onboardingApi } from "~/services/api";
 import { useAuth } from "~/composables/auth0";
 import { useCommonStore } from "~/stores/common";
+import { useUserStore } from "~/stores/user";
 
 definePageMeta({
   layout: false,
@@ -48,6 +49,9 @@ definePageMeta({
 const router = useRouter();
 const auth = useAuth();
 const commonStore = useCommonStore();
+
+const user_Store = useUserStore();
+const { validate_passwordless_otp } = user_Store;
 
 const isEmailSent = ref(false);
 const email = ref("");
@@ -72,18 +76,14 @@ const verify_otp = async (param) => {
   try {
     otp.value = param;
     isOtpValid.value = true;
+
     const body = {
+      email: email.value,
       code: otp.value,
       channel_code: "CH_DIRECT",
     };
-    // http://localhost:3080/auth0/password-less-email-otp-validate/rajesh.hofo%40gmail.com?code=967060&channel_code=CH_LMS
-    const url = `/auth0/password-less-email-otp-validate/${encodeURIComponent(
-      email.value,
-    )}`;
-    const queryParams = new URLSearchParams(body).toString();
-    const fullUrl = `${url}?${queryParams}`;
 
-    const req = await onboardingApi(fullUrl, "POST");
+    const req = await validate_passwordless_otp(body);
     if (req.status_code) {
       req.message = req.message ? req.message : "OTP is not valid";
       getErrorMessage(req);
@@ -108,7 +108,7 @@ const send_otp = async (param) => {
     isOtpValid.value = true;
     const req = await onboardingApi(
       `/auth0/password-less-email-login/${email.value}`,
-      "POST",
+      "POST"
     );
     if (req) {
       isEmailSent.value = true;

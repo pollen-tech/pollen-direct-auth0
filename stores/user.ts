@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { directApi } from "~/services/api";
+import { directApi, onboardingApi } from "~/services/api";
 
 interface User {
   user_id: string;
@@ -28,10 +28,18 @@ export const useUserStore = defineStore("user", {
     },
     async get_user_profile_channel(param: any) {
       const req = await directApi(
-        `/users?email=${param.email}&channel=${param.channel}`,
+        `/users?email=${param.email}&channel=${param.channel}`
       );
       this.user_profile = req.data || req;
       return req;
+    },
+    async validate_passwordless_otp(param_body: any) {
+      const data = await onboardingApi(
+        "/auth0/login/password-less-email-otp-validate",
+        "POST",
+        param_body
+      );
+      return data;
     },
   },
 });
