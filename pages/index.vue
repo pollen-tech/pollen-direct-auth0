@@ -26,7 +26,7 @@ const common_store = useCommonStore();
 
 onMounted(async () => {
   console.log(route);
-  if (route.query.user_id) {
+  if (route.query.user_id && route.query.user_id != "null") {
     try {
       const req = await get_user_profile_channel(route.query);
       if (req.status_code == "OK") {
@@ -46,6 +46,12 @@ onMounted(async () => {
       }
     } catch (error) {
       console.error("Navigation error:", error);
+    }
+  } else {
+    if (route.query.user_id == "null") {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.search = "";
+      window.history.replaceState({}, document.title, currentUrl.toString());
     }
   }
 });
