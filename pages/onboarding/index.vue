@@ -2,19 +2,9 @@
   <div class="h-100">
     <OnboardingHeader />
     <v-container>
-      <div class="d-flex justify-space-between my-6">
-        <NuxtLink
-          to="/onboarding"
-          variant="plain"
-          class="text-grey-darken-1 cursor-pointer text-decoration-none text-capitalize text-body-2"
-          external
-        >
-          <v-icon>mdi-chevron-left</v-icon> Previous
-        </NuxtLink>
-      </div>
       <v-row
         no-gutters
-        class="h-100 rounded-lg"
+        class="h-100 rounded-lg mt-6"
         style="border: #e5e7eb solid 1px"
       >
         <v-col
@@ -130,7 +120,7 @@ const save_company_information = async (paramBody) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}`,
       "POST",
-      company_body.value,
+      company_body.value
     );
     if (req.status_code == "CREATED") {
       await save_company_interest(req?.data, paramBody);
@@ -148,18 +138,20 @@ const save_company_interest = async (param, paramBody) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}/${param.id}/interest`,
       "POST",
-      paramBody,
+      paramBody
     );
     if (!req.statusCode) {
-      await notify_admin_by_email(req.company_id);
-      commonStore.setShowNotification({
-        display: true,
-        status: "success",
-        msg: "Company Successfully Registered",
-      });
-      setTimeout(() => {
-        goto_home_page();
-      }, 2000);
+      const send_admin_email = await notify_admin_by_email(req.company_id);
+      if (send_admin_email) {
+        commonStore.setShowNotification({
+          display: true,
+          status: "success",
+          msg: "Company Successfully Registered",
+        });
+        setTimeout(() => {
+          goto_home_page();
+        }, 2000);
+      }
     } else {
       show_error(err);
       return;
@@ -182,12 +174,16 @@ const notify_admin_by_email = async (companyId) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}/${companyId}/notify-admin-by-email`,
       "POST",
-      body,
+      body
     );
     if (req.status_code != "OK") {
       show_error(req);
+      return false;
+    } else {
+      return true;
     }
   } catch (err) {
+    return false;
     console.log(err);
   }
 };

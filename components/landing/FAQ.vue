@@ -9,7 +9,7 @@
           v-model="panel"
           multiple
           variant="accordion"
-          class="w-75"
+          :class="{ 'w-75': !xs, 'w-100': xs }"
         >
           <v-expansion-panel
             v-for="i in items"
@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useDisplay } from "vuetify";
 
 export default defineComponent({
   setup() {
@@ -65,6 +66,7 @@ export default defineComponent({
           desc: "Pollen would be happy to assist you in sourcing your desired inventory. Please contact contact@pollen.tech",
         },
       ],
+      xs: useDisplay().xs,
     };
   },
 });

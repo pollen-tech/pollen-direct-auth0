@@ -52,7 +52,7 @@
                   </v-avatar>
                 </v-col>
 
-                <v-col sm="11" md="7" class="d-flex flex-row">
+                <v-col cols="7" sm="11" md="7" class="d-flex flex-row">
                   <div>
                     <b style="letter-spacing: 0.03em">Company Settings</b>
                     <p class="text-caption text-grey">
@@ -70,10 +70,15 @@
                 />
               </v-row>
             </div>
-            <div class="px-10 py-4">
+            <div
+              :class="{
+                'px-10 py-4': !xs,
+                'px-4 py-4': xs,
+              }"
+            >
               <div class="d-flex flex-column mb-2">
                 <v-breadcrumbs
-                  class="text-caption text-capitalize"
+                  class="text-caption text-capitalize text-truncate"
                   color="deep-purple-accent-4"
                   :items="[company.name, 'Company Information']"
                 >
@@ -395,6 +400,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 import "vue-tel-input/vue-tel-input.css";
 import { useSellerStore } from "~/stores/seller";
 import { useCountryStore } from "~/stores/country";
@@ -405,6 +411,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["close"]);
 
+const { xs } = useDisplay();
 const seller_store = useSellerStore();
 const { get_company_profile, get_company_interest } = seller_store;
 const countryStore = useCountryStore();
@@ -447,16 +454,16 @@ const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
     company.value.category = extract_data_interest_category(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.import_markets = extract_data_market_resale(
-      req.data.import_markets,
+      req.data.import_markets
     );
     target_resale_market.value = extract_data_target_resale(
-      req.data.target_markets,
+      req.data.target_markets
     );
     interest_categories.value = extract_data_interest_categories(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.country = req.data.operation_country_name;
   }

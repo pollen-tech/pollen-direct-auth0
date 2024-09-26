@@ -52,7 +52,7 @@
                   </v-avatar>
                 </v-col>
 
-                <v-col sm="11" md="7" class="d-flex flex-row">
+                <v-col cols="7" sm="11" md="7" class="d-flex flex-row">
                   <div>
                     <b style="letter-spacing: 0.03em">{{
                       dialog_content[tab]?.title
@@ -72,7 +72,12 @@
                 />
               </v-row>
             </div>
-            <div class="px-10 py-4">
+            <div
+              :class="{
+                'px-10 py-4': !xs,
+                'px-4 py-4': xs,
+              }"
+            >
               <v-tabs
                 v-model="tab"
                 align-tabs="start"
@@ -212,7 +217,12 @@
                         </v-sheet>
                       </v-col>
                       <v-col>
-                        <div class="profile-card py-4 px-8 mt-12">
+                        <div
+                          :class="[
+                            'profile-card py-4  mt-12',
+                            !xs ? 'px-8' : 'px-4',
+                          ]"
+                        >
                           <div class="d-flex justify-end">
                             <img
                               src="../../assets/image/avatar_pollen_white.webp"
@@ -220,9 +230,17 @@
                             />
                           </div>
 
-                          <div class="d-flex ga-3">
+                          <div
+                            :class="{
+                              'd-flex ga-3': !xs,
+                              'd-flex ga-3 flex-column': xs,
+                            }"
+                          >
                             <img
                               src="../../assets/image/profile_card_user.png"
+                              :style="{
+                                width: xs ? '70px' : 'auto',
+                              }"
                             />
                             <div class="text-white">
                               <p class="font-weight-bold">
@@ -254,7 +272,7 @@
                               <p class="font-weight-bold text-body-2">
                                 {{
                                   moment(profile?.created_at).format(
-                                    "DD/MM/YYYY",
+                                    "DD/MM/YYYY"
                                   )
                                 }}
                               </p>
@@ -311,6 +329,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 import moment from "moment";
 
 import { VueTelInput } from "vue-tel-input";
@@ -324,6 +343,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["close"]);
 
+const { xs } = useDisplay();
 const runtimeConfig = useRuntimeConfig();
 
 const seller_store = useSellerStore();

@@ -41,5 +41,16 @@ export const useUserStore = defineStore("user", {
       );
       return data;
     },
+    async validate_user_allowed_login(param: any) {
+      const data = await onboardingApi(`/users/is-login-allowed/${param}`);
+      return data;
+    },
+    async validate_passwordless_email_login(param: any) {
+      const data = await onboardingApi(
+        `/auth0/password-less-email-login/${param}`,
+        "POST"
+      );
+      return data;
+    },
   },
 });

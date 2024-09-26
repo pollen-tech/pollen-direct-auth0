@@ -1,6 +1,6 @@
 <template>
   <v-layout class="rounded rounded-md d-flex flex-column">
-    <v-app-bar class="px-8 py-2 bg-white">
+    <v-app-bar class="px-3 py-2 bg-white">
       <v-list-item class="pl-1">
         <v-list-item-title class="d-flex align-center">
           <a @click="go_to_homepage"

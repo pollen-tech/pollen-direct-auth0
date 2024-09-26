@@ -8,7 +8,10 @@
     >
       <v-card
         elevation="0"
-        class="d-flex flex-column justify-space-between text-center pa-12 w-75"
+        :class="[
+          'd-flex flex-column justify-space-between text-center pa-12',
+          xs ? 'w-100' : 'w-75',
+        ]"
         color="#FFFFFF00"
       >
         <div class="my-4 text-uppercase">{{ title }}</div>
@@ -29,10 +32,10 @@
     <v-card
       :class="
         'd-flex justify-center py-8 ' + $vuetify.display.mobile
-          ? 'mt-8 mx-10 px-4'
+          ? 'mt-8 mx-2 px-4'
           : 'mx-10'
       "
-      :height="$vuetify.display.mobile ? 'auto' : '450'"
+      :height="xs ? 'auto' : '450'"
       theme="dark"
       color="#F9FAFB"
       elevation="0"
@@ -72,6 +75,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useDisplay } from "vuetify";
 
 export default defineComponent({
   setup() {
@@ -96,6 +100,7 @@ export default defineComponent({
         "Direct from Global Manufacturers",
         "Regularly Refreshed",
       ],
+      xs: useDisplay().xs,
     };
   },
 });

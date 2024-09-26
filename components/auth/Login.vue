@@ -1,24 +1,47 @@
 <template>
   <div>
     <div
-      class="d-flex flex-column align-center mx-16"
+      :class="['d-flex flex-column align-center', !xs ? '  mx-16' : 'mx-4']"
       :style="{
         'margin-top': $vuetify.display.mobile ? '20px' : '10%',
       }"
     >
-      <div class="text-caption justify-center mb-12 mx-10 d-flex">
-        <img src="~/assets/image/pollen-direct-1.svg" class="mx-4" />
+      <div
+        :class="[
+          'text-caption justify-center d-flex d-sm-flex flex-column flex-sm-row',
+          !xs ? ' mb-12' : 'text-center  mb-8',
+        ]"
+      >
+        <img
+          src="~/assets/image/pollen-direct-1.svg"
+          :class="{
+            'mx-4': !xs,
+            'mx-auto mb-4': xs,
+          }"
+          :style="{
+            width: xs ? '50ox' : '',
+          }"
+        />
         <div>
           <p class="font-weight-bold mb-1">
             {{ notification.title }}
           </p>
-          <p>
+          <p
+            :class="{
+              'multiline-text': xs,
+            }"
+          >
             {{ notification.desc }}
           </p>
         </div>
       </div>
 
-      <div class="mt-10 mb-5 text-center ga-2 d-flex flex-column">
+      <div
+        :class="[
+          'text-center ga-2 d-flex flex-column',
+          xs ? 'mb-2 mt-5' : ' mb-5 mt-10',
+        ]"
+      >
         <h3 class="font-weight-bold">{{ title.title }}</h3>
         <label class="font-weight-normal mt-1">{{ title.desc }} </label>
       </div>
@@ -82,17 +105,24 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <CommonSmallDialog ref="confirm" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useSellerStore } from "~/stores/seller";
+import { useDisplay } from "vuetify";
+import { useUserStore } from "@/stores/user";
 
 const emit = defineEmits(["submit", "notRegister"]);
 
-const seller_store = useSellerStore();
+const { xs } = useDisplay();
+
+const user_Store = useUserStore();
+const { validate_user_allowed_login } = user_Store;
+
+const confirm = ref(null);
 const runtimeConfig = useRuntimeConfig();
 const title = ref({
   title: "Enter your information",
@@ -113,24 +143,74 @@ const is_loading = ref(false);
 const show_dialog = ref(false);
 const formRef = ref(null);
 
+const showDialog = async () => {
+  const options = {
+    title: "Email Not Registered",
+    message:
+      "It looks like the email address you entered is not registered in our system. Please check the email address and try again. If you are new here, you can sign up to create a new Pollen Pass account. For assistance please send us a message at cs@pollen.tech.",
+    icon: "",
+    color: "purple darken-2",
+    actionText1: "Login",
+    actionText2: "Contact CS",
+    actionIcon2: "",
+    rejection: false,
+  };
+  if (await confirm.value.open(options)) {
+    window.location.href = "mailto:contact@pollen.tech";
+  } else {
+    navigateTo("/auth/login");
+  }
+};
+
+const show_phone_verification_dialog = async () => {
+  const options = {
+    title: "Phone Registration Incomplete",
+    message:
+      " It appears that your phone number registration is not complete. Please finish the verification process and return to log in. For assistance please send us a message at cs@pollen.tech.",
+    icon: "",
+    color: "purple darken-2",
+    actionText1: "Cancel",
+    actionText2: "Contact CS",
+    actionIcon2: "",
+    rejection: false,
+  };
+  if (await confirm.value.open(options)) {
+    window.location.href = "mailto:contact@pollen.tech";
+  }
+};
+
+const is_allowed_login = async () => {
+  try {
+    const req = await validate_user_allowed_login(email.value);
+
+    if (req.data?.is_email_exist) {
+      if (!req.data?.is_pollen_pass_phone_verified) {
+        show_phone_verification_dialog();
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      showDialog();
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const submit = async () => {
   is_loading.value = true;
   const { valid } = await formRef.value.validate();
   if (valid) {
-    const validate_user_exist = await seller_store.validate_user_exist(
-      email.value,
-    );
-    if (validate_user_exist?.status_code === "OK") {
+    const user_allowed = await is_allowed_login();
+    if (user_allowed) {
       emit("submit", email.value);
       setTimeout(() => {
         is_loading.value = false;
       }, 1500);
     } else {
       is_loading.value = false;
-      emit("notRegister", {
-        title: "Email Not Registered",
-        msg: "It looks like the email address you entered is not registered in our system. Please check the email address and try again. If you are new here, you can sign up to create a new Pollen Pass  account. For assistance please send us a message at cs@pollen.tech.",
-      });
     }
   }
 };

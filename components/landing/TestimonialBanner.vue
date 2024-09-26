@@ -4,7 +4,10 @@
       <div class="text-center my-4">
         <h2>Testimonial</h2>
         <div class="d-flex justify-center my-8">
-          <p class="font-italic w-75" style="line-height: 1.8em">
+          <p
+            :class="['font-italic', xs ? 'w-100' : 'w-75']"
+            style="line-height: 1.8em"
+          >
             “As frequent buyers of excess inventory off Pollen’s marketplace,
             we’ve consistently found the quality and quantity to be according to
             our requirements. Not only that, the team at Pollen has always gone
@@ -26,8 +29,10 @@
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+import { useDisplay } from "vuetify";
+
+const { xs } = useDisplay();
 </script>
 
 <style scoped></style>

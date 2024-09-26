@@ -20,7 +20,7 @@
       </v-col>
     </v-row>
     <div
-      class="d-flex flex-column align-center mx-16"
+      :class="['d-flex flex-column align-center', !xs ? 'mx-16' : 'mx-10']"
       :style="{
         'margin-top': $vuetify.display.mobile ? '20px' : '10%',
       }"
@@ -115,6 +115,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 
 const emit = defineEmits(["verifyOtpEvent", "sendOtpEvent", "previousPage"]);
 
@@ -127,6 +128,7 @@ const props = defineProps({
   otpType: { type: String, default: "sms" },
 });
 
+const { xs } = useDisplay();
 const runtimeConfig = useRuntimeConfig();
 const title = ref("Enter Verification Code");
 const desc = ref("We have sent a 6-digit code to:");
@@ -153,7 +155,7 @@ const formatTime = computed(() => {
   const seconds = remainingTime.value % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
-    "0",
+    "0"
   )}`;
 });
 

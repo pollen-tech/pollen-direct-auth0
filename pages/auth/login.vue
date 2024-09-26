@@ -12,7 +12,12 @@
         <AuthSideBar />
       </v-col>
       <v-col cols="12" md="8">
-        <div class="ma-8">
+        <div
+          :class="{
+            'my-8': xs,
+            'ma-8': !xs,
+          }"
+        >
           <AuthLogin
             v-if="!isEmailSent"
             @submit="send_otp"
@@ -35,6 +40,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 import { useRouter } from "vue-router";
 import { onboardingApi } from "~/services/api";
 import { useAuth } from "~/composables/auth0";
@@ -46,6 +52,7 @@ definePageMeta({
   middleware: "auth",
 });
 
+const { xs } = useDisplay();
 const router = useRouter();
 const auth = useAuth();
 const commonStore = useCommonStore();
