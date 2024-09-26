@@ -74,7 +74,7 @@
             >Sign in</v-btn
           >
           <p class="text-center" style="color: #111827; font-size: 14px">
-            Want to access Pollen LMS? <br v-if="xs" />
+            Want to access Pollen Direct? <br v-if="xs" />
             <a href="#" style="color: #8431e7" @click="on_signup()"
               >Sign Up with Pollen Pass</a
             >
