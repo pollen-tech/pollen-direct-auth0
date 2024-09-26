@@ -43,9 +43,8 @@
         ]"
       >
         <h3 class="font-weight-bold">{{ title.title }}</h3>
-        <label class="font-weight-normal mt-1">{{ title.desc }} </label>
+        <label class="font-weight-normal">{{ title.desc }} </label>
       </div>
-
       <v-card
         :width="$vuetify.display.mobile ? 300 : 450"
         elevation="0"
@@ -53,8 +52,9 @@
       >
         <v-form ref="formRef">
           <div class="my-4 text-start flex-1-0">
-            <label class="font-weight-medium"
+            <label class="font-weight-medium" style="font-size: 14px"
               >Enter your Pollen Pass registered email
+              <span class="red--text">*</span>
             </label>
 
             <v-text-field
@@ -73,9 +73,11 @@
             @click="submit"
             >Sign in</v-btn
           >
-          <p class="text-center" style="font-size: 14px">
-            Don't have Pollen Pass?
-            <a href="#" style="color: #8431e7" @click="on_signup"> Sign Up</a>
+          <p class="text-center" style="color: #111827; font-size: 14px">
+            Want to access Pollen LMS? <br v-if="xs" />
+            <a href="#" style="color: #8431e7" @click="on_signup()"
+              >Sign Up with Pollen Pass</a
+            >
           </p>
         </v-form>
       </v-card>
