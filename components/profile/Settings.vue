@@ -272,7 +272,7 @@
                               <p class="font-weight-bold text-body-2">
                                 {{
                                   moment(profile?.created_at).format(
-                                    "DD/MM/YYYY"
+                                    "DD/MM/YYYY",
                                   )
                                 }}
                               </p>

@@ -28,7 +28,7 @@ export const useUserStore = defineStore("user", {
     },
     async get_user_profile_channel(param: any) {
       const req = await directApi(
-        `/users?email=${param.email}&channel=${param.channel}`
+        `/users?email=${param.email}&channel=${param.channel}`,
       );
       this.user_profile = req.data || req;
       return req;
@@ -37,7 +37,7 @@ export const useUserStore = defineStore("user", {
       const data = await onboardingApi(
         "/auth0/login/password-less-email-otp-validate",
         "POST",
-        param_body
+        param_body,
       );
       return data;
     },
@@ -48,7 +48,7 @@ export const useUserStore = defineStore("user", {
     async validate_passwordless_email_login(param: any) {
       const data = await onboardingApi(
         `/auth0/password-less-email-login/${param}`,
-        "POST"
+        "POST",
       );
       return data;
     },

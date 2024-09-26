@@ -454,16 +454,16 @@ const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
     company.value.category = extract_data_interest_category(
-      req.data.interest_categories
+      req.data.interest_categories,
     );
     company.value.import_markets = extract_data_market_resale(
-      req.data.import_markets
+      req.data.import_markets,
     );
     target_resale_market.value = extract_data_target_resale(
-      req.data.target_markets
+      req.data.target_markets,
     );
     interest_categories.value = extract_data_interest_categories(
-      req.data.interest_categories
+      req.data.interest_categories,
     );
     company.value.country = req.data.operation_country_name;
   }
