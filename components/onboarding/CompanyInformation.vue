@@ -168,6 +168,7 @@
             </template>
           </v-checkbox>
           <v-btn
+            v-if="!companyProfile.order_volume_id"
             :disabled="!checkAcceptTerms"
             class="my-4 me-auto text-capitalize rounded-lg"
             color="#8431E7"
@@ -176,6 +177,16 @@
             @click="submit"
             >Continue</v-btn
           >
+          <v-btn
+            v-else
+            class="my-4 me-auto text-capitalize rounded-lg"
+            color="#8431E7"
+            block
+            :disabled="is_complete_onboarding_disabled"
+            @click="complete_onboarding"
+            >Complete Onboarding</v-btn
+          >
+
           <!-- <v-btn
             variant="outlined"
             class="me-auto text-capitalize rounded-lg"
@@ -231,7 +242,7 @@
 import { ref } from "vue";
 import { useSellerStore } from "@/stores/seller";
 
-const emit = defineEmits(["submit", "skip", "error"]);
+const emit = defineEmits(["submit", "skip", "error", "sendNotification"]);
 const props = defineProps({
   userId: { type: String, default: "" },
   companyTypes: { type: Array, default: () => [] },
@@ -251,6 +262,7 @@ const validateCompanyName = ref(0);
 const checkAcceptTerms = ref(false);
 const formRef = ref(null);
 const is_company_registered = ref(false);
+const is_complete_onboarding_disabled = ref(false);
 
 const submit = async () => {
   try {
@@ -283,7 +295,17 @@ const onValidateCompanyName = async () => {
     console.log(err);
   }
 };
+
 const checkTerms = () => {};
+
+const complete_onboarding = () => {
+  is_complete_onboarding_disabled.value = true;
+  emit("sendNotifcation");
+  setTimeout(() => {
+    is_complete_onboarding_disabled.value = false;
+    window.location.reload();
+  }, 4500);
+};
 
 onUpdated(() => {
   if (props.companyProfile?.id) {

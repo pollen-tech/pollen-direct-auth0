@@ -121,7 +121,7 @@
                         <v-tooltip activator="parent" location="end">
                           <div
                             v-for="(additionalCity, index) in target.city.slice(
-                              1,
+                              1
                             )"
                             :key="index"
                           >
@@ -165,6 +165,7 @@
             class="my-4 me-auto text-capitalize rounded-lg"
             color="#8431E7"
             block
+            :disabled="is_submit_disabled"
             :loading="isLoading"
             @click="submit"
             >Continue</v-btn
@@ -230,9 +231,11 @@ const interest_categories = ref([]);
 const required = [(v) => !!v || "Field is required"];
 const formRef = ref(null);
 const company = ref({});
+const is_submit_disabled = ref(false);
 
 const submit = async () => {
   try {
+    is_submit_disabled.value = true;
     isLoading.value = true;
 
     const { valid } = await formRef.value.validate();
@@ -245,10 +248,16 @@ const submit = async () => {
         target_markets: extract_target_market(),
       };
       emit("submit", body);
+      setTimeout(() => {
+        is_submit_disabled.value = false;
+        isLoading.value = false;
+      }, 6000);
     } else {
+      is_submit_disabled.value = false;
       isLoading.value = false;
     }
   } catch (err) {
+    is_submit_disabled.value = false;
     isLoading.value = false;
   }
 };
@@ -256,7 +265,7 @@ const submit = async () => {
 const remove_item = (param) => {
   if (target_resale_market.value[0]) {
     const extract_cn = target_resale_market.value.filter(
-      (item) => item.country.id !== param.country.id,
+      (item) => item.country.id !== param.country.id
     );
     target_resale_market.value = extract_cn;
   }
@@ -264,7 +273,7 @@ const remove_item = (param) => {
 const remove_category_item = (param) => {
   if (interest_categories.value[0]) {
     const extract_cat = interest_categories.value.filter(
-      (item) => item.category.category_id !== param.category.category_id,
+      (item) => item.category.category_id !== param.category.category_id
     );
     interest_categories.value = extract_cat;
   }
@@ -278,7 +287,7 @@ const applyOptionCategory = (param) => {
 const format_category = (param) => {
   const formattedArray = param.map((category) => {
     category.sub_category = category.sub_category.map(
-      ({ sub_category_description, ...rest }) => rest,
+      ({ sub_category_description, ...rest }) => rest
     );
 
     return category;
@@ -298,7 +307,7 @@ const format_location_city = (param) => {
       country_id: entry.country.id,
       city_id: city.id,
       city_name: city.city_name,
-    })),
+    }))
   );
 
   return formattedArray;

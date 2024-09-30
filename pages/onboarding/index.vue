@@ -27,6 +27,7 @@
               @submit="next_step"
               @skip="goto_home_page"
               @error="show_error"
+              @send-notifcation="notify_admin_by_email"
             />
             <OnboardingCompanyInterest
               v-else
@@ -97,6 +98,7 @@ onBeforeMount(async () => {
       await seller_store.get_order_unit();
       await countryStore.get_countries();
     } else {
+      await get_profile();
       await seller_store.get_company_types();
       await countryStore.get_countries();
       await seller_store.get_category();
@@ -120,7 +122,7 @@ const save_company_information = async (paramBody) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}`,
       "POST",
-      company_body.value,
+      company_body.value
     );
     if (req.status_code == "CREATED") {
       await save_company_interest(req?.data, paramBody);
@@ -138,7 +140,7 @@ const save_company_interest = async (param, paramBody) => {
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}/${param.id}/interest`,
       "POST",
-      paramBody,
+      paramBody
     );
     if (!req.statusCode) {
       const send_admin_email = await notify_admin_by_email(req.company_id);
@@ -149,8 +151,8 @@ const save_company_interest = async (param, paramBody) => {
           msg: "Company Successfully Registered",
         });
         setTimeout(() => {
-          goto_home_page();
-        }, 2000);
+          window.location.reload();
+        }, 1000);
       }
     } else {
       show_error(err);
@@ -171,10 +173,13 @@ const notify_admin_by_email = async (companyId) => {
       phone_no: profile.value.phone_no,
       pollen_pass_id: profile.value.pollen_pass_id,
     };
+    if (!companyId) {
+      companyId = company_profile.value.id;
+    }
     const req = await directApi(
       `${DIRECT_ONBOARD_COMPANY}/${companyId}/notify-admin-by-email`,
       "POST",
-      body,
+      body
     );
     if (req.status_code != "OK") {
       show_error(req);
@@ -183,8 +188,8 @@ const notify_admin_by_email = async (companyId) => {
       return true;
     }
   } catch (err) {
-    return false;
     console.log(err);
+    return false;
   }
 };
 
