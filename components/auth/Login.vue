@@ -172,12 +172,15 @@ const show_phone_verification_dialog = async () => {
     icon: "",
     color: "purple darken-2",
     actionText1: "Cancel",
-    actionText2: "Contact CS",
+    actionText2: "Go To Pollen Pass",
     actionIcon2: "",
     rejection: false,
   };
   if (await confirm.value.open(options)) {
-    window.location.href = "mailto:contact@pollen.tech";
+    const url = new URL(runtimeConfig.public.pollenPassUrl);
+    url.searchParams.append("channel", "CH_DIRECT");
+    url.searchParams.append("action", "signin");
+    navigateTo(url.toString(), { external: true });
   }
 };
 
