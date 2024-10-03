@@ -50,6 +50,8 @@ export const useSellerStore = defineStore("seller", {
           name: "40ft Container",
         },
       ],
+      seller_company: null,
+      user_profile: null,
     };
   },
   actions: {
@@ -67,21 +69,35 @@ export const useSellerStore = defineStore("seller", {
         company_name: param,
       };
       const { data } = await directApi(
-        `${DIRECT_ONBOARD_COMPANY}?${new URLSearchParams(body).toString()}`,
+        `${DIRECT_ONBOARD_COMPANY}?${new URLSearchParams(body).toString()}`
       );
       return data;
     },
-    async get_company_profile(param: any) {
-      const data = await directApi(`${DIRECT_ONBOARD_COMPANY}/users/${param}`);
-      return data;
+    async get_company_profile(param: any, paramBool: boolean) {
+      if (!this.seller_company || paramBool) {
+        const data = await directApi(
+          `${DIRECT_ONBOARD_COMPANY}/users/${param}`
+        );
+        this.seller_company = data;
+        return data;
+      } else {
+        return this.seller_company;
+      }
     },
     async validate_user_exist(param: any) {
       const req = await onboardingApi(`/users/pollen-pass-by-email/${param}`);
       return req;
     },
     async get_user_profile(param: any) {
-      const req = await onboardingApi(`/users/${param}`);
-      return req;
+      if (this.user_profile == null) {
+        const req = await onboardingApi(`/users/${param}`);
+
+        this.user_profile = req.data || req;
+        console.log(req);
+        return req;
+      } else {
+        return this.user_profile;
+      }
     },
     async get_user_channel(param: any) {
       const req = await onboardingApi(`/users/channel/${param}`);
@@ -93,20 +109,20 @@ export const useSellerStore = defineStore("seller", {
     },
     async get_sub_category(id: number) {
       const { data } = await onboardingApi(
-        `/product-category/${id}/sub-category`,
+        `/product-category/${id}/sub-category`
       );
       this.sub_category = data;
       return data;
     },
     async get_order_unit() {
       const { data } = await onboardingApi(
-        `${DIRECT_ONBOARD_COMPANY}/order-volume`,
+        `${DIRECT_ONBOARD_COMPANY}/order-volume`
       );
       this.order_unit = data;
     },
     async get_company_interest(param: any) {
       const data = await directApi(
-        `${DIRECT_ONBOARD_COMPANY}/${param}/interest`,
+        `${DIRECT_ONBOARD_COMPANY}/${param}/interest`
       );
       return data;
     },

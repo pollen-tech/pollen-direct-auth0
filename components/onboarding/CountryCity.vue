@@ -18,13 +18,14 @@
         <v-autocomplete
           v-model="city"
           item-value="city_id"
-          item-title="city_name"
+          item-title="name"
           :items="cityList"
           :return-object="true"
           placeholder="City"
           variant="outlined"
           multiple
           persistent-hint
+          :loading="is_city_loading"
           @update:model-value="selectLocation"
         />
       </v-col>
@@ -61,6 +62,7 @@ const location = ref([]);
 const cityList = ref([]);
 const city = ref([]);
 const country = ref(null);
+const is_city_loading = ref(false);
 
 // Watcher
 watch(
@@ -68,7 +70,7 @@ watch(
   (newVal) => {
     location.value = Object.values(newVal);
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 // Lifecycle hook
@@ -77,34 +79,39 @@ onMounted(() => {
 });
 
 const fetchCity = async (selectedCountry) => {
-  if (selectedCountry?.id) {
-    const cities = await country_store.get_cities(selectedCountry.id);
-    cityList.value = cities;
-    city.value = [];
-    console.log(cities);
+  try {
+    if (selectedCountry?.id) {
+      is_city_loading.value = true;
+      const cities = await country_store.get_cities(selectedCountry.id);
+      cityList.value = cities;
+      city.value = [];
 
-    // Update location to include new cities
-    const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.id === selectedCountry.id,
-    );
-    if (countryIndex === -1) {
-      location.value.push({
-        country: selectedCountry,
-        city: [],
-      });
-    } else {
-      location.value[countryIndex].country = selectedCountry;
-      location.value[countryIndex].city = [];
+      // Update location to include new cities
+      const countryIndex = location.value.findIndex(
+        (loc) => loc.country?.id === selectedCountry.id
+      );
+      if (countryIndex === -1) {
+        location.value.push({
+          country: selectedCountry,
+          city: [],
+        });
+      } else {
+        location.value[countryIndex].country = selectedCountry;
+        location.value[countryIndex].city = [];
+      }
+      is_city_loading.value = false;
+
+      commitLocation(syncLocation());
     }
-
-    commitLocation(syncLocation());
+  } catch (err) {
+    is_city_loading.value = false;
   }
 };
 
 const selectLocation = (selectedCities) => {
   if (country.value?.id) {
     const countryIndex = location.value.findIndex(
-      (loc) => loc.country?.id === country.value.id,
+      (loc) => loc.country?.id === country.value.id
     );
 
     if (countryIndex !== -1) {
@@ -127,8 +134,8 @@ const syncLocation = () => {
         const newCities = item.city.filter(
           (newCity) =>
             !existingCities.some(
-              (existingCity) => existingCity.city_id === newCity.city_id,
-            ),
+              (existingCity) => existingCity.city_id === newCity.city_id
+            )
         );
 
         combinedCountries[id].city = [...existingCities, ...newCities];

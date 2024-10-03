@@ -25,7 +25,7 @@
 <script setup>
 // eslint-disable-next-line no-unused-vars
 const _props = defineProps({
-  step: { type: String, default: "1", required: false },
+  step: { type: Number, default: 1, required: false },
   name: { type: String, default: "" },
 });
 </script>

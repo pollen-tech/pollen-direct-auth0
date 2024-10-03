@@ -65,19 +65,19 @@
           <template #activator="{ props }">
             <div>
               <v-btn
+                :class="{
+                  'mr-2': xs,
+                }"
                 icon="mdi-account-outline"
                 variant="tonal"
                 color="primary"
                 rounded="lg"
                 v-bind="props"
               />
-              <v-tooltip v-if="!is_company_display" activator="parent">
-                Please complete the onboarding process.
-              </v-tooltip>
             </div>
           </template>
 
-          <v-card v-if="is_company_display" class="rounded pa-1">
+          <v-card class="rounded pa-1">
             <v-card-text class="pa-0">
               <v-list density="compact">
                 <v-list-item
@@ -195,10 +195,12 @@
 
 <script setup>
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
 import { useRoute } from "vue-router";
 import { useAuth } from "~/composables/auth0";
 import { useSellerStore } from "~/stores/seller";
 
+const { xs } = useDisplay();
 const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
 
@@ -220,8 +222,8 @@ const is_company_display = ref(false);
 const currentUrl = computed(() => route.fullPath);
 
 onMounted(async () => {
+  user_id.value = get_user_id();
   if (user_id.value) {
-    user_id.value = get_user_id();
     await get_profile();
     const companyProfile = await get_company_profile(user_id.value);
     is_company_display.value = companyProfile?.data?.id ? true : false;

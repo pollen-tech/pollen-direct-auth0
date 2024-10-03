@@ -21,7 +21,6 @@
             <LazyOnboardingCompanyInformation
               v-if="step == 1"
               :user-id="user_id"
-              :company-types="company_type"
               :countries="countries"
               :company-profile="company_profile"
               @submit="next_step"
@@ -31,8 +30,6 @@
             />
             <LazyOnboardingCompanyInterest
               v-else
-              :category="category"
-              :order-unit="order_unit"
               :countries="countries"
               :profile="profile"
               @previous-page="previous_step"
@@ -70,9 +67,6 @@ const { countries } = storeToRefs(countryStore);
 
 const seller_store = useSellerStore();
 const { get_user_profile, get_company_profile } = seller_store;
-const company_type = computed(() => seller_store.seller_company_types);
-const category = computed(() => seller_store.category);
-const order_unit = computed(() => seller_store.order_unit);
 const company_profile = ref();
 
 const user_id = get_user_id();
@@ -93,15 +87,10 @@ onBeforeMount(async () => {
     const companyProfile = await get_company_profile(user_id);
     if (!companyProfile?.data) {
       await get_profile();
-      await seller_store.get_company_types();
-      await seller_store.get_category();
-      await seller_store.get_order_unit();
       await countryStore.get_countries();
     } else {
       await get_profile();
-      await seller_store.get_company_types();
       await countryStore.get_countries();
-      await seller_store.get_category();
       company_profile.value = companyProfile?.data;
     }
   }

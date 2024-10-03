@@ -56,7 +56,7 @@
             </label>
             <v-combobox
               v-model="company.types"
-              :items="companyTypes"
+              :items="company_type"
               item-value="id"
               item-title="name"
               :return-object="false"
@@ -64,46 +64,8 @@
               variant="outlined"
               :rules="required"
               :disabled="is_company_registered"
-            >
-              <template #item="data">
-                <v-list-item
-                  :key="data.item.id"
-                  v-bind="data.attrs"
-                  @click="
-                    () => {
-                      console.log(data);
-                      data.props.onClick(data.item);
-                    }
-                  "
-                >
-                  <template #prepend />
-
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{ data.item.title }}
-
-                      <v-tooltip class="custom-icon">
-                        <div
-                          class="multiline-text d-flex flex-column"
-                          style="width: 250px"
-                        >
-                          <b>{{ data.item.title }}</b>
-                          <span>{{ data.item.raw.description }}</span>
-                        </div>
-                        <template #activator="{ props }">
-                          <v-icon
-                            v-bind="props"
-                            size="x-small"
-                            color="grey"
-                            icon="mdi-information-outline"
-                          />
-                        </template>
-                      </v-tooltip>
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-combobox>
+              @focus="fetchSellerCompanyTypes"
+            />
           </div>
 
           <div class="my-2 text-start flex-1-0">
@@ -186,28 +148,8 @@
             @click="complete_onboarding"
             >Complete Onboarding</v-btn
           >
-
-          <!-- <v-btn
-            variant="outlined"
-            class="me-auto text-capitalize rounded-lg"
-            block
-            :loading="isLoading"
-            style="z-index: 999"
-            @click="$emit('skip')"
-            >Skip Onboarding</v-btn
-          > -->
         </v-form>
       </v-card>
-      <!-- <v-card elevation="0" class="align-center px-8 w-100">
-        <v-btn
-          variant="outlined"
-          class="me-auto text-capitalize rounded-lg"
-          block
-          :loading="isLoading"
-          @click="$emit('skip')"
-          >Skip Onboarding</v-btn
-        >
-      </v-card> -->
 
       <v-dialog
         v-model="showDialog"
@@ -245,13 +187,14 @@ import { useSellerStore } from "@/stores/seller";
 const emit = defineEmits(["submit", "skip", "error", "sendNotification"]);
 const props = defineProps({
   userId: { type: String, default: "" },
-  companyTypes: { type: Array, default: () => [] },
   countries: { type: Array, default: () => [] },
   companyProfile: { type: Object, default: () => ({}) },
 });
 
 const config = useRuntimeConfig();
 const sellerStore = useSellerStore();
+
+const company_type = computed(() => sellerStore.seller_company_types);
 
 const company = ref({});
 
@@ -279,6 +222,12 @@ const submit = async () => {
     }
   } catch (err) {
     emit("error", err);
+  }
+};
+
+const fetchSellerCompanyTypes = async () => {
+  if (sellerStore.seller_company_types.length == 0) {
+    await sellerStore.get_company_types();
   }
 };
 

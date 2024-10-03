@@ -61,7 +61,6 @@
 
             <onboarding-category
               :preselect="interest_categories"
-              :categories="category"
               @apply-option="applyOptionCategory"
             />
           </div>
@@ -114,7 +113,7 @@
                         class="text-truncate"
                         style="max-width: 90px"
                       >
-                        {{ city.city_name }} ,
+                        {{ city.name }} ,
                       </span>
                       <span v-if="c === 1">
                         ( +{{ target.city.length - 1 }} others ),&nbsp;
@@ -125,7 +124,7 @@
                             )"
                             :key="index"
                           >
-                            {{ additionalCity.city_name }}
+                            {{ additionalCity.name }}
                           </div>
                         </v-tooltip>
                       </span>
@@ -153,11 +152,12 @@
               v-model="company.order_volume"
               item-value="id"
               item-title="name"
-              :items="orderUnit"
+              :items="order_unit"
               :return-object="true"
               placeholder="Choose one or more"
               variant="outlined"
               :rules="required"
+              @focus="fetch_order_unit"
             />
           </div>
 
@@ -211,19 +211,20 @@
 
 <script setup>
 import { ref } from "vue";
+import { useSellerStore } from "@/stores/seller";
 
 const emit = defineEmits(["submit", "previousPage", "error"]);
 
 // eslint-disable-next-line no-unused-vars
 const _props = defineProps({
   userId: { type: String, default: "" },
-  category: { type: Array, default: () => [] },
   countries: { type: Array, default: () => [] },
-  orderUnit: { type: Array, default: () => [] },
   companyId: { type: String, default: "" },
   profile: { type: Object, default: () => ({}) },
 });
 
+const seller_store = useSellerStore();
+const order_unit = computed(() => seller_store.order_unit);
 const isLoading = ref(false);
 const showDialog = ref(false);
 const target_resale_market = ref([]);
@@ -247,7 +248,9 @@ const submit = async () => {
         import_markets: extract_import_market(),
         target_markets: extract_target_market(),
       };
-      emit("submit", body);
+
+      console.log(body);
+      // emit("submit", body);
       setTimeout(() => {
         is_submit_disabled.value = false;
         isLoading.value = false;
@@ -306,7 +309,7 @@ const format_location_city = (param) => {
       country_name: entry.country.name,
       country_id: entry.country.id,
       city_id: city.id,
-      city_name: city.city_name,
+      city_name: city.name,
     }))
   );
 
@@ -327,7 +330,7 @@ const extract_target_market = () => {
     country_name: item.country.name,
     cities: item.city.map((city) => ({
       city_id: city.city_id,
-      city_name: city.city_name,
+      city_name: city.name,
     })),
   }));
   return res;
@@ -353,6 +356,12 @@ const extract_categories = () => {
     })),
   }));
   return transformedData;
+};
+
+const fetch_order_unit = async () => {
+  if (seller_store.order_unit.length == 0) {
+    await seller_store.get_order_unit();
+  }
 };
 </script>
 <style>
