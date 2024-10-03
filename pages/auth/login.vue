@@ -25,6 +25,7 @@
           <AuthVerification
             v-else
             :email="email"
+            :is-otp-loading="isLoading"
             @previous-page="go_to_login"
             @verify-otp-event="verify_otp"
             @send-otp-event="send_otp"
@@ -68,9 +69,7 @@ const showLogin = ref(false);
 const is_authenticated = computed(() => auth.is_user_authenticated());
 
 onMounted(() => {
-  isLoading.value = true;
   setTimeout(() => {
-    isLoading.value = false;
     showLogin.value = !is_authenticated.value;
     if (is_authenticated.value) {
       router.push("/");
@@ -80,6 +79,7 @@ onMounted(() => {
 
 const verify_otp = async (param) => {
   try {
+    isLoading.value = true;
     otp.value = param;
     isOtpValid.value = true;
 
@@ -94,13 +94,16 @@ const verify_otp = async (param) => {
       req.message = req.message ? req.message : "OTP is not valid";
       getErrorMessage(req);
       console.log(req);
+      isLoading.value = false;
     } else {
       auth.handleAuth0Response(req);
       isEmailSent.value = true;
       go_to_redirect();
+      isLoading.value = false;
     }
   } catch (err) {
     console.log(err);
+    isLoading.value = false;
   }
 };
 

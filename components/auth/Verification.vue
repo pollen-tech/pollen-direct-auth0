@@ -77,7 +77,7 @@
             class="my-4 me-auto text-capitalize rounded-lg"
             color="#8431E7"
             block
-            :loading="isLoading"
+            :loading="isOtpLoading"
             @click="submit"
             >Continue</v-btn
           >
@@ -155,7 +155,7 @@ const formatTime = computed(() => {
   const seconds = remainingTime.value % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
-    "0",
+    "0"
   )}`;
 });
 
