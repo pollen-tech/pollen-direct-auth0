@@ -1,50 +1,28 @@
 <template>
   <div>
     <div
-      :class="['d-flex flex-column align-center', !xs ? '  mx-16' : 'mx-4']"
+      class="d-flex flex-column align-center mx-12"
       :style="{
-        'margin-top': $vuetify.display.mobile ? '20px' : '10%',
+        'margin-top': $vuetify.display.mobile ? '75px' : '10%',
       }"
     >
-      <div
-        :class="[
-          'text-caption justify-center d-flex d-sm-flex flex-column flex-sm-row',
-          !xs ? ' mb-12' : 'text-center  mb-8',
-        ]"
-      >
+      <div class="mb-6">
         <img
           src="~/assets/image/pollen-direct-1.svg"
-          :class="{
-            'mx-4': !xs,
-            'mx-auto mb-4': xs,
-          }"
-          :style="{
-            width: xs ? '50ox' : '',
-          }"
+          class="mx-4"
+          style="width: 55px"
         />
-        <div>
-          <p class="font-weight-bold mb-1">
-            {{ notification.title }}
-          </p>
-          <p
-            :class="{
-              'multiline-text': xs,
-            }"
-          >
-            {{ notification.desc }}
-          </p>
-        </div>
       </div>
-
       <div
         :class="[
-          'text-center ga-2 d-flex flex-column',
-          xs ? 'mb-2 mt-5' : ' mb-5 mt-10',
+          'text-center ga-2 d-flex flex-column  mt-5',
+          xs ? 'mb-2' : ' mb-5',
         ]"
       >
-        <h3 class="font-weight-bold">{{ title.title }}</h3>
-        <label class="font-weight-normal">{{ title.desc }} </label>
+        <h3 style="color: #111827; font-size: 20px">{{ title.title }}</h3>
+        <p style="color: #111827; font-size: 14x">{{ title.desc }}</p>
       </div>
+
       <v-card
         :width="$vuetify.display.mobile ? 300 : 450"
         elevation="0"
@@ -60,22 +38,26 @@
             <v-text-field
               v-model="email"
               variant="outlined"
-              placeholder="Enter valid email address"
+              placeholder="Enter Email"
               :rules="required_email"
+              class="custom-text-field"
+              autocomplete="email"
+              clearable
+              @input="validateEmail"
             />
           </div>
           <v-btn
-            :disabled="!email"
-            class="my-4 me-auto text-capitalize rounded-lg"
+            class="custom-button my-4 me-auto text-capitalize rounded-lg"
             color="#8431E7"
             block
             :loading="is_loading"
-            @click="submit"
+            :disabled="!isEmailValid"
+            @click="submit()"
             >Sign in</v-btn
           >
           <p class="text-center" style="color: #111827; font-size: 14px">
             Want to access Pollen Direct? <br v-if="xs" />
-            <a href="#" style="color: #8431e7" @click="on_signup()"
+            <a href="#" class="link" @click="on_signup()"
               >Sign Up with Pollen Pass</a
             >
           </p>
@@ -127,14 +109,10 @@ const { validate_user_allowed_login } = user_Store;
 const confirm = ref(null);
 const runtimeConfig = useRuntimeConfig();
 const title = ref({
-  title: "Enter your information",
+  title: "Login",
   desc: "Login to Pollen Direct with Pollen Pass",
 });
-const notification = ref({
-  title:
-    "Get exclusive access to the latest Pollen Direct liquidation inventory catalogs with Pollen Pass",
-  desc: "Pollen Pass is Pollen’s free buyer membership program. By signing up as a Pollen Pass member on Pollen Save. Pollen Save delivers excess or discontinued products from global brands direct to your doorstep. Whether you're looking for shampoo, conditioner, face wash, make up, toys, shoes, or more - there's something for everyone at unbeatable prices on Pollen Save!",
-});
+
 const email = ref("");
 const required_email = [
   (v) =>
@@ -144,6 +122,11 @@ const required_email = [
 const is_loading = ref(false);
 const show_dialog = ref(false);
 const formRef = ref(null);
+const isEmailValid = ref(false);
+
+const validateEmail = () => {
+  isEmailValid.value = /^[\w+.-]+@[\w.-]+\.\w{2,}$/.test(email.value);
+};
 
 const showDialog = async () => {
   const options = {
