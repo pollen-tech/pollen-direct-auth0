@@ -250,11 +250,11 @@ const submit = async () => {
       };
 
       console.log(body);
-      // emit("submit", body);
+      emit("submit", body);
       setTimeout(() => {
         is_submit_disabled.value = false;
         isLoading.value = false;
-      }, 6000);
+      }, 6500);
     } else {
       is_submit_disabled.value = false;
       isLoading.value = false;
