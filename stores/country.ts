@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import countries_list from "~/utils/country.json";
-import cities_list from "~/utils/city.json";
 export interface Country {
   country_id: number;
   country_name: string;
@@ -10,29 +9,24 @@ export interface City {
   country_id: number;
   city_name: string;
 }
-const cities_list_typed: City[] = cities_list as City[];
-
 export const useCountryStore = defineStore("country", {
-  state: () => {
-    return {
-      countries: [] as Country[],
-    };
-  },
+  state: () => ({
+    countries: [] as Country[],
+  }),
+
   actions: {
     async get_countries() {
-      const country_typed: Country[] = countries_list as Country[];
-      // const { data } = await onboardingApi('/country');
-      this.countries = country_typed;
+      if (this.countries.length === 0) {
+        const country_typed: Country[] = countries_list.map((country) => ({
+          country_id: country.id,
+          country_name: country.name,
+        })) as Country[];
+
+        this.countries = country_typed;
+      }
     },
-    setCountries(param: never[]) {
+    setCountries(param: Country[]) {
       this.countries = param;
-    },
-    async get_cities(param: any) {
-      return cities_list_typed.filter(
-        (city: { country_id: any }) => city.country_id === param,
-      ) as City[];
-      // const { data } = await onboardingApi(`/country/${param}/city`);
-      // return data;
     },
   },
 });
