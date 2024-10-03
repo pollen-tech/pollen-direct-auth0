@@ -1,7 +1,7 @@
 <template>
   <div>
-    <AppEmpty v-if="is_visible" />
-    <NotificationStatus />
+    <LazyAppEmpty v-if="is_visible" />
+    <LazyNotificationStatus />
   </div>
 </template>
 

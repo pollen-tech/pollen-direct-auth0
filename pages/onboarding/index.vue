@@ -1,6 +1,6 @@
 <template>
   <div class="h-100">
-    <OnboardingHeader />
+    <LazyOnboardingHeader />
     <v-container>
       <v-row
         no-gutters
@@ -13,12 +13,12 @@
           md="5"
           class="side-container"
         >
-          <OnboardingSideBar />
+          <LazyOnboardingSideBar />
         </v-col>
         <v-col cols="12" md="7" class="d-flex justify-center">
           <div v-if="user_id" class="w-75 d-flex flex-column h-100 py-8 mt-10">
-            <OnboardingStepper :step="step" :name="profile?.first_name" />
-            <OnboardingCompanyInformation
+            <LazyOnboardingStepper :step="step" :name="profile?.first_name" />
+            <LazyOnboardingCompanyInformation
               v-if="step == 1"
               :user-id="user_id"
               :company-types="company_type"
@@ -29,7 +29,7 @@
               @error="show_error"
               @send-notifcation="notify_admin_by_email"
             />
-            <OnboardingCompanyInterest
+            <LazyOnboardingCompanyInterest
               v-else
               :category="category"
               :order-unit="order_unit"
@@ -43,7 +43,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <NotificationStatus />
+    <LazyNotificationStatus />
   </div>
 </template>
 

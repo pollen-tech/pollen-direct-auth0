@@ -1,7 +1,7 @@
 <template>
   <div>
-    <AppLanding />
-    <NotificationStatus />
+    <LazyAppLanding />
+    <LazyNotificationStatus />
   </div>
 </template>
 

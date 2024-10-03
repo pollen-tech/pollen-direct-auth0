@@ -1,6 +1,5 @@
 <template>
   <div class="h-screen">
-    <CommonLoading v-if="isLoading" :loading="true" />
     <v-row v-if="showLogin" no-gutters>
       <v-col
         v-if="!$vuetify.display.mobile"
@@ -115,7 +114,7 @@ const send_otp = async (param) => {
     isOtpValid.value = true;
     const req = await onboardingApi(
       `/auth0/password-less-email-login/${email.value}`,
-      "POST",
+      "POST"
     );
     if (req) {
       isEmailSent.value = true;
