@@ -132,18 +132,6 @@
       style="min-height: 100vh"
     >
       <slot />
-      <ProfileSettings
-        v-model="dialog_visible"
-        :dialog-value="dialog_visible"
-        :user-id="user_id"
-        @close="dialog_visible = false"
-      />
-      <CompanySettings
-        v-model="dialog_company"
-        :dialog-value="dialog_company"
-        :user-id="user_id"
-        @close="dialog_company = false"
-      />
     </v-main>
     <v-dialog v-model="displayLogoutDialog">
       <v-card
@@ -215,11 +203,11 @@ const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
 
 const { is_user_authenticated, get_user_id } = useAuth();
+const user_id = ref(null);
 
 const seller_store = useSellerStore();
 const { get_user_profile, get_company_profile } = seller_store;
 
-const user_id = get_user_id();
 const is_authenticated = computed(() => {
   return is_user_authenticated();
 });
@@ -232,15 +220,16 @@ const is_company_display = ref(false);
 const currentUrl = computed(() => route.fullPath);
 
 onMounted(async () => {
-  if (user_id) {
+  if (user_id.value) {
+    user_id.value = get_user_id();
     await get_profile();
-    const companyProfile = await get_company_profile(user_id);
+    const companyProfile = await get_company_profile(user_id.value);
     is_company_display.value = companyProfile?.data?.id ? true : false;
   }
 });
 
 const get_profile = async () => {
-  const req = await get_user_profile(user_id);
+  const req = await get_user_profile(user_id.value);
   if (req) {
     if (JSON.stringify(profile.value) !== JSON.stringify(req)) {
       profile.value = req.data ? req.data : req;
