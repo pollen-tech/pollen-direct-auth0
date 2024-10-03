@@ -143,12 +143,7 @@ const timerRunning = ref(false);
 const timerInterval = ref(null);
 
 const submit = () => {
-  isLoading.value = true;
   emit("verifyOtpEvent", otp.value);
-
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 2200);
 };
 const formatTime = computed(() => {
   const minutes = Math.floor(remainingTime.value / 60);

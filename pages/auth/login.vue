@@ -94,16 +94,22 @@ const verify_otp = async (param) => {
       req.message = req.message ? req.message : "OTP is not valid";
       getErrorMessage(req);
       console.log(req);
-      isLoading.value = false;
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 2200);
     } else {
       auth.handleAuth0Response(req);
       isEmailSent.value = true;
       go_to_redirect();
-      isLoading.value = false;
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 2200);
     }
   } catch (err) {
     console.log(err);
-    isLoading.value = false;
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 2200);
   }
 };
 

@@ -63,6 +63,7 @@
               placeholder="Select Company Type"
               variant="outlined"
               :rules="required"
+              :loading="is_company_type_loading"
               :disabled="is_company_registered"
               @focus="fetchSellerCompanyTypes"
             />
@@ -206,6 +207,7 @@ const checkAcceptTerms = ref(false);
 const formRef = ref(null);
 const is_company_registered = ref(false);
 const is_complete_onboarding_disabled = ref(false);
+const is_company_type_loading = ref(false);
 
 const submit = async () => {
   try {
@@ -226,8 +228,12 @@ const submit = async () => {
 };
 
 const fetchSellerCompanyTypes = async () => {
+  is_company_type_loading.value = true;
   if (sellerStore.seller_company_types.length == 0) {
     await sellerStore.get_company_types();
+    is_company_type_loading.value = false;
+  } else {
+    is_company_type_loading.value = false;
   }
 };
 

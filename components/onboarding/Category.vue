@@ -26,6 +26,7 @@
           variant="outlined"
           multiple
           persistent-hint
+          :loading="is_sub_category_loading"
           @update:model-value="select_sub_category"
         />
       </v-col>
@@ -59,6 +60,8 @@ const sub_category_list = ref([]);
 const res_category = ref([]);
 const category = ref(null);
 const sub_category = ref([]);
+const is_category_loading = ref(false);
+const is_sub_category_loading = ref(false);
 
 // Watcher
 watch(
@@ -75,13 +78,18 @@ onMounted(() => {
 });
 
 const fetch_category = async () => {
+  is_category_loading.value = true;
   if (seller_store.category.length == 0) {
     await seller_store.get_category();
+    is_category_loading.value = false;
+  } else {
+    is_category_loading.value = false;
   }
 };
 
 const fetch_sub_category = async (val) => {
   if (val?.category_id) {
+    is_sub_category_loading.value = true;
     const req_sub_category = await seller_store.get_sub_category(
       val.category_id
     );
@@ -100,6 +108,7 @@ const fetch_sub_category = async (val) => {
       res_category.value[categoryIndex].category = val;
       res_category.value[categoryIndex].sub_category = [];
     }
+    is_sub_category_loading.value = false;
 
     commmit_category(sync_category());
   }
