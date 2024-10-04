@@ -132,6 +132,12 @@
       style="min-height: 100vh"
     >
       <slot />
+      <LazyProfileSettings
+        v-model="dialog_visible"
+        :dialog-value="dialog_visible"
+        :user-id="user_id"
+        @close="dialog_visible = false"
+      />
     </v-main>
     <v-dialog v-model="displayLogoutDialog">
       <v-card

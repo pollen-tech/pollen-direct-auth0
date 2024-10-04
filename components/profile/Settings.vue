@@ -155,7 +155,7 @@
                               mode="international"
                               :required="true"
                               :maxLen="20"
-                              :value="phone"
+                              :value="profile.phone"
                               :disabledFormatting="true"
                               :validCharactersOnly="true"
                               :class="phoneValid ? 'phoneStyle' : 'hasError'"
@@ -272,7 +272,7 @@
                               <p class="font-weight-bold text-body-2">
                                 {{
                                   moment(profile?.created_at).format(
-                                    "DD/MM/YYYY",
+                                    "DD/MM/YYYY"
                                   )
                                 }}
                               </p>
@@ -360,6 +360,7 @@ const profile = ref({
   country_code: "",
   phone_no: "",
   phone_verified: false,
+  phone: 0,
   email: "",
   channel: "",
   status: "",
