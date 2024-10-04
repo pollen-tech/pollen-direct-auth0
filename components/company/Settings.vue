@@ -121,7 +121,7 @@
                           variant="outlined"
                           placeholder="Enter Last Name"
                           :rules="required"
-                          :disabled="form_disabled"
+                          :disabled="true"
                         />
                       </div>
 
@@ -331,6 +331,7 @@
                         color="#8431e7"
                         class="ma-1 me-auto w-50 text-capitalize rounded-lg"
                         :disabled="form_disabled"
+                        :loading="is_form_loading"
                         @click="save_company_settings"
                       />
                     </v-sheet>
@@ -384,6 +385,7 @@ const company = ref({
 const required = [(v) => !!v || "Field is required"];
 const target_resale_market = ref([]);
 const interest_categories = ref([]);
+const is_form_loading = ref(false);
 
 onUpdated(async () => {
   if (props.dialogValue && !company.value.id) {
@@ -397,6 +399,7 @@ onUpdated(async () => {
 
 const save_company_settings = async () => {
   try {
+    is_form_loading.value = true;
     const body = {
       user_id: props.userId,
       name: company.value.name,
@@ -417,7 +420,7 @@ const save_company_settings = async () => {
     if (req.data.id) {
       const interest = await update_company_interest_settings(
         company.value.id,
-        body_interest,
+        body_interest
       );
       if (!interest.status_code) {
         common_store.setShowNotification({
@@ -425,18 +428,22 @@ const save_company_settings = async () => {
           status: "success",
           msg: "Successfully Update Company Settings! ",
         });
+        is_form_loading.value = false;
       } else {
         common_store.setShowNotification({
           display: true,
           status: "error",
           msg: "Failed to save company interest! Please contact CS. ",
         });
+        is_form_loading.value = false;
       }
     } else {
       get_error_msg(req);
+      is_form_loading.value = false;
     }
   } catch (err) {
     console.log(err);
+    is_form_loading.value = false;
   }
 };
 
@@ -540,16 +547,16 @@ const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
     company.value.category = extract_data_interest_category(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.import_markets = extract_data_market_resale(
-      req.data.import_markets,
+      req.data.import_markets
     );
     target_resale_market.value = extract_data_target_resale(
-      req.data.target_markets,
+      req.data.target_markets
     );
     interest_categories.value = extract_data_interest_categories(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.country = req.data.operation_country_name;
   }
@@ -616,7 +623,7 @@ const applyOptionCategory = (param) => {
 const format_category = (param) => {
   const formattedArray = param.map((category) => {
     category.sub_category = category.sub_category.map(
-      ({ sub_category_description, ...rest }) => rest,
+      ({ sub_category_description, ...rest }) => rest
     );
 
     return category;
@@ -637,7 +644,7 @@ const format_location_city = (param) => {
       country_id: entry.country.id,
       city_id: city.id,
       city_name: city.name,
-    })),
+    }))
   );
 
   return formattedArray;
