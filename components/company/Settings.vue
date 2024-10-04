@@ -121,7 +121,7 @@
                           variant="outlined"
                           placeholder="Enter Last Name"
                           :rules="required"
-                          :disabled="!isAvailable"
+                          :disabled="form_disabled"
                         />
                       </div>
 
@@ -159,48 +159,7 @@
                           :rules="required"
                           :disabled="form_disabled"
                           hide-details
-                        >
-                          <template #item="data">
-                            <v-list-item
-                              :key="data.item.id"
-                              v-bind="data.attrs"
-                              @click="
-                                () => {
-                                  console.log(data);
-                                  data.props.onClick(data.item);
-                                }
-                              "
-                            >
-                              <template #prepend />
-
-                              <v-list-item-content>
-                                <v-list-item-title>
-                                  {{ data.item.title }}
-
-                                  <v-tooltip class="custom-icon">
-                                    <div
-                                      class="multiline-text d-flex flex-column"
-                                      style="width: 250px"
-                                    >
-                                      <b>{{ data.item.title }}</b>
-                                      <span>{{
-                                        data.item.raw.description
-                                      }}</span>
-                                    </div>
-                                    <template #activator="{ props }">
-                                      <v-icon
-                                        v-bind="props"
-                                        size="x-small"
-                                        color="grey"
-                                        icon="mdi-information-outline"
-                                      />
-                                    </template>
-                                  </v-tooltip>
-                                </v-list-item-title>
-                              </v-list-item-content>
-                            </v-list-item>
-                          </template>
-                        </v-combobox>
+                        />
                       </div>
                     </v-sheet>
                   </v-col>
@@ -384,7 +343,7 @@
                         text="Save Changes"
                         color="#8431e7"
                         class="ma-1 me-auto w-50 text-capitalize rounded-lg"
-                        :disabled="!isAvailable"
+                        :disabled="form_disabled"
                       />
                     </v-sheet>
                   </v-col>
@@ -454,16 +413,16 @@ const get_interest = async () => {
   const req = await get_company_interest(company.value.id);
   if (req?.data) {
     company.value.category = extract_data_interest_category(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.import_markets = extract_data_market_resale(
-      req.data.import_markets,
+      req.data.import_markets
     );
     target_resale_market.value = extract_data_target_resale(
-      req.data.target_markets,
+      req.data.target_markets
     );
     interest_categories.value = extract_data_interest_categories(
-      req.data.interest_categories,
+      req.data.interest_categories
     );
     company.value.country = req.data.operation_country_name;
   }

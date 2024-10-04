@@ -138,6 +138,12 @@
         :user-id="user_id"
         @close="dialog_visible = false"
       />
+      <LazyCompanySettings
+        v-model="dialog_company"
+        :dialog-value="dialog_company"
+        :user-id="user_id"
+        @close="dialog_company = false"
+      />
     </v-main>
     <v-dialog v-model="displayLogoutDialog">
       <v-card
