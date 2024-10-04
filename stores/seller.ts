@@ -126,5 +126,21 @@ export const useSellerStore = defineStore("seller", {
       );
       return data;
     },
+    async update_company_settings(param: any, param_body: any) {
+      const req = await onboardingApi(
+        `${DIRECT_ONBOARD_COMPANY}/${param}`,
+        "PUT",
+        param_body
+      );
+      return req;
+    },
+    async update_company_interest_settings(param: any, param_body: any) {
+      const req = await onboardingApi(
+        `${DIRECT_ONBOARD_COMPANY}/${param}/interest`,
+        "PUT",
+        param_body
+      );
+      return req;
+    },
   },
 });

@@ -149,11 +149,11 @@
                           >Company Type <span class="red--text">*</span>
                         </label>
                         <v-combobox
-                          v-model="company.company_type_description"
+                          v-model="company.company_type_id"
                           :items="seller_store.seller_company_types"
                           item-value="id"
                           item-title="name"
-                          :return-object="false"
+                          :return-object="true"
                           placeholder="Select Company Type"
                           variant="outlined"
                           :rules="required"
@@ -222,16 +222,10 @@
                           </template>
                         </div>
                         <!-- v-model="company.category" -->
-                        <v-autocomplete
-                          item-value="id"
-                          item-title="name"
-                          :items="seller_store.category"
-                          :return-object="true"
-                          placeholder="Choose Multiple"
-                          variant="outlined"
-                          :rules="required"
-                          clearable
-                          :disabled="form_disabled"
+
+                        <onboarding-category
+                          :preselect="interest_categories"
+                          @apply-option="applyOptionCategory"
                         />
                       </div>
                       <div class="my-2">
@@ -265,7 +259,7 @@
                             >
                               <v-chip
                                 v-if="target?.country?.name"
-                                :key="target.country.country_id"
+                                :key="target.country.id"
                                 class="my-2 text-truncate multiline-text"
                                 @click:close="remove_item(target)"
                               >
@@ -304,17 +298,10 @@
                             </span>
                           </template>
                         </div>
-                        <v-autocomplete
-                          v-model="company.target_markets"
-                          item-value="id"
-                          item-title="name"
-                          :items="countries"
-                          :return-object="true"
-                          placeholder="Choose one or more"
-                          variant="outlined"
-                          :rules="required"
-                          clearable
-                          :disabled="form_disabled"
+                        <onboarding-country-city
+                          :preselect="target_resale_market"
+                          :countries="countries"
+                          @apply-option="applyOption"
                         />
                       </div>
                       <div class="my-2">
@@ -327,7 +314,7 @@
                           item-value="id"
                           item-title="name"
                           :items="seller_store.order_unit"
-                          :return-object="false"
+                          :return-object="true"
                           placeholder="Select"
                           variant="outlined"
                           :rules="required"
@@ -344,6 +331,7 @@
                         color="#8431e7"
                         class="ma-1 me-auto w-50 text-capitalize rounded-lg"
                         :disabled="form_disabled"
+                        @click="save_company_settings"
                       />
                     </v-sheet>
                   </v-col>
@@ -363,6 +351,7 @@ import { useDisplay } from "vuetify";
 import "vue-tel-input/vue-tel-input.css";
 import { useSellerStore } from "~/stores/seller";
 import { useCountryStore } from "~/stores/country";
+import { useCommonStore } from "~/stores/common";
 
 const props = defineProps({
   dialogValue: { type: Boolean, default: false },
@@ -372,13 +361,20 @@ const emit = defineEmits(["close"]);
 
 const { xs } = useDisplay();
 const seller_store = useSellerStore();
-const { get_company_profile, get_company_interest } = seller_store;
+const {
+  get_company_profile,
+  get_company_interest,
+  update_company_settings,
+  update_company_interest_settings,
+} = seller_store;
 const countryStore = useCountryStore();
 const { countries } = storeToRefs(countryStore);
 
+const common_store = useCommonStore();
+
 const dialogVisible = ref(false);
 const is_available = ref(false);
-const form_disabled = ref(true);
+const form_disabled = ref(false);
 const company = ref({
   account_id: "",
   name: "",
@@ -398,6 +394,137 @@ onUpdated(async () => {
     await get_company();
   }
 });
+
+const save_company_settings = async () => {
+  try {
+    const body = {
+      user_id: props.userId,
+      name: company.value.name,
+      company_type_id: extract_company_type(),
+      operation_country_id: extract_country("id"),
+      operation_country_name: extract_country("name"),
+    };
+
+    const body_interest = {
+      order_volume_id: extract_order_volume("id"),
+      order_volume_name: extract_order_volume("name"),
+      interest_categories: extract_categories() || [],
+      import_markets: extract_import_market(),
+      target_markets: extract_target_market(),
+    };
+    const req = await update_company_settings(company.value.id, body);
+
+    if (req.data.id) {
+      const interest = await update_company_interest_settings(
+        company.value.id,
+        body_interest
+      );
+      if (!interest.status_code) {
+        common_store.setShowNotification({
+          display: true,
+          status: "success",
+          msg: "Successfully Update Company Settings! ",
+        });
+      } else {
+        common_store.setShowNotification({
+          display: true,
+          status: "error",
+          msg: "Failed to save company interest! Please contact CS. ",
+        });
+      }
+    } else {
+      get_error_msg(req);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const get_error_msg = (req) => {
+  let errorMsg = req.message;
+  if (typeof req.message !== "string") {
+    const formattedMessages = req.message.map((message) => {
+      const words = message.split(" ");
+      words[0] = "• " + words[0];
+      return words.join(" ");
+    });
+
+    errorMsg = formattedMessages.join(",<br/>");
+  }
+
+  common_store.setShowNotification({
+    display: true,
+    status: "error",
+    msg: errorMsg,
+  });
+};
+
+const extract_target_market = () => {
+  const res = target_resale_market.value.map((item) => ({
+    country_id: item.country.id,
+    country_name: item.country.name,
+    cities: item.city.map((city) => ({
+      city_id: city.city_id,
+      city_name: city.name,
+    })),
+  }));
+  return res;
+};
+
+const extract_import_market = () => {
+  const res = {
+    country_id: company.value.import_markets.id,
+    country_name: company.value.import_markets.name,
+  };
+
+  return [res];
+};
+
+const extract_categories = () => {
+  const transformedData = interest_categories.value.map((item) => ({
+    category_id: item.category.category_id,
+    category_name: item.category.category_name,
+    sub_category: item.sub_category.map((sub) => ({
+      category_id: sub.category_id,
+      sub_category_id: sub.sub_category_id,
+      sub_category_name: sub.sub_category_name,
+    })),
+  }));
+  return transformedData;
+};
+
+const extract_order_volume = (param) => {
+  if (company.value.order_volume_id.id == undefined) {
+    if (param == "id") {
+      return company.value.order_volume_id;
+    }
+    return company.value.order_volume_name;
+  }
+  if (param == "id") {
+    return company.value.order_volume_id.id;
+  }
+  return company.value.order_volume_id.name;
+};
+
+const extract_company_type = () => {
+  if (typeof company.value.company_type_id != "number") {
+    return company.value.company_type_id.id;
+  }
+  return company.value.company_type_id;
+};
+
+const extract_country = (param) => {
+  if (company.value.country.id == undefined) {
+    if (param == "id") {
+      return company.value.operation_country_id;
+    }
+    return company.value.operation_country_name;
+  }
+  if (param == "id") {
+    return company.value.country.id;
+  }
+  return company.value.country.name;
+};
 
 const get_company = async () => {
   const req = await get_company_profile(props.userId);
@@ -435,7 +562,6 @@ const extract_data_market_resale = (param) => {
     res.name = entry.country_name;
     return res;
   });
-
   return formattedArray;
 };
 
@@ -467,7 +593,7 @@ const extract_data_target_resale = (param) => {
   const formattedArray = param.map((entry) => {
     const res = {};
     res.country = {
-      country_id: entry.country_id,
+      id: entry.country_id,
       name: entry.country_name,
     };
     res.city = entry.cities.map((ct) => {
@@ -481,6 +607,50 @@ const extract_data_target_resale = (param) => {
 
   return formattedArray;
 };
+
+const applyOptionCategory = (param) => {
+  interest_categories.value = param;
+  company.value.interest_categories = format_category(param);
+};
+
+const format_category = (param) => {
+  const formattedArray = param.map((category) => {
+    category.sub_category = category.sub_category.map(
+      ({ sub_category_description, ...rest }) => rest
+    );
+
+    return category;
+  });
+  return formattedArray;
+};
+
+const applyOption = (param) => {
+  target_resale_market.value = param;
+  company.value.target_markets_city = format_location_city(param);
+  company.value.target_markets_country = format_location_country(param);
+};
+
+const format_location_city = (param) => {
+  const formattedArray = param.flatMap((entry) =>
+    entry.city.map((city) => ({
+      country_name: entry.country.name,
+      country_id: entry.country.id,
+      city_id: city.id,
+      city_name: city.name,
+    }))
+  );
+
+  return formattedArray;
+};
+const format_location_country = (param) => {
+  const formattedArray = param.map((entry) => ({
+    country_id: entry.country.id,
+    name: entry.country.name,
+  }));
+
+  return formattedArray;
+};
+
 const closeDialog = () => {
   dialogVisible.value = false;
   emit("close");
