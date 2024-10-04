@@ -123,7 +123,7 @@ const send_otp = async (param) => {
     isOtpValid.value = true;
     const req = await onboardingApi(
       `/auth0/password-less-email-login/${email.value}`,
-      "POST"
+      "POST",
     );
     if (req) {
       isEmailSent.value = true;

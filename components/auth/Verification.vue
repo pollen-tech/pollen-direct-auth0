@@ -132,7 +132,6 @@ const { xs } = useDisplay();
 const runtimeConfig = useRuntimeConfig();
 const title = ref("Enter Verification Code");
 const desc = ref("We have sent a 6-digit code to:");
-const isLoading = ref(false);
 const showDialog = ref(false);
 
 const otp = ref("");
@@ -150,7 +149,7 @@ const formatTime = computed(() => {
   const seconds = remainingTime.value % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
-    "0"
+    "0",
   )}`;
 });
 

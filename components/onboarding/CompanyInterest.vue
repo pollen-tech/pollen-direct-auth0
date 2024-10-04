@@ -120,7 +120,7 @@
                         <v-tooltip activator="parent" location="end">
                           <div
                             v-for="(additionalCity, index) in target.city.slice(
-                              1
+                              1,
                             )"
                             :key="index"
                           >
@@ -268,7 +268,7 @@ const submit = async () => {
 const remove_item = (param) => {
   if (target_resale_market.value[0]) {
     const extract_cn = target_resale_market.value.filter(
-      (item) => item.country.id !== param.country.id
+      (item) => item.country.id !== param.country.id,
     );
     target_resale_market.value = extract_cn;
   }
@@ -276,7 +276,7 @@ const remove_item = (param) => {
 const remove_category_item = (param) => {
   if (interest_categories.value[0]) {
     const extract_cat = interest_categories.value.filter(
-      (item) => item.category.category_id !== param.category.category_id
+      (item) => item.category.category_id !== param.category.category_id,
     );
     interest_categories.value = extract_cat;
   }
@@ -290,7 +290,7 @@ const applyOptionCategory = (param) => {
 const format_category = (param) => {
   const formattedArray = param.map((category) => {
     category.sub_category = category.sub_category.map(
-      ({ sub_category_description, ...rest }) => rest
+      ({ sub_category_description, ...rest }) => rest,
     );
 
     return category;
@@ -310,7 +310,7 @@ const format_location_city = (param) => {
       country_id: entry.country.id,
       city_id: city.id,
       city_name: city.name,
-    }))
+    })),
   );
 
   return formattedArray;
